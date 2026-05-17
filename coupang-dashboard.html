@@ -10,13 +10,13 @@
     body{font-family:'Noto Sans KR',sans-serif;background:#0f1117;color:#f0f0f0;min-height:100vh;padding-bottom:40px}
 
     header{background:linear-gradient(135deg,#1a1d27,#0f1117);border-bottom:2px solid #e74c3c33;padding:14px 20px;position:sticky;top:0;z-index:10}
-    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+    .header-top{display:flex;align-items:center;justify-content:space-between}
     .logo{display:flex;align-items:center;gap:10px}
     .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#e74c3c,#c0392b);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
-    .logo-text{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+    .logo-text{font-size:14px;font-weight:700;white-space:nowrap}
     .center-sub{font-size:10px;color:#666;margin-top:1px}
     .header-right{display:flex;align-items:center;gap:8px}
-    .refresh-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#aaa;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer;transition:all 0.2s}
+    .refresh-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#aaa;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer}
     .refresh-btn:hover{border-color:#e74c3c44;color:#e74c3c}
     .next-info{font-size:11px;color:#444;background:#13161f;border-radius:6px;padding:5px 10px;white-space:nowrap}
     .next-info span{color:#e74c3c;font-weight:700}
@@ -27,20 +27,17 @@
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
     .active-label{font-size:12px;color:#888}
     .active-count{font-size:26px;font-weight:900;color:#00e676;line-height:1}
-    .active-names{font-size:10px;color:#555;max-width:55%;line-height:1.7;text-align:right}
-    .active-name-tag{display:inline-block;background:#00e67615;color:#00e676;border-radius:4px;padding:1px 6px;margin:1px 2px;font-size:10px}
 
     .section-title{font-size:11px;color:#555;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:14px 16px 8px}
 
-    /* 피크 카드 5개 */
-    .peak-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0 16px 14px}
+    .peak-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 16px 14px}
     @media(max-width:600px){.peak-grid{grid-template-columns:repeat(3,1fr)}}
-    .peak-card{background:#13161f;border-radius:12px;padding:12px 6px 10px;text-align:center;border:1px solid #ffffff08;position:relative;overflow:hidden}
+    .peak-card{background:#13161f;border-radius:12px;padding:14px 6px 10px;text-align:center;border:1px solid #ffffff08;position:relative;overflow:hidden}
     .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#e74c3c,#c0392b)}
     .peak-label{font-size:9px;color:#666;margin-bottom:4px;line-height:1.4}
     .peak-rate{font-size:15px;font-weight:900;margin-bottom:4px}
-    .peak-fraction{display:flex;align-items:baseline;justify-content:center;gap:2px;flex-wrap:nowrap}
-    .peak-done{font-size:16px;font-weight:900;color:#00c3ff;line-height:1}
+    .peak-fraction{display:flex;align-items:baseline;justify-content:center;gap:2px}
+    .peak-done{font-size:16px;font-weight:900;color:#00c3ff}
     .peak-sep{font-size:11px;color:#444}
     .peak-goal-num{font-size:13px;color:#3a3f55;font-weight:600}
     .peak-bar-wrap{height:4px;background:#1a1d27;border-radius:2px;margin:6px 4px 0;overflow:hidden}
@@ -49,12 +46,11 @@
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 6px}
     .summary-card{background:#1a1d27;border-radius:12px;padding:14px 10px;text-align:center;border:1px solid #ffffff0d;position:relative;overflow:hidden}
     .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-    .summary-card.accept::before{background:#00e676}
     .summary-card.reject::before{background:#ff5252}
+    .summary-card.cancel::before{background:#ffd740}
     .summary-card.assign::before{background:#00c3ff}
-    .summary-card.reject2::before{background:#ffd740}
     .card-label{font-size:11px;color:#888;margin-bottom:8px}
-    .card-value{font-size:26px;font-weight:900;line-height:1}
+    .card-value{font-size:24px;font-weight:900;line-height:1}
     .card-unit{font-size:12px;font-weight:500}
     .sub-info{display:flex;gap:16px;padding:6px 16px 14px;font-size:11px;color:#555}
 
@@ -68,7 +64,7 @@
     .stat-item{min-width:32px}
     .stat-val{font-size:16px;font-weight:900;line-height:1}
     .stat-label{font-size:9px;color:#666;margin-top:2px}
-    .stat-complete{color:#00e676}.stat-reject{color:#ff5252}.stat-lunch{color:#ffd740}.stat-evening{color:#00c3ff}.stat-zero{color:#333}
+    .stat-complete{color:#00e676}.stat-reject{color:#ff5252}.stat-lunch{color:#ffd740}.stat-dinner{color:#00c3ff}.stat-zero{color:#333}
 
     .timestamp{font-size:11px;color:#444;text-align:center;padding:14px}
     .loading{text-align:center;padding:60px 20px;color:#555}
@@ -88,7 +84,6 @@
       </div>
     </div>
     <div class="header-right">
-      <div class="next-info">다음 갱신 <span id="nextTime">--:--</span></div>
       <button class="refresh-btn" onclick="loadData()">🔄 새로고침</button>
     </div>
   </div>
@@ -101,27 +96,6 @@
 
 <script>
 const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/coupangData.json";
-const SLOT_MIN = 1;
-
-const peakEmoji = {"아침":"🌅","점심 피크":"☀️","점심 논피크":"🌤️","저녁 피크":"🌆","저녁 논피크":"🌙"};
-
-function getNextSlot() {
-  const now = new Date();
-  const ms = now.getMinutes()*60000 + now.getSeconds()*1000 + now.getMilliseconds();
-  const slotMs = SLOT_MIN * 60000;
-  return new Date(Date.now() + (slotMs - (ms % slotMs)));
-}
-
-function updateNextTime() {
-  const next = getNextSlot();
-  document.getElementById("nextTime").textContent =
-    next.toLocaleTimeString("ko-KR", { hour:"2-digit", minute:"2-digit" });
-}
-
-function scheduleNextLoad() {
-  const msLeft = getNextSlot() - Date.now();
-  setTimeout(() => { loadData(); scheduleNextLoad(); }, msLeft);
-}
 
 async function loadData() {
   try {
@@ -146,52 +120,46 @@ function peakBar(done, goal) {
 
 function render(data) {
   const p = data.peak || {};
-  const r = data.riders || {};
-  const riders = r.riders || [];
-  const active = r.activeCount ?? riders.filter(r=>r.status?.includes("배달")).length;
-  const totalR = r.totalCount ?? riders.length;
+  const peaks = p.peaks || [];
+  const riders = data.riders || [];
+  const active = data.activeCount ?? riders.filter(r=>r.status==="ON_LINE"||r.status==="IDLE").length;
+  const totalR = data.totalCount ?? riders.length;
 
-  if (p.centerName || r.centerName) {
-    document.getElementById("centerTitle").textContent = p.centerName || r.centerName;
-  }
-
-  const activeNames = riders.filter(r=>r.status?.includes("배달")).map(r=>r.name);
-  const nameTags = activeNames.map(n=>`<span class="active-name-tag">${n}</span>`).join("");
+  if (data.centerName) document.getElementById("centerTitle").textContent = data.centerName;
 
   const sorted = [...riders].sort((a,b) => {
-    const aA = a.status?.includes("배달") ? 0 : 1;
-    const bA = b.status?.includes("배달") ? 0 : 1;
-    return aA - bA;
+    const order = { ON_LINE:0, IDLE:1, OFF_LINE:2 };
+    return (order[a.status]??2) - (order[b.status]??2);
   });
 
-  const peakCards = (p.peaks||[]).map(pk => {
-    const rateNum = parseFloat(pk.rate) || 0;
-    const rateColor = rateNum >= 100 ? "#00e676" : "#ff5252";
+  const peakCards = peaks.map(pk => {
+    const rateColor = pk.rateNum >= 100 ? "#00e676" : "#ff5252";
     return `<div class="peak-card">
-      <div class="peak-label">${peakEmoji[pk.label]||"⏰"}<br>${pk.label}</div>
+      <div class="peak-label">${pk.emoji||"⏰"}<br>${pk.label}</div>
       <div class="peak-rate" style="color:${rateColor}">${pk.rate}</div>
       <div class="peak-fraction">
-        <span class="peak-done">${pk.done}</span>
+        <span class="peak-done">${pk.completedCount}</span>
         <span class="peak-sep">/</span>
-        <span class="peak-goal-num">${pk.goal}</span>
+        <span class="peak-goal-num">${pk.goalCount}</span>
       </div>
-      ${peakBar(pk.done, pk.goal)}
+      ${peakBar(pk.completedCount, pk.goalCount)}
     </div>`;
   }).join("");
 
   const sv = (v,cls,label) =>
-    `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v||"-"}</div><div class="stat-label">${label}</div></div>`;
+    `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v||0}</div><div class="stat-label">${label}</div></div>`;
 
   const cards = sorted.map(r => {
-    const isActive = r.status?.includes("배달");
+    const isActive = r.status==="ON_LINE"||r.status==="IDLE";
+    const statusLabel = r.status==="ON_LINE"?"온라인":r.status==="IDLE"?"대기중":"오프라인";
     return `<div class="rider-card">
       <div><div class="rider-name">${r.name}</div>
-      <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
+      <span class="rider-status ${isActive?"status-active":"status-inactive"}">${statusLabel}</span></div>
       <div class="rider-stats">
-        ${sv(r.done,"stat-complete","완료")}
+        ${sv(r.complete,"stat-complete","완료")}
         ${sv(r.reject,"stat-reject","거절")}
-        ${sv(r.lunch,"stat-lunch","점심")}
-        ${sv(r.evening,"stat-evening","저녁")}
+        ${sv(r.lunchPeak,"stat-lunch","점심")}
+        ${sv(r.dinnerPeak,"stat-dinner","저녁")}
       </div></div>`;
   }).join("");
 
@@ -203,21 +171,20 @@ function render(data) {
       <div class="active-main">
         <div class="active-dot"></div>
         <div>
-          <div class="active-label">현재 배달중</div>
+          <div class="active-label">현재 온라인</div>
           <div class="active-count">${active}<span style="font-size:14px;color:#555;font-weight:400"> / ${totalR}명</span></div>
         </div>
       </div>
     </div>
 
     <div class="summary-grid">
-      <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectRate||"-"}</div></div>
-      <div class="summary-card reject2"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${p.rejectCount||"-"}<span class="card-unit">건</span></div></div>
-      <div class="summary-card assign"><div class="card-label">📦 오늘배정물량</div><div class="card-value" style="color:#00c3ff">${p.assigned||"-"}<span class="card-unit">건</span></div></div>
+      <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectionRate||0}<span class="card-unit">%</span></div></div>
+      <div class="summary-card cancel"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${Math.round(p.rejectionCount||0)}<span class="card-unit">건</span></div></div>
+      <div class="summary-card assign"><div class="card-label">📦 오늘배정물량</div><div class="card-value" style="color:#00c3ff">${Math.round(p.scheduledCount||0)}<span class="card-unit">건</span></div></div>
     </div>
     <div class="sub-info">
-      <span>처리 ${p.processed||"-"}건</span>
-      <span>잔여 ${p.remaining||"-"}건</span>
-      <span>거절률 ${p.rejectRate||"-"}</span>
+      <span>처리 ${Math.round(p.processingCount||0)}건</span>
+      <span>전체수행률 ${p.overallRate||0}%</span>
     </div>
 
     <div class="section-title">라이더별 현황</div>
@@ -225,9 +192,6 @@ function render(data) {
 }
 
 loadData();
-scheduleNextLoad();
-setInterval(updateNextTime, 30000);
-updateNextTime();
 </script>
 </body>
 </html>
