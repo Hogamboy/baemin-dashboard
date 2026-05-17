@@ -50,6 +50,7 @@
     .summary-card.accept::before{background:#00e676}
     .summary-card.reject::before{background:#ff5252}
     .summary-card.assign::before{background:#00c3ff}
+    .summary-card.reject2::before{background:#ffd740}
     .card-label{font-size:11px;color:#888;margin-bottom:8px}
     .card-value{font-size:26px;font-weight:900;line-height:1}
     .card-unit{font-size:12px;font-weight:500}
@@ -161,14 +162,17 @@ function render(data) {
     return aA - bA;
   });
 
-  const peakCards = (p.peaks||[]).map(pk => `
-    <div class="peak-card">
+  const peakCards = (p.peaks||[]).map(pk => {
+    const rateNum = parseFloat(pk.rate) || 0;
+    const rateColor = rateNum >= 100 ? "#00e676" : "#ff5252";
+    const remain = Math.max(0, (pk.goal||0) - (pk.done||0)).toFixed(1);
+    return `<div class="peak-card">
       <div class="peak-label">${peakEmoji[pk.label]||"⏰"}<br>${pk.label}</div>
-      <div class="peak-rate">${pk.rate}</div>
+      <div class="peak-rate" style="color:${rateColor}">${pk.rate}</div>
       <div class="peak-value">${pk.done}<span class="peak-goal">/${pk.goal}</span></div>
-      <div class="peak-remain">잔여 ${pk.remain}</div>
       ${peakBar(pk.done, pk.goal)}
-    </div>`).join("");
+    </div>`;
+  }).join("");
 
   const sv = (v,cls,label) =>
     `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v||"-"}</div><div class="stat-label">${label}</div></div>`;
@@ -202,8 +206,8 @@ function render(data) {
     </div>
 
     <div class="summary-grid">
-      <div class="summary-card accept"><div class="card-label">✅ 수락률</div><div class="card-value" style="color:#00e676">${p.acceptRate||"-"}</div></div>
-      <div class="summary-card reject"><div class="card-label">❌ 거절수</div><div class="card-value" style="color:#ff5252">${p.rejectCount||"-"}<span class="card-unit">건</span></div></div>
+      <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectRate||"-"}</div></div>
+      <div class="summary-card reject2"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${p.rejectCount||"-"}<span class="card-unit">건</span></div></div>
       <div class="summary-card assign"><div class="card-label">📦 배정물량</div><div class="card-value" style="color:#00c3ff">${p.assigned||"-"}<span class="card-unit">건</span></div></div>
     </div>
     <div class="sub-info">
