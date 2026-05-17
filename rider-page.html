@@ -61,7 +61,7 @@
     .rr-label{font-size:12px;color:#888}
     .rr-value{font-size:28px;font-weight:900;color:#ff5252}
 
-    /* 수행건수 */
+    /* 수행건수(완료+거절+취소) */
     .perform-card{background:#13161f;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #ffffff08;display:flex;align-items:center;justify-content:space-between}
     .perf-label{font-size:12px;color:#666}
     .perf-value{font-size:22px;font-weight:900;color:#aaa}
@@ -201,7 +201,7 @@ function renderRider(r) {
     <div class="rate-card">
       <div class="rate-label">✅ 완료율</div>
       <div class="rate-value">${completeRate}<span style="font-size:22px;font-weight:500;color:#00b359">%</span></div>
-      <div class="rate-sub">수행건수 ${total}건 기준</div>
+      <div class="rate-sub">수행건수(완료+거절+취소) ${total}건 기준</div>
     </div>
 
     <div class="summary-grid">
@@ -216,7 +216,7 @@ function renderRider(r) {
     </div>
 
     <div class="perform-card">
-      <div class="perf-label">📦 수행건수</div>
+      <div class="perf-label">📦 수행건수(완료+거절+취소)</div>
       <div class="perf-value">${total}<span class="perf-unit"> 건</span></div>
     </div>
 
