@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>쿠팡이츠 배달현황 대시보드</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#0f1117;color:#f0f0f0;min-height:100vh;padding-bottom:40px}
+
+    header{background:linear-gradient(135deg,#1a1d27,#0f1117);border-bottom:2px solid #e74c3c33;padding:14px 20px;position:sticky;top:0;z-index:10}
+    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#e74c3c,#c0392b);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
+    .logo-text{font-size:15px;font-weight:700}
+    .center-sub{font-size:10px;color:#666;margin-top:1px}
+    .header-right{display:flex;align-items:center;gap:8px}
+    .refresh-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#aaa;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer;transition:all 0.2s}
+    .refresh-btn:hover{border-color:#e74c3c44;color:#e74c3c}
+    .next-info{font-size:11px;color:#444;background:#13161f;border-radius:6px;padding:5px 10px;white-space:nowrap}
+    .next-info span{color:#e74c3c;font-weight:700}
+
+    .active-banner{margin:14px 16px 6px;background:#1a1d27;border:1px solid #00e67630;border-radius:12px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
+    .active-main{display:flex;align-items:center;gap:10px}
+    .active-dot{width:9px;height:9px;background:#00e676;border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+    .active-label{font-size:12px;color:#888}
+    .active-count{font-size:26px;font-weight:900;color:#00e676;line-height:1}
+    .active-names{font-size:10px;color:#555;max-width:55%;line-height:1.7;text-align:right}
+    .active-name-tag{display:inline-block;background:#00e67615;color:#00e676;border-radius:4px;padding:1px 6px;margin:1px 2px;font-size:10px}
+
+    .section-title{font-size:11px;color:#555;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:14px 16px 8px}
+
+    /* 피크 카드 5개 */
+    .peak-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 16px 14px}
+    .peak-card{background:#13161f;border-radius:12px;padding:14px 6px 10px;text-align:center;border:1px solid #ffffff08;position:relative;overflow:hidden}
+    .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#e74c3c,#c0392b)}
+    .peak-label{font-size:9px;color:#666;margin-bottom:4px;line-height:1.4}
+    .peak-rate{font-size:16px;font-weight:900;color:#e74c3c;margin-bottom:3px}
+    .peak-value{font-size:18px;font-weight:900;color:#00c3ff;line-height:1}
+    .peak-goal{font-size:10px;color:#3a3f55;font-weight:400}
+    .peak-remain{font-size:9px;color:#555;margin-top:2px}
+    .peak-bar-wrap{height:4px;background:#1a1d27;border-radius:2px;margin:6px 4px 0;overflow:hidden}
+    .peak-bar{height:100%;border-radius:2px;transition:width 0.6s ease}
+
+    .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 6px}
+    .summary-card{background:#1a1d27;border-radius:12px;padding:14px 10px;text-align:center;border:1px solid #ffffff0d;position:relative;overflow:hidden}
+    .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .summary-card.accept::before{background:#00e676}
+    .summary-card.reject::before{background:#ff5252}
+    .summary-card.assign::before{background:#00c3ff}
+    .card-label{font-size:11px;color:#888;margin-bottom:8px}
+    .card-value{font-size:26px;font-weight:900;line-height:1}
+    .card-unit{font-size:12px;font-weight:500}
+    .sub-info{display:flex;gap:16px;padding:6px 16px 14px;font-size:11px;color:#555}
+
+    .rider-list{padding:0 16px}
+    .rider-card{background:#1a1d27;border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1px solid #ffffff08;display:flex;align-items:center;justify-content:space-between}
+    .rider-name{font-size:14px;font-weight:700;color:#f0f0f0;margin-bottom:3px}
+    .rider-status{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;display:inline-block}
+    .status-active{background:#00e67622;color:#00e676}
+    .status-inactive{background:#e74c3c22;color:#e74c3c}
+    .rider-stats{display:flex;gap:12px;text-align:center}
+    .stat-item{min-width:32px}
+    .stat-val{font-size:16px;font-weight:900;line-height:1}
+    .stat-label{font-size:9px;color:#666;margin-top:2px}
+    .stat-complete{color:#00e676}.stat-reject{color:#ff5252}.stat-lunch{color:#ffd740}.stat-evening{color:#00c3ff}.stat-zero{color:#333}
+
+    .timestamp{font-size:11px;color:#444;text-align:center;padding:14px}
+    .loading{text-align:center;padding:60px 20px;color:#555}
+    .spinner{font-size:32px;animation:spin 1.2s linear infinite;display:inline-block;margin-bottom:10px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .error-msg{text-align:center;padding:50px 20px;color:#ff5252;font-size:13px;line-height:1.8}
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">🚀</div>
+      <div>
+        <div class="logo-text" id="centerTitle">쿠팡이츠 대시보드</div>
+        <div class="center-sub">파트너 배달현황</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="next-info">다음 갱신 <span id="nextTime">--:--</span></div>
+      <button class="refresh-btn" onclick="loadData()">🔄 새로고침</button>
+    </div>
+  </div>
+</header>
+
+<div id="content">
+  <div class="loading"><div class="spinner">⏳</div><br>데이터 불러오는 중...</div>
+</div>
+<div class="timestamp" id="ts"></div>
+
+<script>
+const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/coupangData.json";
+const SLOT_MIN = 5;
+
+const peakEmoji = {"아침":"🌅","점심 피크":"☀️","점심 논피크":"🌤️","저녁 피크":"🌆","저녁 논피크":"🌙"};
+
+function getNextSlot() {
+  const now = new Date();
+  const ms = now.getMinutes()*60000 + now.getSeconds()*1000 + now.getMilliseconds();
+  const slotMs = SLOT_MIN * 60000;
+  return new Date(Date.now() + (slotMs - (ms % slotMs)));
+}
+
+function updateNextTime() {
+  const next = getNextSlot();
+  document.getElementById("nextTime").textContent =
+    next.toLocaleTimeString("ko-KR", { hour:"2-digit", minute:"2-digit" });
+}
+
+function scheduleNextLoad() {
+  const msLeft = getNextSlot() - Date.now();
+  setTimeout(() => { loadData(); scheduleNextLoad(); }, msLeft);
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(FIREBASE_URL);
+    if (!res.ok) throw new Error("응답 오류 " + res.status);
+    const data = await res.json();
+    if (!data) throw new Error("데이터 없음");
+    render(data);
+    document.getElementById("ts").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
+  } catch(e) {
+    document.getElementById("content").innerHTML =
+      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small style="color:#666">${e.message}</small><br><br>관리자가 쿠팡이츠 페이지를 열어두면 자동으로 업데이트됩니다.</div>`;
+  }
+}
+
+function peakBar(done, goal) {
+  if (!goal) return "";
+  const pct = Math.min(100, (done/goal)*100);
+  const color = pct >= 100 ? "#00e676" : pct >= 70 ? "#ffd740" : "#ff5252";
+  return `<div class="peak-bar-wrap"><div class="peak-bar" style="width:${pct.toFixed(0)}%;background:${color}"></div></div>`;
+}
+
+function render(data) {
+  const p = data.peak || {};
+  const r = data.riders || {};
+  const riders = r.riders || [];
+  const active = r.activeCount ?? riders.filter(r=>r.status?.includes("배달")).length;
+  const totalR = r.totalCount ?? riders.length;
+
+  if (p.centerName || r.centerName) {
+    document.getElementById("centerTitle").textContent = p.centerName || r.centerName;
+  }
+
+  const activeNames = riders.filter(r=>r.status?.includes("배달")).map(r=>r.name);
+  const nameTags = activeNames.map(n=>`<span class="active-name-tag">${n}</span>`).join("");
+
+  const sorted = [...riders].sort((a,b) => {
+    const aA = a.status?.includes("배달") ? 0 : 1;
+    const bA = b.status?.includes("배달") ? 0 : 1;
+    return aA - bA;
+  });
+
+  const peakCards = (p.peaks||[]).map(pk => `
+    <div class="peak-card">
+      <div class="peak-label">${peakEmoji[pk.label]||"⏰"}<br>${pk.label}</div>
+      <div class="peak-rate">${pk.rate}</div>
+      <div class="peak-value">${pk.done}<span class="peak-goal">/${pk.goal}</span></div>
+      <div class="peak-remain">잔여 ${pk.remain}</div>
+      ${peakBar(pk.done, pk.goal)}
+    </div>`).join("");
+
+  const sv = (v,cls,label) =>
+    `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v||"-"}</div><div class="stat-label">${label}</div></div>`;
+
+  const cards = sorted.map(r => {
+    const isActive = r.status?.includes("배달");
+    return `<div class="rider-card">
+      <div><div class="rider-name">${r.name}</div>
+      <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
+      <div class="rider-stats">
+        ${sv(r.done,"stat-complete","완료")}
+        ${sv(r.reject,"stat-reject","거절")}
+        ${sv(r.lunch,"stat-lunch","점심")}
+        ${sv(r.evening,"stat-evening","저녁")}
+      </div></div>`;
+  }).join("");
+
+  document.getElementById("content").innerHTML = `
+    <div class="section-title">⏰ 피크타임별 현황</div>
+    <div class="peak-grid">${peakCards||'<div style="color:#555;padding:10px 16px;font-size:12px">피크 데이터 없음</div>'}</div>
+
+    <div class="active-banner">
+      <div class="active-main">
+        <div class="active-dot"></div>
+        <div>
+          <div class="active-label">현재 배달중</div>
+          <div class="active-count">${active}<span style="font-size:14px;color:#555;font-weight:400"> / ${totalR}명</span></div>
+        </div>
+      </div>
+      <div class="active-names">${nameTags||'<span style="color:#444;font-size:11px">배달중 없음</span>'}</div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card accept"><div class="card-label">✅ 수락률</div><div class="card-value" style="color:#00e676">${p.acceptRate||"-"}</div></div>
+      <div class="summary-card reject"><div class="card-label">❌ 거절수</div><div class="card-value" style="color:#ff5252">${p.rejectCount||"-"}<span class="card-unit">건</span></div></div>
+      <div class="summary-card assign"><div class="card-label">📦 배정물량</div><div class="card-value" style="color:#00c3ff">${p.assigned||"-"}<span class="card-unit">건</span></div></div>
+    </div>
+    <div class="sub-info">
+      <span>처리 ${p.processed||"-"}건</span>
+      <span>잔여 ${p.remaining||"-"}건</span>
+      <span>거절률 ${p.rejectRate||"-"}</span>
+    </div>
+
+    <div class="section-title">라이더별 현황</div>
+    <div class="rider-list">${cards||'<div style="color:#555;padding:10px 16px;font-size:12px">라이더 데이터 없음</div>'}</div>`;
+}
+
+loadData();
+scheduleNextLoad();
+setInterval(updateNextTime, 30000);
+updateNextTime();
+</script>
+</body>
+</html>
