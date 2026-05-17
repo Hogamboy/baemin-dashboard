@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>내 배달 현황</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#0f1117;color:#f0f0f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px}
+
+    /* 로그인 화면 */
+    .login-wrap{width:100%;max-width:400px;margin-top:40px}
+    .login-logo{text-align:center;margin-bottom:32px}
+    .login-logo .icon{width:60px;height:60px;background:linear-gradient(135deg,#00c3ff,#0077ff);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
+    .login-logo h1{font-size:20px;font-weight:700;color:#fff}
+    .login-logo p{font-size:12px;color:#666;margin-top:4px}
+
+    .login-card{background:#1a1d27;border-radius:16px;padding:28px 24px;border:1px solid #ffffff0d}
+    .input-group{margin-bottom:16px}
+    .input-group label{display:block;font-size:12px;color:#888;margin-bottom:6px;font-weight:500}
+    .input-group input{width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;font-family:'Noto Sans KR',sans-serif;padding:14px 16px;outline:none;transition:border-color 0.2s}
+    .input-group input:focus{border-color:#00c3ff55}
+    .input-group input::placeholder{color:#444}
+    .login-btn{width:100%;background:linear-gradient(135deg,#00c3ff,#0077ff);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:15px;cursor:pointer;margin-top:8px;transition:opacity 0.2s}
+    .login-btn:hover{opacity:0.85}
+    .login-btn:disabled{opacity:0.4;cursor:not-allowed}
+    .login-error{color:#ff5252;font-size:12px;text-align:center;margin-top:12px;min-height:18px}
+
+    /* 대시보드 화면 */
+    .dashboard-wrap{width:100%;max-width:480px;display:none}
+
+    .dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .dash-header h2{font-size:18px;font-weight:700}
+    .dash-header .sub{font-size:11px;color:#666;margin-top:2px}
+    .logout-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#888;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer}
+
+    /* 완료율 큰 카드 */
+    .rate-card{background:#1a1d27;border-radius:16px;padding:20px;margin-bottom:12px;border:1px solid #ffffff0d;text-align:center;position:relative;overflow:hidden}
+    .rate-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00c3ff,#00e676)}
+    .rate-label{font-size:11px;color:#888;margin-bottom:8px}
+    .rate-value{font-size:48px;font-weight:900;color:#00e676;line-height:1}
+    .rate-sub{font-size:12px;color:#555;margin-top:6px}
+
+    /* 3개 요약 카드 */
+    .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+    .summary-card{background:#1a1d27;border-radius:12px;padding:16px 10px;text-align:center;border:1px solid #ffffff0d;position:relative;overflow:hidden}
+    .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .summary-card.complete::before{background:#00e676}
+    .summary-card.reject::before{background:#ff5252}
+    .summary-card.cancel::before{background:#ffd740}
+    .s-label{font-size:10px;color:#888;margin-bottom:6px}
+    .s-value{font-size:26px;font-weight:900;line-height:1}
+    .summary-card.complete .s-value{color:#00e676}
+    .summary-card.reject .s-value{color:#ff5252}
+    .summary-card.cancel .s-value{color:#ffd740}
+    .s-unit{font-size:11px;font-weight:500}
+
+    /* 거절율 카드 */
+    .reject-rate-card{background:#1a1d27;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #ff525222;display:flex;align-items:center;justify-content:space-between}
+    .rr-label{font-size:12px;color:#888}
+    .rr-value{font-size:28px;font-weight:900;color:#ff5252}
+
+    /* 수행건수 */
+    .perform-card{background:#13161f;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #ffffff08;display:flex;align-items:center;justify-content:space-between}
+    .perf-label{font-size:12px;color:#666}
+    .perf-value{font-size:22px;font-weight:900;color:#aaa}
+    .perf-unit{font-size:12px;color:#555}
+
+    /* 시간대별 */
+    .section-title{font-size:11px;color:#555;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
+    .peak-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+    .peak-card{background:#1a1d27;border-radius:12px;padding:16px 10px;text-align:center;border:1px solid #ffffff08;position:relative;overflow:hidden}
+    .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#00c3ff,#0077ff)}
+    .peak-emoji{font-size:20px;margin-bottom:6px}
+    .peak-label{font-size:10px;color:#666;margin-bottom:4px}
+    .peak-value{font-size:28px;font-weight:900;color:#00c3ff}
+    .peak-unit{font-size:11px;color:#444}
+
+    .timestamp{font-size:10px;color:#444;text-align:center;padding:8px 0 16px}
+    .loading-msg{color:#555;font-size:13px;text-align:center;margin-top:12px}
+  </style>
+</head>
+<body>
+
+<!-- 로그인 화면 -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-logo">
+    <div class="icon">🛵</div>
+    <h1>내 배달 현황</h1>
+    <p>배민커넥트비즈</p>
+  </div>
+  <div class="login-card">
+    <div class="input-group">
+      <label>이름</label>
+      <input type="text" id="inputName" placeholder="홍길동" />
+    </div>
+    <div class="input-group">
+      <label>전화번호 (숫자만)</label>
+      <input type="tel" id="inputPhone" placeholder="01012345678" maxlength="11" />
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">확인</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- 대시보드 화면 -->
+<div class="dashboard-wrap" id="dashWrap">
+  <div class="dash-header">
+    <div>
+      <h2 id="riderName">-</h2>
+      <div class="sub" id="lastUpdate">-</div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+  </div>
+  <div id="dashContent"></div>
+</div>
+
+<script>
+const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/baeminData.json";
+
+// 엔터키 로그인
+document.getElementById("inputPhone").addEventListener("keydown", e => {
+  if (e.key === "Enter") doLogin();
+});
+document.getElementById("inputName").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("inputPhone").focus();
+});
+
+// 저장된 로그인 정보 확인
+window.onload = () => {
+  const saved = localStorage.getItem("riderLogin");
+  if (saved) {
+    const { name, phone } = JSON.parse(saved);
+    document.getElementById("inputName").value = name;
+    document.getElementById("inputPhone").value = phone;
+    doLogin(true);
+  }
+};
+
+async function doLogin(auto = false) {
+  const name  = document.getElementById("inputName").value.trim();
+  const phone = document.getElementById("inputPhone").value.trim().replace(/[-\s]/g, "");
+  const errEl = document.getElementById("loginError");
+
+  if (!name) { errEl.textContent = "이름을 입력해주세요."; return; }
+  if (!phone || phone.length < 10) { errEl.textContent = "전화번호를 확인해주세요."; return; }
+
+  errEl.textContent = "";
+  document.getElementById("loginBtn").disabled = true;
+  document.getElementById("loginBtn").textContent = "조회 중...";
+
+  try {
+    const res = await fetch(FIREBASE_URL);
+    if (!res.ok) throw new Error("데이터 로드 실패");
+    const data = await res.json();
+
+    if (!data || !data.riders) throw new Error("데이터 없음");
+
+    // 이름 + 전화번호 매칭
+    const rider = data.riders.find(r => {
+      const rName  = r.name?.trim();
+      const rPhone = r.phone?.replace(/[-\s]/g, "").trim();
+      return rName === name && rPhone === phone;
+    });
+
+    if (!rider) {
+      errEl.textContent = "이름 또는 전화번호가 일치하지 않아요.";
+      document.getElementById("loginBtn").disabled = false;
+      document.getElementById("loginBtn").textContent = "확인";
+      return;
+    }
+
+    // 로그인 정보 저장
+    localStorage.setItem("riderLogin", JSON.stringify({ name, phone }));
+
+    // 화면 전환
+    document.getElementById("loginWrap").style.display = "none";
+    document.getElementById("dashWrap").style.display = "block";
+    document.getElementById("riderName").textContent = rider.name + " 기사님";
+    document.getElementById("lastUpdate").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
+
+    renderRider(rider);
+  } catch(e) {
+    errEl.textContent = "오류: " + e.message;
+  } finally {
+    document.getElementById("loginBtn").disabled = false;
+    document.getElementById("loginBtn").textContent = "확인";
+  }
+}
+
+function renderRider(r) {
+  const complete = r.complete || 0;
+  const reject   = r.reject   || 0;
+  const cancel   = r.cancel   || 0;
+  const total    = complete + reject + cancel;
+  const completeRate = total > 0 ? ((complete / total) * 100).toFixed(1) : "0.0";
+  const rejectRate   = total > 0 ? ((reject   / total) * 100).toFixed(1) : "0.0";
+
+  document.getElementById("dashContent").innerHTML = `
+    <div class="rate-card">
+      <div class="rate-label">✅ 완료율</div>
+      <div class="rate-value">${completeRate}<span style="font-size:22px;font-weight:500;color:#00b359">%</span></div>
+      <div class="rate-sub">수행건수 ${total}건 기준</div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card complete"><div class="s-label">완료</div><div class="s-value">${complete}<span class="s-unit">건</span></div></div>
+      <div class="summary-card reject"><div class="s-label">거절</div><div class="s-value">${reject}<span class="s-unit">건</span></div></div>
+      <div class="summary-card cancel"><div class="s-label">배차취소</div><div class="s-value">${cancel}<span class="s-unit">건</span></div></div>
+    </div>
+
+    <div class="reject-rate-card">
+      <div class="rr-label">❌ 거절율</div>
+      <div class="rr-value">${rejectRate}<span style="font-size:14px;font-weight:500">%</span></div>
+    </div>
+
+    <div class="perform-card">
+      <div class="perf-label">📦 수행건수</div>
+      <div class="perf-value">${total}<span class="perf-unit"> 건</span></div>
+    </div>
+
+    <div class="section-title">⏰ 시간대별 완료</div>
+    <div class="peak-grid">
+      <div class="peak-card">
+        <div class="peak-emoji">🌅</div>
+        <div class="peak-label">아침점심피크</div>
+        <div class="peak-value">${r.morningPeak||0}<span class="peak-unit">건</span></div>
+      </div>
+      <div class="peak-card">
+        <div class="peak-emoji">☀️</div>
+        <div class="peak-label">오후논피크</div>
+        <div class="peak-value">${r.afternoonOff||0}<span class="peak-unit">건</span></div>
+      </div>
+      <div class="peak-card">
+        <div class="peak-emoji">🌆</div>
+        <div class="peak-label">저녁피크</div>
+        <div class="peak-value">${r.eveningPeak||0}<span class="peak-unit">건</span></div>
+      </div>
+      <div class="peak-card">
+        <div class="peak-emoji">🌙</div>
+        <div class="peak-label">심야논피크</div>
+        <div class="peak-value">${r.nightOff||0}<span class="peak-unit">건</span></div>
+      </div>
+    </div>`;
+}
+
+function doLogout() {
+  localStorage.removeItem("riderLogin");
+  document.getElementById("loginWrap").style.display = "block";
+  document.getElementById("dashWrap").style.display = "none";
+  document.getElementById("inputName").value = "";
+  document.getElementById("inputPhone").value = "";
+  document.getElementById("loginError").textContent = "";
+}
+</script>
+</body>
+</html>
