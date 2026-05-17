@@ -195,7 +195,7 @@ function renderRider(r) {
   const cancel   = r.cancel   || 0;
   const total    = complete + reject + cancel;
   const completeRate = total > 0 ? ((complete / total) * 100).toFixed(1) : "0.0";
-  const rejectRate   = total > 0 ? ((reject   / total) * 100).toFixed(1) : "0.0";
+  const rejectRate   = total > 0 ? (((reject + cancel) / total) * 100).toFixed(1) : "0.0";
 
   document.getElementById("dashContent").innerHTML = `
     <div class="rate-card">
