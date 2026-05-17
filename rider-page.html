@@ -61,7 +61,7 @@
     .rr-label{font-size:12px;color:#888}
     .rr-value{font-size:28px;font-weight:900;color:#ff5252}
 
-    /* 수행건수(완료+거절+취소) */
+    /* 수행건수 */
     .perform-card{background:#13161f;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #ffffff08;display:flex;align-items:center;justify-content:space-between}
     .perf-label{font-size:12px;color:#666}
     .perf-value{font-size:22px;font-weight:900;color:#aaa}
@@ -157,11 +157,13 @@ async function doLogin(auto = false) {
 
     if (!data || !data.riders) throw new Error("데이터 없음");
 
-    // 이름 + 전화번호 매칭
+    // 이름 + 전화번호 매칭 (마스킹된 번호와 비교)
+    // 입력: 01012345678 → 마스킹: 010-****-5678 → 뒤 4자리로 비교
+    const phoneLast4 = phone.slice(-4);
     const rider = data.riders.find(r => {
-      const rName  = r.name?.trim();
-      const rPhone = r.phone?.replace(/[-\s]/g, "").trim();
-      return rName === name && rPhone === phone;
+      const rName     = r.name?.trim();
+      const rPhoneLast4 = r.phone?.replace(/[-\s]/g, "").slice(-4);
+      return rName === name && rPhoneLast4 === phoneLast4;
     });
 
     if (!rider) {
@@ -201,7 +203,7 @@ function renderRider(r) {
     <div class="rate-card">
       <div class="rate-label">✅ 완료율</div>
       <div class="rate-value">${completeRate}<span style="font-size:22px;font-weight:500;color:#00b359">%</span></div>
-      <div class="rate-sub">수행건수(완료+거절+취소) ${total}건 기준</div>
+      <div class="rate-sub">수행건수 ${total}건 기준</div>
     </div>
 
     <div class="summary-grid">
@@ -216,7 +218,7 @@ function renderRider(r) {
     </div>
 
     <div class="perform-card">
-      <div class="perf-label">📦 수행건수(완료+거절+취소)</div>
+      <div class="perf-label">📦 수행건수</div>
       <div class="perf-value">${total}<span class="perf-unit"> 건</span></div>
     </div>
 
