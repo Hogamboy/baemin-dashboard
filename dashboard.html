@@ -227,6 +227,8 @@ function render(data) {
   const goals = getGoals(currentDayType, currentSets);
   const total = (s.complete||0)+(s.reject||0)+(s.cancel||0);
   const pct = v => total > 0 ? Math.max(1,(v/total)*100).toFixed(1) : 0;
+  // 거절율 = (거절+취소) / 수행건수
+  const rejectPct = total > 0 ? Math.max(1,((s.reject+s.cancel)/total)*100).toFixed(1) : 0;
   const active = data.activeCount ?? data.riders.filter(r=>r.status?.includes("운행중")).length;
   const totalR = data.totalCount ?? data.riders.length;
   const activeNames = data.riders.filter(r=>r.status?.includes("운행중")).map(r=>r.name);
@@ -317,8 +319,7 @@ function render(data) {
     </div>
     <div class="bar-legend">
       <span><span class="legend-dot" style="background:#00e676"></span>완료 ${pct(s.complete)}%</span>
-      <span><span class="legend-dot" style="background:#ff5252"></span>거절 ${pct(s.reject)}%</span>
-      <span><span class="legend-dot" style="background:#ffd740"></span>배차취소 ${pct(s.cancel)}%</span>
+      <span><span class="legend-dot" style="background:#ff5252"></span>거절율 ${rejectPct}%</span>
     </div>
     <div class="section-title">라이더별 현황</div>
     <div class="rider-list">${sortedCards}</div>`;
