@@ -128,7 +128,7 @@
 
 <script>
 const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/baeminData.json";
-const SLOT_MIN = 5;
+const SLOT_MIN = 1;
 
 const GOALS_PER_SET = {
   weekday: { morningPeak: 21, afternoonOff: 20, eveningPeak: 30, nightOff: 29 },
@@ -303,7 +303,6 @@ function render(data) {
           <div class="active-count">${active}<span style="font-size:14px;color:#555;font-weight:400"> / ${totalR}명</span></div>
         </div>
       </div>
-      <div class="active-names">${nameTags||'<span style="color:#444;font-size:11px">운행중 없음</span>'}</div>
     </div>
     <div class="summary-grid">
       <div class="summary-card complete"><div class="card-label">✅ 완료</div><div class="card-value">${s.complete||0}<span class="card-unit">건</span></div></div>

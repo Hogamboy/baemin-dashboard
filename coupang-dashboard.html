@@ -13,7 +13,7 @@
     .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
     .logo{display:flex;align-items:center;gap:10px}
     .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#e74c3c,#c0392b);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
-    .logo-text{font-size:15px;font-weight:700}
+    .logo-text{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
     .center-sub{font-size:10px;color:#666;margin-top:1px}
     .header-right{display:flex;align-items:center;gap:8px}
     .refresh-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#aaa;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer;transition:all 0.2s}
@@ -101,7 +101,7 @@
 
 <script>
 const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/coupangData.json";
-const SLOT_MIN = 5;
+const SLOT_MIN = 1;
 
 const peakEmoji = {"아침":"🌅","점심 피크":"☀️","점심 논피크":"🌤️","저녁 피크":"🌆","저녁 논피크":"🌙"};
 
