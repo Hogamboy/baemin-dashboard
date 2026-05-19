@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>배달현황 대시보드</title>
+  <title>오늘 배달현황</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
@@ -96,7 +96,7 @@
     <div class="logo">
       <div class="logo-icon">🛵</div>
       <div>
-        <div class="logo-text" id="centerTitle">배달현황 대시보드</div>
+        <div class="logo-text" id="centerTitle">오늘 배달현황</div>
         <div class="center-sub" id="centerSub">배민커넥트비즈</div>
       </div>
     </div>
@@ -210,7 +210,7 @@ async function loadData() {
     document.getElementById("ts").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
   } catch(e) {
     document.getElementById("content").innerHTML =
-      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small style="color:#666">${e.message}</small><br><br>관리자가 배민 페이지를 열어두면 자동으로 업데이트됩니다.</div>`;
+      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small style="color:#666">${e.message}</small><br><br>서버에서 문제를 해결중입니다.</div>`;
   }
 }
 
@@ -276,17 +276,46 @@ function render(data) {
     const bA = b.status?.includes("운행중") ? 0 : 1;
     return aA - bA;
   });
-  const sortedCards = sorted.map(r => {
+ const sortedCards = sorted.map(r => {
     const isActive = r.statusCode==="DELIVERING"||r.status?.includes("운행중");
-    return `<div class="rider-card">
-      <div><div class="rider-name">${r.name}</div>
-      <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
-      <div class="rider-stats">
-        ${sv(r.complete,"stat-complete","완료")}
-        ${sv(r.reject,"stat-reject","거절")}
-        ${sv(r.cancel,"stat-cancel","배차취소")}
-        ${svRate(calcRejectRate(r))}
-      </div></div>`;
+    const rRate = calcRejectRate(r);
+    const uid = r.name.replace(/\s/g,'_');
+    return `<div class="rider-card" onclick="togglePeak('${uid}')" style="cursor:pointer;flex-direction:column;align-items:stretch">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><div class="rider-name">${r.name}</div>
+        <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
+        <div class="rider-stats">
+          ${sv(r.complete,"stat-complete","완료")}
+          ${sv(r.reject,"stat-reject","거절")}
+          ${sv(r.cancel,"stat-cancel","배차취소")}
+          ${svRate(rRate)}
+        </div>
+      </div>
+      <div id="peak_${uid}" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid #ffffff0d">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center">
+          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
+            <div style="font-size:16px;margin-bottom:4px">🌅</div>
+            <div style="font-size:9px;color:#666;margin-bottom:4px">아침점심</div>
+            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.morningPeak||0}</div>
+          </div>
+          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
+            <div style="font-size:16px;margin-bottom:4px">☀️</div>
+            <div style="font-size:9px;color:#666;margin-bottom:4px">오후논피크</div>
+            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.afternoonOff||0}</div>
+          </div>
+          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
+            <div style="font-size:16px;margin-bottom:4px">🌆</div>
+            <div style="font-size:9px;color:#666;margin-bottom:4px">저녁피크</div>
+            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.eveningPeak||0}</div>
+          </div>
+          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
+            <div style="font-size:16px;margin-bottom:4px">🌙</div>
+            <div style="font-size:9px;color:#666;margin-bottom:4px">심야논피크</div>
+            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.nightOff||0}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
   }).join("");
 
   document.getElementById("content").innerHTML = `
@@ -346,6 +375,11 @@ loadData();
 scheduleNextLoad();
 setInterval(updateNextTime, 30000);
 updateNextTime();
+  function togglePeak(uid) {
+  const el = document.getElementById('peak_' + uid);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
 </script>
 </body>
 </html>
