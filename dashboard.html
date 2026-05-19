@@ -348,7 +348,7 @@ function render(data) {
       <div class="summary-card reject"><div class="card-label">❌ 거절</div><div class="card-value">${s.reject||0}<span class="card-unit">건</span></div></div>
       <div class="summary-card cancel"><div class="card-label">⚡ 배차취소</div><div class="card-value">${s.cancel||0}<span class="card-unit">건</span></div></div>
     </div>
-     <div class="active-banner">
+     <div class="active-banner" onclick="toggleRiderList()" style="cursor:pointer">
       <div class="active-main">
         <div class="active-dot"></div>
         <div>
@@ -367,8 +367,8 @@ function render(data) {
       <span><span class="legend-dot" style="background:#00e676"></span>완료 ${pct(s.complete)}%</span>
       <span><span class="legend-dot" style="background:#ff5252"></span>거절율 ${rejectPct}%</span>
     </div>
-    <div class="section-title">라이더별 현황</div>
-    <div class="rider-list">${sortedCards}</div>`;
+    <div class="section-title" id="riderSection" style="display:none">라이더별 현황</div>
+    <div class="rider-list" id="riderList" style="display:none">${sortedCards}</div>`;
 }
 
 // 시작
@@ -380,6 +380,14 @@ updateNextTime();
   const el = document.getElementById('peak_' + uid);
   if (!el) return;
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+  function toggleRiderList() {
+  const s = document.getElementById('riderSection');
+  const l = document.getElementById('riderList');
+  if (!s || !l) return;
+  const show = s.style.display === 'none';
+  s.style.display = show ? 'block' : 'none';
+  l.style.display = show ? 'block' : 'none';
 }
 </script>
 </body>
