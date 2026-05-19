@@ -342,7 +342,13 @@ function render(data) {
         ${peakBar(s.nightOff||0, goals.nightOff)}
       </div>
     </div>
-    <div class="active-banner">
+   
+    <div class="summary-grid">
+      <div class="summary-card complete"><div class="card-label">✅ 완료</div><div class="card-value">${s.complete||0}<span class="card-unit">건</span></div></div>
+      <div class="summary-card reject"><div class="card-label">❌ 거절</div><div class="card-value">${s.reject||0}<span class="card-unit">건</span></div></div>
+      <div class="summary-card cancel"><div class="card-label">⚡ 배차취소</div><div class="card-value">${s.cancel||0}<span class="card-unit">건</span></div></div>
+    </div>
+     <div class="active-banner">
       <div class="active-main">
         <div class="active-dot"></div>
         <div>
@@ -351,11 +357,6 @@ function render(data) {
         </div>
       </div>
       <div class="active-names">${nameTags||'<span style="color:#444;font-size:11px">운행중 없음</span>'}</div>
-    </div>
-    <div class="summary-grid">
-      <div class="summary-card complete"><div class="card-label">✅ 완료</div><div class="card-value">${s.complete||0}<span class="card-unit">건</span></div></div>
-      <div class="summary-card reject"><div class="card-label">❌ 거절</div><div class="card-value">${s.reject||0}<span class="card-unit">건</span></div></div>
-      <div class="summary-card cancel"><div class="card-label">⚡ 배차취소</div><div class="card-value">${s.cancel||0}<span class="card-unit">건</span></div></div>
     </div>
     <div class="bar-wrap">
       <div class="bar-segment bar-complete" style="width:${pct(s.complete)}%"></div>
