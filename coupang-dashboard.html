@@ -176,7 +176,18 @@ function render(data) {
     <div class="section-title">⏰ 피크타임별 현황</div>
     <div class="peak-grid">${peakCards||'<div style="color:#555;padding:10px 16px;font-size:12px">피크 데이터 없음</div>'}</div>
 
-    <div class="active-banner">
+//거절률, 거절수, 오늘배정물량 카드
+      <div class="summary-grid">
+      <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectionRate||0}<span class="card-unit">%</span></div></div>
+      <div class="summary-card cancel"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${Math.round(p.rejectionCount||0)}<span class="card-unit">건</span></div></div>
+      <div class="summary-card assign"><div class="card-label">📦 오늘배정물량</div><div class="card-value" style="color:#00c3ff">${Math.round(p.scheduledCount||0)}<span class="card-unit">건</span></div></div>
+    </div>
+    <div class="sub-info">
+      <span>처리 ${Math.round(p.processingCount||0)}건</span>
+      <span>전체수행률 ${p.overallRate||0}%</span>
+    </div>
+
+    <div class="active-banner" onclick="toggleRiderList()" style="cursor:pointer">
       <div class="active-left">
         <div class="active-dot"></div>
         <div>
@@ -190,21 +201,19 @@ function render(data) {
       </div>
     </div>
 
-    <div class="summary-grid">
-      <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectionRate||0}<span class="card-unit">%</span></div></div>
-      <div class="summary-card cancel"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${Math.round(p.rejectionCount||0)}<span class="card-unit">건</span></div></div>
-      <div class="summary-card assign"><div class="card-label">📦 오늘배정물량</div><div class="card-value" style="color:#00c3ff">${Math.round(p.scheduledCount||0)}<span class="card-unit">건</span></div></div>
-    </div>
-    <div class="sub-info">
-      <span>처리 ${Math.round(p.processingCount||0)}건</span>
-      <span>전체수행률 ${p.overallRate||0}%</span>
-    </div>
-
-    <div class="section-title">라이더별 현황</div>
-    <div class="rider-list">${cards||'<div style="color:#555;padding:10px 16px;font-size:12px">라이더 데이터 없음</div>'}</div>`;
+    <div class="section-title" id="riderSection" style="display:none">라이더별 현황</div>
+<div class="rider-list" id="riderList" style="display:none">${cards||'<div style="color:#555;padding:10px 16px;font-size:12px">라이더 데이터 없음</div>'}</div>`;
 }
 
 loadData();
+  function toggleRiderList() {
+  const s = document.getElementById('riderSection');
+  const l = document.getElementById('riderList');
+  if (!s || !l) return;
+  const show = s.style.display === 'none';
+  s.style.display = show ? 'block' : 'none';
+  l.style.display = show ? 'block' : 'none';
+}
 </script>
 </body>
 </html>
