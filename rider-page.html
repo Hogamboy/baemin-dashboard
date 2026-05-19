@@ -7,42 +7,41 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Noto Sans KR',sans-serif;background:#0f1117;color:#f0f0f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px}
+    body{font-family:'Noto Sans KR',sans-serif;background:#0f1117;color:#f0f0f0;min-height:100vh;padding-bottom:80px}
 
-    /* 로그인 화면 */
-    .login-wrap{width:100%;max-width:400px;margin-top:40px}
+    /* 로그인 */
+    .login-wrap{width:100%;max-width:400px;margin:40px auto;padding:0 16px}
     .login-logo{text-align:center;margin-bottom:32px}
     .login-logo .icon{width:60px;height:60px;background:linear-gradient(135deg,#00c3ff,#0077ff);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
-    .login-logo h1{font-size:20px;font-weight:700;color:#fff}
+    .login-logo h1{font-size:20px;font-weight:700}
     .login-logo p{font-size:12px;color:#666;margin-top:4px}
-
     .login-card{background:#1a1d27;border-radius:16px;padding:28px 24px;border:1px solid #ffffff0d}
     .input-group{margin-bottom:16px}
     .input-group label{display:block;font-size:12px;color:#888;margin-bottom:6px;font-weight:500}
-    .input-group input{width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;font-family:'Noto Sans KR',sans-serif;padding:14px 16px;outline:none;transition:border-color 0.2s}
+    .input-group input{width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;font-family:'Noto Sans KR',sans-serif;padding:14px 16px;outline:none}
     .input-group input:focus{border-color:#00c3ff55}
-    .input-group input::placeholder{color:#444}
-    .login-btn{width:100%;background:linear-gradient(135deg,#00c3ff,#0077ff);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:15px;cursor:pointer;margin-top:8px;transition:opacity 0.2s}
-    .login-btn:hover{opacity:0.85}
-    .login-btn:disabled{opacity:0.4;cursor:not-allowed}
+    .login-btn{width:100%;background:linear-gradient(135deg,#00c3ff,#0077ff);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:15px;cursor:pointer;margin-top:8px}
+    .login-btn:disabled{opacity:0.4}
     .login-error{color:#ff5252;font-size:12px;text-align:center;margin-top:12px;min-height:18px}
 
-    /* 대시보드 화면 */
-    .dashboard-wrap{width:100%;max-width:480px;display:none}
-
-    .dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    /* 대시보드 */
+    .dashboard-wrap{width:100%;max-width:480px;margin:0 auto;display:none;padding:0 16px}
+    .dash-header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px}
     .dash-header h2{font-size:18px;font-weight:700}
     .dash-header .sub{font-size:11px;color:#666;margin-top:2px}
     .logout-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#888;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer}
 
-    /* 완료율 큰 카드 */
+    /* 탭 */
+    .tab-bar{display:flex;background:#13161f;border-radius:12px;padding:4px;margin-bottom:16px;gap:4px}
+    .tab-btn{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:transparent;color:#666;transition:all 0.2s}
+    .tab-btn.active{background:#1a1d27;color:#00c3ff}
+
+    /* 실적 현황 */
     .rate-card{background:#1a1d27;border-radius:16px;padding:20px;margin-bottom:12px;border:1px solid #ffffff0d;text-align:center;position:relative;overflow:hidden}
     .rate-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00c3ff,#00e676)}
     .rate-label{font-size:11px;color:#888;margin-bottom:8px}
     .rate-value{font-size:48px;font-weight:900;color:#00e676;line-height:1}
     .rate-sub{font-size:12px;color:#555;margin-top:6px}
-
-    /* 3개 요약 카드 */
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
     .summary-card{background:#1a1d27;border-radius:12px;padding:16px 10px;text-align:center;border:1px solid #ffffff0d;position:relative;overflow:hidden}
     .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
@@ -55,35 +54,65 @@
     .summary-card.reject .s-value{color:#ff5252}
     .summary-card.cancel .s-value{color:#ffd740}
     .s-unit{font-size:11px;font-weight:500}
-
-    /* 거절율 카드 */
     .reject-rate-card{background:#1a1d27;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #ff525222;display:flex;align-items:center;justify-content:space-between}
     .rr-label{font-size:12px;color:#888}
     .rr-value{font-size:28px;font-weight:900;color:#ff5252}
-
-    /* 수행건수 */
     .perform-card{background:#13161f;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #ffffff08;display:flex;align-items:center;justify-content:space-between}
     .perf-label{font-size:12px;color:#666}
     .perf-value{font-size:22px;font-weight:900;color:#aaa}
-    .perf-unit{font-size:12px;color:#555}
-
-    /* 시간대별 */
     .section-title{font-size:11px;color:#555;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
-    .peak-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+    .peak-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
     .peak-card{background:#1a1d27;border-radius:12px;padding:16px 10px;text-align:center;border:1px solid #ffffff08;position:relative;overflow:hidden}
     .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#00c3ff,#0077ff)}
     .peak-emoji{font-size:20px;margin-bottom:6px}
-    .peak-label{font-size:10px;color:#666;margin-bottom:4px}
+    .peak-label-txt{font-size:10px;color:#666;margin-bottom:4px}
     .peak-value{font-size:28px;font-weight:900;color:#00c3ff}
     .peak-unit{font-size:11px;color:#444}
 
+    /* 주간기록 탭 */
+    .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .week-nav-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#aaa;font-size:18px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .week-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+    .week-title{font-size:13px;font-weight:700;color:#fff;text-align:center}
+    .week-title .sub{font-size:11px;color:#666;margin-top:2px}
+
+    /* 순위 카드 */
+    .rank-card{background:linear-gradient(135deg,#1a1d27,#13161f);border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid #00c3ff22;display:flex;align-items:center;gap:16px}
+    .rank-badge{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#00c3ff,#0077ff);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .rank-num{font-size:22px;font-weight:900;color:#fff}
+    .rank-label{font-size:11px;color:#888;margin-bottom:4px}
+    .rank-info{font-size:20px;font-weight:900;color:#00c3ff}
+    .rank-total{font-size:13px;color:#555}
+
+    /* 주간 합계 */
+    .week-summary{background:#1a1d27;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #ffffff0d}
+    .week-summary-title{font-size:11px;color:#555;font-weight:700;margin-bottom:12px}
+    .week-stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+    .week-stat{text-align:center}
+    .week-stat-label{font-size:9px;color:#666;margin-bottom:4px}
+    .week-stat-value{font-size:16px;font-weight:900}
+    .wsc{color:#00e676}.wsr{color:#ff5252}.wsca{color:#ffd740}.wscr{color:#00c3ff}.wsrr{color:#ff7043}
+
+    /* 일별 기록 */
+    .day-list{display:flex;flex-direction:column;gap:8px}
+    .day-card{background:#1a1d27;border-radius:12px;padding:14px 16px;border:1px solid #ffffff08}
+    .day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .day-name{font-size:13px;font-weight:700;color:#fff}
+    .day-rate{font-size:13px;font-weight:900;color:#00e676}
+    .day-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+    .day-stat{text-align:center}
+    .day-stat-label{font-size:9px;color:#666}
+    .day-stat-value{font-size:14px;font-weight:700}
+    .dsc{color:#00e676}.dsr{color:#ff5252}.dsca{color:#ffd740}.dsrr{color:#ff7043}
+
+    .no-data{text-align:center;padding:40px 20px;color:#555;font-size:13px}
     .timestamp{font-size:10px;color:#444;text-align:center;padding:8px 0 16px}
-    .loading-msg{color:#555;font-size:13px;text-align:center;margin-top:12px}
+    .loading-msg{color:#555;font-size:13px;text-align:center;margin-top:40px}
   </style>
 </head>
 <body>
 
-<!-- 로그인 화면 -->
+<!-- 로그인 -->
 <div class="login-wrap" id="loginWrap">
   <div class="login-logo">
     <div class="icon">🛵</div>
@@ -104,7 +133,7 @@
   </div>
 </div>
 
-<!-- 대시보드 화면 -->
+<!-- 대시보드 -->
 <div class="dashboard-wrap" id="dashWrap">
   <div class="dash-header">
     <div>
@@ -113,26 +142,52 @@
     </div>
     <button class="logout-btn" onclick="doLogout()">로그아웃</button>
   </div>
-  <div id="dashContent"></div>
+
+  <!-- 탭 -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab1" onclick="switchTab(1)">📊 실적 현황</button>
+    <button class="tab-btn" id="tab2" onclick="switchTab(2)">📅 주간 기록</button>
+  </div>
+
+  <!-- 실적 현황 탭 -->
+  <div id="tabContent1">
+    <div id="dashContent"></div>
+  </div>
+
+  <!-- 주간 기록 탭 -->
+  <div id="tabContent2" style="display:none">
+    <div class="week-nav">
+      <button class="week-nav-btn" id="btnPrevWeek" onclick="changeWeek(-1)">&#8249;</button>
+      <div style="text-align:center">
+        <div class="week-title" id="weekTitle">-</div>
+        <div style="font-size:11px;color:#666;margin-top:2px" id="weekDateRange">-</div>
+      </div>
+      <button class="week-nav-btn" id="btnNextWeek" onclick="changeWeek(1)">&#8250;</button>
+    </div>
+    <div id="weekContent"><div class="loading-msg">데이터 불러오는 중...</div></div>
+  </div>
 </div>
 
 <script>
-const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/baeminData.json";
+const FIREBASE_URL         = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/baeminData.json";
+const FIREBASE_HISTORY_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/riderHistory.json";
 
-// 엔터키 로그인
-document.getElementById("inputPhone").addEventListener("keydown", e => {
-  if (e.key === "Enter") doLogin();
-});
-document.getElementById("inputName").addEventListener("keydown", e => {
-  if (e.key === "Enter") document.getElementById("inputPhone").focus();
-});
+let currentRider    = null;
+let currentRiderKey = null;
+let historyData     = null;
+let currentWeekOffset = 0; // 0=이번주, -1=지난주, ...
+const MAX_WEEKS = 3; // 최대 3주 전까지 (총 4주)
 
-// 저장된 로그인 정보 확인
+// 엔터키
+document.getElementById("inputPhone").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
+document.getElementById("inputName").addEventListener("keydown",  e => { if(e.key==="Enter") document.getElementById("inputPhone").focus(); });
+
+// 자동 로그인
 window.onload = () => {
   const saved = localStorage.getItem("riderLogin");
   if (saved) {
     const { name, phone } = JSON.parse(saved);
-    document.getElementById("inputName").value = name;
+    document.getElementById("inputName").value  = name;
     document.getElementById("inputPhone").value = phone;
     doLogin(true);
   }
@@ -142,51 +197,47 @@ async function doLogin(auto = false) {
   const name  = document.getElementById("inputName").value.trim();
   const phone = document.getElementById("inputPhone").value.trim().replace(/[-\s]/g, "");
   const errEl = document.getElementById("loginError");
-
-  if (!name) { errEl.textContent = "이름을 입력해주세요."; return; }
-  if (!phone || phone.length < 10) { errEl.textContent = "전화번호를 확인해주세요."; return; }
-
+  if (!name)                    { errEl.textContent = "이름을 입력해주세요."; return; }
+  if (!phone || phone.length<10){ errEl.textContent = "전화번호를 확인해주세요."; return; }
   errEl.textContent = "";
-  document.getElementById("loginBtn").disabled = true;
+  document.getElementById("loginBtn").disabled    = true;
   document.getElementById("loginBtn").textContent = "조회 중...";
 
   try {
-    const res = await fetch(FIREBASE_URL);
-    if (!res.ok) throw new Error("데이터 로드 실패");
+    const res  = await fetch(FIREBASE_URL);
     const data = await res.json();
-
     if (!data || !data.riders) throw new Error("데이터 없음");
 
-    // 이름 + 전화번호 매칭 (마스킹된 번호와 비교)
-    // 입력: 01012345678 → 마스킹: 010-****-5678 → 뒤 4자리로 비교
     const phoneLast4 = phone.slice(-4);
     const rider = data.riders.find(r => {
-      const rName     = r.name?.trim();
-      const rPhoneLast4 = r.phone?.replace(/[-\s]/g, "").slice(-4);
+      const rName      = r.name ? r.name.trim() : "";
+      const rPhoneLast4 = r.phone ? r.phone.replace(/[-\s]/g,"").slice(-4) : "";
       return rName === name && rPhoneLast4 === phoneLast4;
     });
 
     if (!rider) {
       errEl.textContent = "이름 또는 전화번호가 일치하지 않아요.";
-      document.getElementById("loginBtn").disabled = false;
-      document.getElementById("loginBtn").textContent = "확인";
       return;
     }
 
-    // 로그인 정보 저장
     localStorage.setItem("riderLogin", JSON.stringify({ name, phone }));
+    currentRider    = rider;
+    currentRiderKey = rider.name.replace(/[.#$\[\]/]/g, "_");
 
-    // 화면 전환
     document.getElementById("loginWrap").style.display = "none";
-    document.getElementById("dashWrap").style.display = "block";
-    document.getElementById("riderName").textContent = rider.name + " 기사님";
-    document.getElementById("lastUpdate").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
+    document.getElementById("dashWrap").style.display  = "block";
+    document.getElementById("riderName").textContent   = rider.name + " 기사님";
+    document.getElementById("lastUpdate").textContent  = "마지막 업데이트: " + (data.scrapedAt || "-");
 
     renderRider(rider);
+
+    // 히스토리 미리 로드
+    loadHistory();
+
   } catch(e) {
     errEl.textContent = "오류: " + e.message;
   } finally {
-    document.getElementById("loginBtn").disabled = false;
+    document.getElementById("loginBtn").disabled    = false;
     document.getElementById("loginBtn").textContent = "확인";
   }
 }
@@ -196,8 +247,8 @@ function renderRider(r) {
   const reject   = r.reject   || 0;
   const cancel   = r.cancel   || 0;
   const total    = complete + reject + cancel;
-  const completeRate = total > 0 ? ((complete / total) * 100).toFixed(1) : "0.0";
-  const rejectRate   = total > 0 ? (((reject + cancel) / total) * 100).toFixed(1) : "0.0";
+  const completeRate = total > 0 ? ((complete/total)*100).toFixed(1) : "0.0";
+  const rejectRate   = total > 0 ? (((reject+cancel)/total)*100).toFixed(1) : "0.0";
 
   document.getElementById("dashContent").innerHTML = `
     <div class="rate-card">
@@ -205,55 +256,263 @@ function renderRider(r) {
       <div class="rate-value">${completeRate}<span style="font-size:22px;font-weight:500;color:#00b359">%</span></div>
       <div class="rate-sub">수행건수 ${total}건 기준</div>
     </div>
-
     <div class="summary-grid">
       <div class="summary-card complete"><div class="s-label">완료</div><div class="s-value">${complete}<span class="s-unit">건</span></div></div>
       <div class="summary-card reject"><div class="s-label">거절</div><div class="s-value">${reject}<span class="s-unit">건</span></div></div>
       <div class="summary-card cancel"><div class="s-label">배차취소</div><div class="s-value">${cancel}<span class="s-unit">건</span></div></div>
     </div>
-
     <div class="reject-rate-card">
       <div class="rr-label">❌ 거절율</div>
       <div class="rr-value">${rejectRate}<span style="font-size:14px;font-weight:500">%</span></div>
     </div>
-
     <div class="perform-card">
       <div class="perf-label">📦 수행건수</div>
-      <div class="perf-value">${total}<span class="perf-unit"> 건</span></div>
+      <div class="perf-value">${total}<span style="font-size:12px;color:#555"> 건</span></div>
     </div>
-
     <div class="section-title">⏰ 시간대별 완료</div>
     <div class="peak-grid">
-      <div class="peak-card">
-        <div class="peak-emoji">🌅</div>
-        <div class="peak-label">아침점심피크</div>
-        <div class="peak-value">${r.morningPeak||0}<span class="peak-unit">건</span></div>
+      <div class="peak-card"><div class="peak-emoji">🌅</div><div class="peak-label-txt">아침점심피크</div><div class="peak-value">${r.morningPeak||0}<span class="peak-unit">건</span></div></div>
+      <div class="peak-card"><div class="peak-emoji">☀️</div><div class="peak-label-txt">오후논피크</div><div class="peak-value">${r.afternoonOff||0}<span class="peak-unit">건</span></div></div>
+      <div class="peak-card"><div class="peak-emoji">🌆</div><div class="peak-label-txt">저녁피크</div><div class="peak-value">${r.eveningPeak||0}<span class="peak-unit">건</span></div></div>
+      <div class="peak-card"><div class="peak-emoji">🌙</div><div class="peak-label-txt">심야논피크</div><div class="peak-value">${r.nightOff||0}<span class="peak-unit">건</span></div></div>
+    </div>`;
+}
+
+// ── 탭 전환 ──
+function switchTab(n) {
+  document.getElementById("tabContent1").style.display = n===1 ? "block" : "none";
+  document.getElementById("tabContent2").style.display = n===2 ? "block" : "none";
+  document.getElementById("tab1").classList.toggle("active", n===1);
+  document.getElementById("tab2").classList.toggle("active", n===2);
+  if (n===2 && historyData) renderWeek();
+}
+
+// ── 히스토리 로드 ──
+async function loadHistory() {
+  try {
+    const res  = await fetch(FIREBASE_HISTORY_URL);
+    historyData = await res.json();
+  } catch(e) {
+    historyData = null;
+  }
+}
+
+// ── 배민 운영 기준 주간 (수~화) 계산 ──
+// offset=0: 이번주, offset=-1: 지난주
+function getWeekRange(offset) {
+  const today = new Date();
+  const day   = today.getDay(); // 0=일, 1=월, 2=화, 3=수, ...
+
+  // 이번 주 수요일 찾기
+  let daysToWed = (day >= 3) ? day - 3 : day + 4;
+  const thisWed = new Date(today);
+  thisWed.setDate(today.getDate() - daysToWed + (offset * 7));
+  thisWed.setHours(0,0,0,0);
+
+  const thisTue = new Date(thisWed);
+  thisTue.setDate(thisWed.getDate() + 6);
+
+  return { start: thisWed, end: thisTue };
+}
+
+function formatDate(d) {
+  const y   = d.getFullYear();
+  const m   = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return y + "-" + m + "-" + day;
+}
+
+function formatDateKo(d) {
+  const m   = d.getMonth()+1;
+  const day = d.getDate();
+  const days = ["일","월","화","수","목","금","토"];
+  return m + "." + day + " (" + days[d.getDay()] + ")";
+}
+
+function changeWeek(dir) {
+  const newOffset = currentWeekOffset + dir;
+  if (newOffset > 0 || newOffset < -MAX_WEEKS) return;
+  currentWeekOffset = newOffset;
+  renderWeek();
+}
+
+// ── 주간 기록 렌더링 ──
+function renderWeek() {
+  const { start, end } = getWeekRange(currentWeekOffset);
+
+  // 네비게이션 버튼 상태
+  document.getElementById("btnPrevWeek").disabled = (currentWeekOffset <= -MAX_WEEKS);
+  document.getElementById("btnNextWeek").disabled = (currentWeekOffset >= 0);
+
+  // 주차 타이틀
+  const weekNum = Math.abs(currentWeekOffset);
+  document.getElementById("weekTitle").textContent =
+    currentWeekOffset === 0 ? "이번 주" : weekNum + "주 전";
+  document.getElementById("weekDateRange").textContent =
+    formatDateKo(start) + " ~ " + formatDateKo(end);
+
+  if (!historyData) {
+    document.getElementById("weekContent").innerHTML =
+      '<div class="no-data">📭 데이터가 없어요.<br>데이터는 매일 오전 5시에 저장됩니다.</div>';
+    return;
+  }
+
+  // 해당 주의 날짜들
+  const dates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    dates.push(formatDate(d));
+  }
+
+  // 기사 데이터 수집
+  const dayData = [];
+  dates.forEach(dateStr => {
+    const dayRec = historyData[dateStr];
+    if (!dayRec || !dayRec.riders) {
+      dayData.push(null);
+      return;
+    }
+    const riderRec = dayRec.riders[currentRiderKey];
+    dayData.push(riderRec || null);
+  });
+
+  // 주간 합계
+  let wComplete=0, wReject=0, wCancel=0, wTotal=0;
+  dayData.forEach(d => {
+    if (!d) return;
+    wComplete += d.complete || 0;
+    wReject   += d.reject   || 0;
+    wCancel   += d.cancel   || 0;
+    wTotal    += d.total    || 0;
+  });
+  const wCompleteRate = wTotal>0 ? ((wComplete/wTotal)*100).toFixed(1) : "-";
+  const wRejectRate   = wTotal>0 ? (((wReject+wCancel)/wTotal)*100).toFixed(1) : "-";
+
+  // 전체 기사 중 순위 계산 (이번 주만)
+  let rankHtml = "";
+  if (currentWeekOffset === 0) {
+    // 오늘 실시간 데이터 기반 순위
+    rankHtml = getRankHtml();
+  } else {
+    // 해당 주 합산 기반 순위
+    rankHtml = getHistoryRankHtml(dates, historyData);
+  }
+
+  // 일별 카드
+  const dayCards = dayData.map((d, i) => {
+    const dateStr = dates[i];
+    const dateObj = new Date(start);
+    dateObj.setDate(start.getDate() + i);
+    const dateLabel = formatDateKo(dateObj);
+
+    if (!d) {
+      return `<div class="day-card">
+        <div class="day-header">
+          <div class="day-name">${dateLabel}</div>
+          <div style="font-size:11px;color:#444">데이터 없음</div>
+        </div>
+      </div>`;
+    }
+
+    const complete = d.complete || 0;
+    const reject   = d.reject   || 0;
+    const cancel   = d.cancel   || 0;
+    const total    = d.total    || 0;
+    const cr = d.completeRate !== undefined ? d.completeRate.toFixed(1) : (total>0?((complete/total)*100).toFixed(1):"0.0");
+    const rr = d.rejectRate   !== undefined ? d.rejectRate.toFixed(1)   : (total>0?(((reject+cancel)/total)*100).toFixed(1):"0.0");
+
+    return `<div class="day-card">
+      <div class="day-header">
+        <div class="day-name">${dateLabel}</div>
+        <div class="day-rate">${cr}%</div>
       </div>
-      <div class="peak-card">
-        <div class="peak-emoji">☀️</div>
-        <div class="peak-label">오후논피크</div>
-        <div class="peak-value">${r.afternoonOff||0}<span class="peak-unit">건</span></div>
-      </div>
-      <div class="peak-card">
-        <div class="peak-emoji">🌆</div>
-        <div class="peak-label">저녁피크</div>
-        <div class="peak-value">${r.eveningPeak||0}<span class="peak-unit">건</span></div>
-      </div>
-      <div class="peak-card">
-        <div class="peak-emoji">🌙</div>
-        <div class="peak-label">심야논피크</div>
-        <div class="peak-value">${r.nightOff||0}<span class="peak-unit">건</span></div>
+      <div class="day-stats">
+        <div class="day-stat"><div class="day-stat-label">완료</div><div class="day-stat-value dsc">${complete}</div></div>
+        <div class="day-stat"><div class="day-stat-label">거절</div><div class="day-stat-value dsr">${reject}</div></div>
+        <div class="day-stat"><div class="day-stat-label">취소</div><div class="day-stat-value dsca">${cancel}</div></div>
+        <div class="day-stat"><div class="day-stat-label">거절율</div><div class="day-stat-value dsrr">${rr}%</div></div>
       </div>
     </div>`;
+  }).join("");
+
+  document.getElementById("weekContent").innerHTML = `
+    ${rankHtml}
+    <div class="week-summary">
+      <div class="week-summary-title">📊 주간 합계</div>
+      <div class="week-stat-grid">
+        <div class="week-stat"><div class="week-stat-label">완료</div><div class="week-stat-value wsc">${wComplete}</div></div>
+        <div class="week-stat"><div class="week-stat-label">거절</div><div class="week-stat-value wsr">${wReject}</div></div>
+        <div class="week-stat"><div class="week-stat-label">취소</div><div class="week-stat-value wsca">${wCancel}</div></div>
+        <div class="week-stat"><div class="week-stat-label">완료율</div><div class="week-stat-value wscr">${wCompleteRate}%</div></div>
+        <div class="week-stat"><div class="week-stat-label">거절율</div><div class="week-stat-value wsrr">${wRejectRate}%</div></div>
+      </div>
+    </div>
+    <div class="section-title" style="margin-bottom:8px">📅 일별 기록</div>
+    <div class="day-list">${dayCards}</div>`;
+}
+
+// ── 실시간 데이터 기반 순위 (오늘) ──
+function getRankHtml() {
+  // 실적 현황 탭의 데이터 재활용 불가 → 별도 fetch 필요하지만
+  // 로그인 시 이미 riders 데이터가 없으므로 표시 안 함
+  // 히스토리 기반으로만 순위 계산
+  return "";
+}
+
+// ── 히스토리 기반 순위 계산 ──
+function getHistoryRankHtml(dates, history) {
+  if (!history) return "";
+
+  // 모든 기사의 주간 합산
+  const riderTotals = {};
+  dates.forEach(dateStr => {
+    const dayRec = history[dateStr];
+    if (!dayRec || !dayRec.riders) return;
+    Object.keys(dayRec.riders).forEach(key => {
+      const r = dayRec.riders[key];
+      if (!riderTotals[key]) riderTotals[key] = { name: r.name, complete:0, total:0 };
+      riderTotals[key].complete += r.complete || 0;
+      riderTotals[key].total   += r.total    || 0;
+    });
+  });
+
+  if (Object.keys(riderTotals).length === 0) return "";
+
+  // 완료율 기준 정렬
+  const sorted = Object.entries(riderTotals)
+    .map(([key, v]) => ({
+      key,
+      name:         v.name,
+      completeRate: v.total>0 ? (v.complete/v.total)*100 : 0,
+    }))
+    .sort((a,b) => b.completeRate - a.completeRate);
+
+  const myIdx = sorted.findIndex(r => r.key === currentRiderKey);
+  if (myIdx === -1) return "";
+
+  const rank  = myIdx + 1;
+  const total = sorted.length;
+  const emoji = rank===1 ? "🥇" : rank===2 ? "🥈" : rank===3 ? "🥉" : "🏅";
+
+  return `<div class="rank-card">
+    <div class="rank-badge"><div class="rank-num">${emoji}</div></div>
+    <div>
+      <div class="rank-label">완료율 기준 순위</div>
+      <div class="rank-info">${rank}위 <span style="font-size:14px;color:#555">/ ${total}명</span></div>
+      <div style="font-size:11px;color:#666;margin-top:3px">완료율 ${sorted[myIdx].completeRate.toFixed(1)}%</div>
+    </div>
+  </div>`;
 }
 
 function doLogout() {
   localStorage.removeItem("riderLogin");
   document.getElementById("loginWrap").style.display = "block";
-  document.getElementById("dashWrap").style.display = "none";
-  document.getElementById("inputName").value = "";
+  document.getElementById("dashWrap").style.display  = "none";
+  document.getElementById("inputName").value  = "";
   document.getElementById("inputPhone").value = "";
   document.getElementById("loginError").textContent = "";
+  currentRider = null; historyData = null; currentWeekOffset = 0;
 }
 </script>
 </body>
