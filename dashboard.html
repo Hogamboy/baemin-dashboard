@@ -240,6 +240,20 @@ function render(data) {
   const sv = (v,cls,label) =>
     `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v}</div><div class="stat-label">${label}</div></div>`;
 
+  const rejectRateColor = (rate) => {
+    if (rate >= 20) return "#ff5252";
+    if (rate >= 10) return "#ffd740";
+    return "#00e676";
+  };
+
+  const svRate = (rate) =>
+    `<div class="stat-item"><div class="stat-val" style="color:${rejectRateColor(rate)}">${rate}%</div><div class="stat-label">거절율</div></div>`;
+
+  const calcRejectRate = (r) => {
+    const t = (r.complete||0)+(r.reject||0)+(r.cancel||0);
+    return t > 0 ? Math.round(((r.reject+r.cancel)/t)*1000)/10 : 0;
+  };
+
   const cards = data.riders.map(r => {
     const isActive = r.statusCode==="DELIVERING"||r.status?.includes("운행중");
     return `<div class="rider-card">
@@ -249,6 +263,7 @@ function render(data) {
         ${sv(r.complete,"stat-complete","완료")}
         ${sv(r.reject,"stat-reject","거절")}
         ${sv(r.cancel,"stat-cancel","배차취소")}
+        ${svRate(calcRejectRate(r))}
       </div></div>`;
   }).join("");
 
@@ -270,6 +285,7 @@ function render(data) {
         ${sv(r.complete,"stat-complete","완료")}
         ${sv(r.reject,"stat-reject","거절")}
         ${sv(r.cancel,"stat-cancel","배차취소")}
+        ${svRate(calcRejectRate(r))}
       </div></div>`;
   }).join("");
 
