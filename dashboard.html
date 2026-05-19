@@ -348,6 +348,15 @@ function render(data) {
       <div class="summary-card reject"><div class="card-label">❌ 거절</div><div class="card-value">${s.reject||0}<span class="card-unit">건</span></div></div>
       <div class="summary-card cancel"><div class="card-label">⚡ 배차취소</div><div class="card-value">${s.cancel||0}<span class="card-unit">건</span></div></div>
     </div>
+    <div class="bar-wrap">
+      <div class="bar-segment bar-complete" style="width:${pct(s.complete)}%"></div>
+      <div class="bar-segment bar-reject"   style="width:${pct(s.reject)}%"></div>
+      <div class="bar-segment bar-cancel"   style="width:${pct(s.cancel)}%"></div>
+    </div>
+    <div class="bar-legend">
+      <span><span class="legend-dot" style="background:#00e676"></span>완료 ${pct(s.complete)}%</span>
+      <span><span class="legend-dot" style="background:#ff5252"></span>거절율 ${rejectPct}%</span>
+    </div>
      <div class="active-banner" onclick="toggleRiderList()" style="cursor:pointer">
       <div class="active-main">
         <div class="active-dot"></div>
@@ -358,15 +367,7 @@ function render(data) {
       </div>
       <div class="active-names">${nameTags||'<span style="color:#444;font-size:11px">운행중 없음</span>'}</div>
     </div>
-    <div class="bar-wrap">
-      <div class="bar-segment bar-complete" style="width:${pct(s.complete)}%"></div>
-      <div class="bar-segment bar-reject"   style="width:${pct(s.reject)}%"></div>
-      <div class="bar-segment bar-cancel"   style="width:${pct(s.cancel)}%"></div>
-    </div>
-    <div class="bar-legend">
-      <span><span class="legend-dot" style="background:#00e676"></span>완료 ${pct(s.complete)}%</span>
-      <span><span class="legend-dot" style="background:#ff5252"></span>거절율 ${rejectPct}%</span>
-    </div>
+    
     <div class="section-title" id="riderSection" style="display:none">라이더별 현황</div>
     <div class="rider-list" id="riderList" style="display:none">${sortedCards}</div>`;
 }
