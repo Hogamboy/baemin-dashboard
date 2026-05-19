@@ -176,7 +176,7 @@ function render(data) {
     <div class="section-title">⏰ 피크타임별 현황</div>
     <div class="peak-grid">${peakCards||'<div style="color:#555;padding:10px 16px;font-size:12px">피크 데이터 없음</div>'}</div>
 
-//거절률, 거절수, 오늘배정물량 카드
+<!-- 거절률, 거절수, 오늘배정물량 카드 -->
       <div class="summary-grid">
       <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectionRate||0}<span class="card-unit">%</span></div></div>
       <div class="summary-card cancel"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${Math.round(p.rejectionCount||0)}<span class="card-unit">건</span></div></div>
