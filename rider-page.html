@@ -296,23 +296,15 @@ async function loadHistory() {
     historyData = null;
   }
 }
-
-// ── 배민 운영 기준 주간 (수~화) 계산 ──
-// offset=0: 이번주, offset=-1: 지난주
+// ── 최근 7일 기준 주간 계산 ──
 function getWeekRange(offset) {
   const today = new Date();
-  const day   = today.getDay(); // 0=일, 1=월, 2=화, 3=수, ...
-
-  // 이번 주 수요일 찾기
-  let daysToWed = (day >= 3) ? day - 3 : day + 4;
-  const thisWed = new Date(today);
-  thisWed.setDate(today.getDate() - daysToWed + (offset * 7));
-  thisWed.setHours(0,0,0,0);
-
-  const thisTue = new Date(thisWed);
-  thisTue.setDate(thisWed.getDate() + 6);
-
-  return { start: thisWed, end: thisTue };
+  today.setHours(0,0,0,0);
+  const end = new Date(today);
+  end.setDate(today.getDate() + (offset * 7));
+  const start = new Date(end);
+  start.setDate(end.getDate() - 6);
+  return { start, end };
 }
 
 function formatDate(d) {
