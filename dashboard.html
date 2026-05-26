@@ -218,8 +218,9 @@ document.getElementById("setsInput").addEventListener("change", (e) => {
 });
 
 async function loadData() {
+  if (!currentCenterId) return;
   try {
-    const res = await fetch(FIREBASE_URL);
+    const res = await fetch(getFirebaseUrl()); 
     if (!res.ok) throw new Error("응답 오류 " + res.status);
     const data = await res.json();
     if (!data || !data.riders) throw new Error("데이터 없음");
