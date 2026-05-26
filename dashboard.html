@@ -107,10 +107,12 @@
   </div>
   <div class="control-bar">
     <div class="sets-wrap">
-      <span class="sets-label">세트수</span>
-      <input type="number" class="sets-input" id="setsInput" value="3" min="1" max="10" />
-      <span class="sets-unit">세트</span>
-    </div>
+  <span class="sets-label">세트수</span>
+  <button onclick="changeSets(-1)" style="background:#1a1d27;border:1px solid #ffffff22;border-radius:6px;color:#aaa;font-size:14px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center">▼</button>
+  <input type="number" class="sets-input" id="setsInput" value="3" min="1" max="10" />
+  <button onclick="changeSets(1)" style="background:#1a1d27;border:1px solid #ffffff22;border-radius:6px;color:#aaa;font-size:14px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center">▲</button>
+  <span class="sets-unit">세트</span>
+</div>
     <div class="divider"></div>
     <div class="day-btns">
       <button class="day-btn" data-day="weekday">평일</button>
@@ -240,7 +242,13 @@ function peakBar(val, goal) {
   return `<div class="peak-bar-wrap"><div class="peak-bar" style="width:${pct.toFixed(0)}%;background:${color}"></div></div>
           <div class="peak-pct">${pct.toFixed(0)}%</div>`;
 }
-
+function changeSets(dir) {
+  const input = document.getElementById("setsInput");
+  const newVal = Math.min(10, Math.max(1, (parseInt(input.value)||1) + dir));
+  input.value = newVal;
+  currentSets = newVal;
+  if (lastData) render(lastData);
+}
 function render(data) {
   const s = data.summary || {};
   const goals = getGoals(currentDayType, currentSets);
