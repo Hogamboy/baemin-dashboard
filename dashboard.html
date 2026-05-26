@@ -448,7 +448,7 @@ function copyStatus() {
   const timeStr = now.toLocaleTimeString("ko-KR", {hour:"2-digit",minute:"2-digit"});
 
   const text = `[${centerName}] ${timeStr} 기준
-완료 ${s.complete||0}건 | ${peakLabel} 목표 ${peakGoal}건 | 접속 ${active}명 | 잔여 ${remain}건`;
+${peakLabel} 완료 ${peakDone}건 | 목표 ${peakGoal}건 | 잔여 ${remain}건 | 접속 ${active}명`;
 
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById("copyBtn");
