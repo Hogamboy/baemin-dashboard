@@ -452,7 +452,8 @@ function copyStatus() {
   else                               { peakLabel="심야논피크"; peakDone=s.nightOff||0;     peakGoal=goals.nightOff; }
   const remain = Math.max(0, peakGoal - peakDone);
   const active = lastData.activeCount ?? 0;
-  const centerName = document.title || BAEMIN_CENTERS[currentCenterId] || currentCenterId;
+  const centerName = (document.title || BAEMIN_CENTERS[currentCenterId] || currentCenterId)
+  .replace(/\s*\(DP\d+\)/i, "");
   const timeStr = now.toLocaleTimeString("ko-KR", {hour:"2-digit",minute:"2-digit"});
 
   const text = `[${centerName}] ${timeStr} 기준
