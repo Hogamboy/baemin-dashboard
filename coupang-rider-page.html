@@ -8,8 +8,6 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Noto Sans KR',sans-serif;background:#0f1117;color:#f0f0f0;min-height:100vh;padding-bottom:80px}
-
-    /* 로그인 */
     .login-wrap{width:100%;max-width:400px;margin:40px auto;padding:0 16px}
     .login-logo{text-align:center;margin-bottom:32px}
     .login-logo .icon{width:60px;height:60px;background:linear-gradient(135deg,#e74c3c,#c0392b);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
@@ -18,51 +16,35 @@
     .login-card{background:#1a1d27;border-radius:16px;padding:28px 24px;border:1px solid #ffffff0d}
     .input-group{margin-bottom:16px}
     .input-group label{display:block;font-size:12px;color:#888;margin-bottom:6px;font-weight:500}
-    .input-group input{width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;font-family:'Noto Sans KR',sans-serif;padding:14px 16px;outline:none}
-    .input-group input:focus{border-color:#e74c3c55}
+    .input-group input, .input-group select{width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;font-family:'Noto Sans KR',sans-serif;padding:14px 16px;outline:none}
+    .input-group input:focus, .input-group select:focus{border-color:#e74c3c55}
     .login-btn{width:100%;background:linear-gradient(135deg,#e74c3c,#c0392b);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:15px;cursor:pointer;margin-top:8px}
     .login-btn:disabled{opacity:0.4}
     .login-error{color:#ff5252;font-size:12px;text-align:center;margin-top:12px;min-height:18px}
-
-    /* 대시보드 */
     .dashboard-wrap{width:100%;max-width:480px;margin:0 auto;display:none;padding:0 16px}
     .dash-header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px}
     .dash-header h2{font-size:18px;font-weight:700}
     .dash-header .sub{font-size:11px;color:#666;margin-top:2px}
     .logout-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#888;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer}
-
-    /* 탭 */
     .tab-bar{display:flex;background:#13161f;border-radius:12px;padding:4px;margin-bottom:16px;gap:4px}
     .tab-btn{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:transparent;color:#666;transition:all 0.2s}
     .tab-btn.active{background:#1a1d27;color:#e74c3c}
-
-    /* 실적 현황 */
     .rate-card{background:#1a1d27;border-radius:16px;padding:20px;margin-bottom:12px;border:1px solid #ffffff0d;text-align:center;position:relative;overflow:hidden}
     .rate-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#e74c3c,#ff8a65)}
     .rate-label{font-size:11px;color:#888;margin-bottom:8px}
     .rate-value{font-size:48px;font-weight:900;color:#00e676;line-height:1}
     .rate-sub{font-size:12px;color:#555;margin-top:6px}
-
-    /* 거절율 카드 */
     .reject-rate-card{background:#1a1d27;border-radius:12px;padding:14px 16px;margin-bottom:12px;border:1px solid #ff525222;display:flex;align-items:center;justify-content:space-between}
     .rr-label{font-size:12px;color:#888}
     .rr-value{font-size:28px;font-weight:900;color:#ff5252}
-
- 
-    /* 주간기록 탭 */
     .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
     .week-nav-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#aaa;font-size:18px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center}
     .week-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
     .week-title{font-size:13px;font-weight:700;color:#fff;text-align:center}
-
-    /* 순위 카드 */
     .rank-card{background:linear-gradient(135deg,#1a1d27,#13161f);border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid #e74c3c22;display:flex;align-items:center;gap:16px}
     .rank-badge{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#e74c3c,#c0392b);display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .rank-num{font-size:22px;font-weight:900;color:#fff}
-    .rank-label{font-size:11px;color:#888;margin-bottom:4px}
     .rank-info{font-size:20px;font-weight:900;color:#e74c3c}
-
-    /* 주간 합계 */
     .week-summary{background:#1a1d27;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #ffffff0d}
     .week-summary-title{font-size:11px;color:#555;font-weight:700;margin-bottom:12px}
     .week-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
@@ -70,8 +52,6 @@
     .week-stat-label{font-size:9px;color:#666;margin-bottom:4px}
     .week-stat-value{font-size:20px;font-weight:900}
     .wscr{color:#00e676}.wsrr{color:#ff5252}
-
-    /* 일별 기록 */
     .day-list{display:flex;flex-direction:column;gap:8px}
     .day-card{background:#1a1d27;border-radius:12px;padding:14px 16px;border:1px solid #ffffff08}
     .day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -82,15 +62,12 @@
     .day-stat-label{font-size:9px;color:#666}
     .day-stat-value{font-size:14px;font-weight:700}
     .dscr{color:#00e676}.dsrr{color:#ff5252}
-
     .no-data{text-align:center;padding:40px 20px;color:#555;font-size:13px}
-    .timestamp{font-size:10px;color:#444;text-align:center;padding:8px 0 16px}
     .loading-msg{color:#555;font-size:13px;text-align:center;margin-top:40px}
   </style>
 </head>
 <body>
 
-<!-- 로그인 -->
 <div class="login-wrap" id="loginWrap">
   <div class="login-logo">
     <div class="icon">🚀</div>
@@ -98,6 +75,15 @@
     <p>쿠팡이츠 파트너</p>
   </div>
   <div class="login-card">
+    <div class="input-group">
+      <label>센터</label>
+      <select id="inputCenter">
+        <option value="">-- 센터 선택 --</option>
+        <option value="coconut_bear">🥥 코코넛 베어</option>
+        <option value="kiwi_squirrel">🥝 키위 다람쥐</option>
+        <option value="peach_tiger">🍑 피치 타이거</option>
+      </select>
+    </div>
     <div class="input-group">
       <label>이름</label>
       <input type="text" id="inputName" placeholder="홍길동" />
@@ -111,7 +97,6 @@
   </div>
 </div>
 
-<!-- 대시보드 -->
 <div class="dashboard-wrap" id="dashWrap">
   <div class="dash-header">
     <div>
@@ -120,19 +105,11 @@
     </div>
     <button class="logout-btn" onclick="doLogout()">로그아웃</button>
   </div>
-
-  <!-- 탭 -->
   <div class="tab-bar">
     <button class="tab-btn active" id="tab1" onclick="switchTab(1)">📊 실적 현황</button>
     <button class="tab-btn" id="tab2" onclick="switchTab(2)">📅 주간 기록</button>
   </div>
-
-  <!-- 실적 현황 탭 -->
-  <div id="tabContent1">
-    <div id="dashContent"></div>
-  </div>
-
-  <!-- 주간 기록 탭 -->
+  <div id="tabContent1"><div id="dashContent"></div></div>
   <div id="tabContent2" style="display:none">
     <div class="week-nav">
       <button class="week-nav-btn" id="btnPrevWeek" onclick="changeWeek(-1)">&#8249;</button>
@@ -147,34 +124,41 @@
 </div>
 
 <script>
-const FIREBASE_URL         = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/coupangData.json";
-const FIREBASE_HISTORY_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/riderHistory.json";
+const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
+const COUPANG_CENTERS = {
+  coconut_bear:  "코코넛 베어",
+  kiwi_squirrel: "키위 다람쥐",
+  peach_tiger:   "피치 타이거",
+};
 
-let currentRider    = null;
-let currentRiderKey = null;
-let historyData     = null;
+let currentRider      = null;
+let currentRiderKey   = null;
+let currentCenterId   = null;
+let historyData       = null;
 let currentWeekOffset = 0;
 const MAX_WEEKS = 3;
 
-// 엔터키
 document.getElementById("inputPhone").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
 document.getElementById("inputName").addEventListener("keydown",  e => { if(e.key==="Enter") document.getElementById("inputPhone").focus(); });
 
-// 자동 로그인
 window.onload = () => {
   const saved = localStorage.getItem("coupangRiderLogin");
   if (saved) {
-    const { name, phone } = JSON.parse(saved);
+    const { name, phone, centerId } = JSON.parse(saved);
     document.getElementById("inputName").value  = name;
     document.getElementById("inputPhone").value = phone;
+    if (centerId) document.getElementById("inputCenter").value = centerId;
     doLogin(true);
   }
 };
 
 async function doLogin(auto = false) {
-  const name  = document.getElementById("inputName").value.trim();
-  const phone = document.getElementById("inputPhone").value.trim().replace(/[-\s]/g, "");
-  const errEl = document.getElementById("loginError");
+  const centerId = document.getElementById("inputCenter").value;
+  const name     = document.getElementById("inputName").value.trim();
+  const phone    = document.getElementById("inputPhone").value.trim().replace(/[-\s]/g, "");
+  const errEl    = document.getElementById("loginError");
+
+  if (!centerId)                 { errEl.textContent = "센터를 선택해주세요."; return; }
   if (!name)                     { errEl.textContent = "이름을 입력해주세요."; return; }
   if (!phone || phone.length<10) { errEl.textContent = "전화번호를 확인해주세요."; return; }
   errEl.textContent = "";
@@ -182,36 +166,33 @@ async function doLogin(auto = false) {
   document.getElementById("loginBtn").textContent = "조회 중...";
 
   try {
-    const res  = await fetch(FIREBASE_URL);
+    const url  = `${FIREBASE_BASE}/coupangData/${centerId}.json`;
+    const res  = await fetch(url);
     const data = await res.json();
     if (!data || !data.riders) throw new Error("데이터 없음");
 
     const phoneLast4 = phone.slice(-4);
-    // riders가 배열 또는 객체 모두 대응
-    const ridersArr = Array.isArray(data.riders) ? data.riders : Object.values(data.riders);
+    const ridersArr  = Array.isArray(data.riders) ? data.riders : Object.values(data.riders);
     const rider = ridersArr.find(r => {
-      const rName      = r.name  ? r.name.trim() : "";
+      const rName       = r.name  ? r.name.trim() : "";
       const rPhoneLast4 = r.phone ? r.phone.replace(/[-\s]/g,"").slice(-4) : "";
       return rName === name && rPhoneLast4 === phoneLast4;
     });
 
-    if (!rider) {
-      errEl.textContent = "이름 또는 전화번호가 일치하지 않아요.";
-      return;
-    }
+    if (!rider) { errEl.textContent = "이름 또는 전화번호가 일치하지 않아요."; return; }
 
-    localStorage.setItem("coupangRiderLogin", JSON.stringify({ name, phone }));
+    localStorage.setItem("coupangRiderLogin", JSON.stringify({ name, phone, centerId }));
     currentRider    = rider;
     currentRiderKey = rider.name.replace(/[.#$\[\]/]/g, "_");
+    currentCenterId = centerId;
 
-    document.getElementById("loginWrap").style.display = "none";
-    document.getElementById("dashWrap").style.display  = "block";
-    document.getElementById("riderName").textContent   = rider.name + " 기사님";
-    document.getElementById("lastUpdate").textContent  = "마지막 업데이트: " + (data.scrapedAt || "-");
+    document.getElementById("loginWrap").style.display  = "none";
+    document.getElementById("dashWrap").style.display   = "block";
+    document.getElementById("riderName").textContent    = rider.name + " 기사님";
+    document.getElementById("lastUpdate").textContent   = (COUPANG_CENTERS[centerId]||centerId) + " · " + (data.scrapedAt||"-");
 
     renderRider(rider);
     loadHistory();
-
   } catch(e) {
     errEl.textContent = "오류: " + e.message;
   } finally {
@@ -221,155 +202,84 @@ async function doLogin(auto = false) {
 }
 
 function renderRider(r) {
-  const complete = r.complete  || 0;
-  const reject   = r.reject    || 0;
-  const cancel   = r.cancel    || 0;
+  const complete = r.complete||0, reject=r.reject||0, cancel=r.cancel||0;
   const total    = complete + reject + cancel;
-
-  // 완료율 / 거절율만 표시 (완료 건수는 숨김)
-  const completeRate = total > 0 ? ((complete / total) * 100).toFixed(1) : "0.0";
-  const rejectRate   = total > 0 ? (((reject + cancel) / total) * 100).toFixed(1) : "0.0";
-
-  // 쿠팡 피크타임: 점심피크 / 저녁피크 / 논피크
+  const completeRate = total>0?((complete/total)*100).toFixed(1):"0.0";
+  const rejectRate   = total>0?(((reject+cancel)/total)*100).toFixed(1):"0.0";
   document.getElementById("dashContent").innerHTML = `
     <div class="rate-card">
       <div class="rate-label">✅ 완료율</div>
       <div class="rate-value">${completeRate}<span style="font-size:22px;font-weight:500;color:#00b359">%</span></div>
       <div class="rate-sub">수행건수 기준</div>
     </div>
-
     <div class="reject-rate-card">
       <div class="rr-label">❌ 거절율</div>
       <div class="rr-value">${rejectRate}<span style="font-size:14px;font-weight:500">%</span></div>
-    </div>
-    `;
+    </div>`;
 }
 
-// ── 탭 전환 ──
 function switchTab(n) {
-  document.getElementById("tabContent1").style.display = n===1 ? "block" : "none";
-  document.getElementById("tabContent2").style.display = n===2 ? "block" : "none";
-  document.getElementById("tab1").classList.toggle("active", n===1);
-  document.getElementById("tab2").classList.toggle("active", n===2);
+  document.getElementById("tabContent1").style.display = n===1?"block":"none";
+  document.getElementById("tabContent2").style.display = n===2?"block":"none";
+  document.getElementById("tab1").classList.toggle("active",n===1);
+  document.getElementById("tab2").classList.toggle("active",n===2);
   if (n===2 && historyData) renderWeek();
   if (n===2 && !historyData) loadHistory().then(renderWeek);
 }
 
-// ── 히스토리 로드 ──
 async function loadHistory() {
   try {
-    const res   = await fetch(FIREBASE_HISTORY_URL);
-    historyData = await res.json();
-  } catch(e) {
-    historyData = null;
-  }
+    const url  = `${FIREBASE_BASE}/riderHistory/${currentCenterId}.json?shallow=true`;
+    const res  = await fetch(url);
+    const keys = await res.json();
+    if (!keys) { historyData = {}; return; }
+    historyData = {};
+    const dates = Object.keys(keys).sort().slice(-28);
+    await Promise.all(dates.map(async d => {
+      const r = await fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${d}.json`);
+      historyData[d] = await r.json();
+    }));
+  } catch(e) { historyData = null; }
 }
 
-// ── 주간 범위 (수~화 기준) ──
 function getWeekRange(offset) {
-  const today = new Date();
-  const day   = today.getDay();
-  let daysToWed = (day >= 3) ? day - 3 : day + 4;
-  const thisWed = new Date(today);
-  thisWed.setDate(today.getDate() - daysToWed + (offset * 7));
-  thisWed.setHours(0,0,0,0);
-  const thisTue = new Date(thisWed);
-  thisTue.setDate(thisWed.getDate() + 6);
-  return { start: thisWed, end: thisTue };
+  const today = new Date(); today.setHours(0,0,0,0);
+  const end = new Date(today); end.setDate(today.getDate()+(offset*7));
+  const start = new Date(end); start.setDate(end.getDate()-6);
+  return { start, end };
 }
+function formatDate(d) { return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function formatDateKo(d) { const days=["일","월","화","수","목","금","토"]; return (d.getMonth()+1)+"."+d.getDate()+" ("+days[d.getDay()]+")"; }
+function changeWeek(dir) { const n=currentWeekOffset+dir; if(n>0||n<-MAX_WEEKS)return; currentWeekOffset=n; renderWeek(); }
 
-function formatDate(d) {
-  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-}
-function formatDateKo(d) {
-  const days = ["일","월","화","수","목","금","토"];
-  return (d.getMonth()+1) + "." + d.getDate() + " (" + days[d.getDay()] + ")";
-}
-
-function changeWeek(dir) {
-  const newOffset = currentWeekOffset + dir;
-  if (newOffset > 0 || newOffset < -MAX_WEEKS) return;
-  currentWeekOffset = newOffset;
-  renderWeek();
-}
-
-// ── 주간 기록 렌더링 ──
 function renderWeek() {
-  const { start, end } = getWeekRange(currentWeekOffset);
-
-  document.getElementById("btnPrevWeek").disabled = (currentWeekOffset <= -MAX_WEEKS);
-  document.getElementById("btnNextWeek").disabled = (currentWeekOffset >= 0);
-
+  const { start } = getWeekRange(currentWeekOffset);
+  document.getElementById("btnPrevWeek").disabled = currentWeekOffset<=-MAX_WEEKS;
+  document.getElementById("btnNextWeek").disabled = currentWeekOffset>=0;
   const weekNum = Math.abs(currentWeekOffset);
-  document.getElementById("weekTitle").textContent =
-    currentWeekOffset === 0 ? "이번 주" : weekNum + "주 전";
-  document.getElementById("weekDateRange").textContent =
-    formatDateKo(start) + " ~ " + formatDateKo(end);
+  document.getElementById("weekTitle").textContent     = currentWeekOffset===0?"이번 주":weekNum+"주 전";
+  document.getElementById("weekDateRange").textContent = formatDateKo(start)+" ~ "+formatDateKo(new Date(start.getTime()+6*86400000));
 
-  if (!historyData) {
-    document.getElementById("weekContent").innerHTML =
-      '<div class="no-data">📭 데이터가 없어요.<br>데이터는 매일 오전 5시에 저장됩니다.</div>';
-    return;
-  }
+  if (!historyData) { document.getElementById("weekContent").innerHTML='<div class="no-data">📭 데이터가 없어요.</div>'; return; }
 
-  const dates = [];
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(start);
-    d.setDate(start.getDate() + i);
-    dates.push(formatDate(d));
-  }
+  const dates=[]; for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);dates.push(formatDate(d));}
+  const dayData = dates.map(dateStr => { const dr=historyData[dateStr]; return dr&&dr.riders?dr.riders[currentRiderKey]||null:null; });
 
-  // 기사 데이터 수집
-  const dayData = [];
-  dates.forEach(dateStr => {
-    const dayRec = historyData[dateStr];
-    if (!dayRec || !dayRec.riders) { dayData.push(null); return; }
-    const riderRec = dayRec.riders[currentRiderKey];
-    dayData.push(riderRec || null);
-  });
+  let wComplete=0,wReject=0,wCancel=0,wTotal=0;
+  dayData.forEach(d=>{if(!d)return;wComplete+=d.complete||0;wReject+=d.reject||0;wCancel+=d.cancel||0;wTotal+=(d.total||((d.complete||0)+(d.reject||0)+(d.cancel||0)));});
+  const wCR=wTotal>0?((wComplete/wTotal)*100).toFixed(1):"-";
+  const wRR=wTotal>0?(((wReject+wCancel)/wTotal)*100).toFixed(1):"-";
 
-  // 주간 합계
-  let wComplete=0, wReject=0, wCancel=0, wTotal=0;
-  dayData.forEach(d => {
-    if (!d) return;
-    wComplete += d.complete || 0;
-    wReject   += d.reject   || 0;
-    wCancel   += d.cancel   || 0;
-    wTotal    += (d.total || ((d.complete||0)+(d.reject||0)+(d.cancel||0)));
-  });
-  const wCompleteRate = wTotal>0 ? ((wComplete/wTotal)*100).toFixed(1) : "-";
-  const wRejectRate   = wTotal>0 ? (((wReject+wCancel)/wTotal)*100).toFixed(1) : "-";
-
-  // 순위 계산
-  const rankHtml = getHistoryRankHtml(dates, historyData);
-
-  // 일별 카드
-  const dayCards = dayData.map((d, i) => {
-    const dateObj = new Date(start);
-    dateObj.setDate(start.getDate() + i);
-    const dateLabel = formatDateKo(dateObj);
-
-    if (!d) {
-      return `<div class="day-card">
-        <div class="day-header">
-          <div class="day-name">${dateLabel}</div>
-          <div style="font-size:11px;color:#444">데이터 없음</div>
-        </div>
-      </div>`;
-    }
-
-    const complete = d.complete || 0;
-    const reject   = d.reject   || 0;
-    const cancel   = d.cancel   || 0;
-    const total    = d.total || (complete + reject + cancel);
-    const cr = total>0 ? ((complete/total)*100).toFixed(1) : "0.0";
-    const rr = total>0 ? (((reject+cancel)/total)*100).toFixed(1) : "0.0";
-
+  const rankHtml = getHistoryRankHtml(dates);
+  const dayCards = dayData.map((d,i)=>{
+    const dateObj=new Date(start); dateObj.setDate(start.getDate()+i);
+    const dateLabel=formatDateKo(dateObj);
+    if(!d) return `<div class="day-card"><div class="day-header"><div class="day-name">${dateLabel}</div><div style="font-size:11px;color:#444">데이터 없음</div></div></div>`;
+    const complete=d.complete||0,reject=d.reject||0,cancel=d.cancel||0,total=d.total||(complete+reject+cancel);
+    const cr=total>0?((complete/total)*100).toFixed(1):"0.0";
+    const rr=total>0?(((reject+cancel)/total)*100).toFixed(1):"0.0";
     return `<div class="day-card">
-      <div class="day-header">
-        <div class="day-name">${dateLabel}</div>
-        <div class="day-rate">${cr}%</div>
-      </div>
+      <div class="day-header"><div class="day-name">${dateLabel}</div><div class="day-rate">${cr}%</div></div>
       <div class="day-stats">
         <div class="day-stat"><div class="day-stat-label">✅ 완료율</div><div class="day-stat-value dscr">${cr}%</div></div>
         <div class="day-stat"><div class="day-stat-label">❌ 거절율</div><div class="day-stat-value dsrr">${rr}%</div></div>
@@ -377,57 +287,40 @@ function renderWeek() {
     </div>`;
   }).join("");
 
-  document.getElementById("weekContent").innerHTML = `
+  document.getElementById("weekContent").innerHTML=`
     ${rankHtml}
     <div class="week-summary">
       <div class="week-summary-title">📊 주간 합계</div>
       <div class="week-stat-grid">
-        <div class="week-stat"><div class="week-stat-label">✅ 완료율</div><div class="week-stat-value wscr">${wCompleteRate}%</div></div>
-        <div class="week-stat"><div class="week-stat-label">❌ 거절율</div><div class="week-stat-value wsrr">${wRejectRate}%</div></div>
+        <div class="week-stat"><div class="week-stat-label">✅ 완료율</div><div class="week-stat-value wscr">${wCR}%</div></div>
+        <div class="week-stat"><div class="week-stat-label">❌ 거절율</div><div class="week-stat-value wsrr">${wRR}%</div></div>
       </div>
     </div>
-    <div class="section-title" style="margin-bottom:8px">📅 일별 기록</div>
+    <div style="font-size:11px;color:#555;font-weight:700;margin-bottom:8px">📅 일별 기록</div>
     <div class="day-list">${dayCards}</div>`;
 }
 
-// ── 히스토리 기반 순위 계산 ──
-function getHistoryRankHtml(dates, history) {
-  if (!history) return "";
-
-  const riderTotals = {};
-  dates.forEach(dateStr => {
-    const dayRec = history[dateStr];
-    if (!dayRec || !dayRec.riders) return;
-    Object.keys(dayRec.riders).forEach(key => {
-      const r = dayRec.riders[key];
-      if (!riderTotals[key]) riderTotals[key] = { name: r.name, complete:0, total:0 };
-      riderTotals[key].complete += r.complete || 0;
-      const t = r.total || ((r.complete||0)+(r.reject||0)+(r.cancel||0));
-      riderTotals[key].total += t;
+function getHistoryRankHtml(dates) {
+  if(!historyData) return "";
+  const riderTotals={};
+  dates.forEach(dateStr=>{
+    const dr=historyData[dateStr]; if(!dr||!dr.riders) return;
+    Object.keys(dr.riders).forEach(key=>{
+      const r=dr.riders[key];
+      if(!riderTotals[key]) riderTotals[key]={name:r.name,complete:0,total:0};
+      riderTotals[key].complete+=r.complete||0;
+      riderTotals[key].total+=(r.total||((r.complete||0)+(r.reject||0)+(r.cancel||0)));
     });
   });
-
-  if (Object.keys(riderTotals).length === 0) return "";
-
-  const sorted = Object.entries(riderTotals)
-    .map(([key, v]) => ({
-      key,
-      name: v.name,
-      completeRate: v.total>0 ? (v.complete/v.total)*100 : 0,
-    }))
-    .sort((a,b) => b.completeRate - a.completeRate);
-
-  const myIdx = sorted.findIndex(r => r.key === currentRiderKey);
-  if (myIdx === -1) return "";
-
-  const rank  = myIdx + 1;
-  const total = sorted.length;
-  const emoji = rank===1?"🥇":rank===2?"🥈":rank===3?"🥉":"🏅";
-
+  if(Object.keys(riderTotals).length===0) return "";
+  const sorted=Object.entries(riderTotals).map(([key,v])=>({key,name:v.name,completeRate:v.total>0?(v.complete/v.total)*100:0})).sort((a,b)=>b.completeRate-a.completeRate);
+  const myIdx=sorted.findIndex(r=>r.key===currentRiderKey);
+  if(myIdx===-1) return "";
+  const rank=myIdx+1,total=sorted.length,emoji=rank===1?"🥇":rank===2?"🥈":rank===3?"🥉":"🏅";
   return `<div class="rank-card">
     <div class="rank-badge"><div class="rank-num">${emoji}</div></div>
     <div>
-      <div class="rank-label">완료율 기준 순위</div>
+      <div style="font-size:11px;color:#888;margin-bottom:4px">완료율 기준 순위</div>
       <div class="rank-info">${rank}위 <span style="font-size:14px;color:#555">/ ${total}명</span></div>
       <div style="font-size:11px;color:#666;margin-top:3px">완료율 ${sorted[myIdx].completeRate.toFixed(1)}%</div>
     </div>
@@ -436,12 +329,13 @@ function getHistoryRankHtml(dates, history) {
 
 function doLogout() {
   localStorage.removeItem("coupangRiderLogin");
-  document.getElementById("loginWrap").style.display = "block";
-  document.getElementById("dashWrap").style.display  = "none";
-  document.getElementById("inputName").value  = "";
-  document.getElementById("inputPhone").value = "";
-  document.getElementById("loginError").textContent = "";
-  currentRider = null; historyData = null; currentWeekOffset = 0;
+  document.getElementById("loginWrap").style.display="block";
+  document.getElementById("dashWrap").style.display="none";
+  document.getElementById("inputName").value="";
+  document.getElementById("inputPhone").value="";
+  document.getElementById("inputCenter").value="";
+  document.getElementById("loginError").textContent="";
+  currentRider=null;historyData=null;currentWeekOffset=0;currentCenterId=null;
   switchTab(1);
 }
 </script>
