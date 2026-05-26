@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>오늘 배달현황</title>
+  <title>배달현황 대시보드</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
@@ -96,7 +96,7 @@
     <div class="logo">
       <div class="logo-icon">🛵</div>
       <div>
-        <div class="logo-text" id="centerTitle">오늘 배달현황</div>
+        <div class="logo-text" id="centerTitle">배달현황 대시보드</div>
         <div class="center-sub" id="centerSub">배민커넥트비즈</div>
       </div>
     </div>
@@ -108,7 +108,7 @@
   <div class="control-bar">
     <div class="sets-wrap">
       <span class="sets-label">세트수</span>
-      <input type="number" class="sets-input" id="setsInput" value="5" min="1" max="10" />
+      <input type="number" class="sets-input" id="setsInput" value="3" min="1" max="10" />
       <span class="sets-unit">세트</span>
     </div>
     <div class="divider"></div>
@@ -127,7 +127,25 @@
 <div class="timestamp" id="ts"></div>
 
 <script>
-const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/baeminData.json";
+const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
+const BAEMIN_CENTERS = {
+  mango_panda:   "🥭 망고 팬더",
+  lime_penguin:  "🍋 라임 펭귄",
+  cherry_rabbit: "🍒 체리 래빗",
+};
+
+let currentCenterId = null;
+
+// URL 파라미터에서 센터 읽기
+function getCenterFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("center") || null;
+}
+
+function getFirebaseUrl() {
+  if (!currentCenterId) return null;
+  return `${FIREBASE_BASE}/baeminData/${currentCenterId}.json`;
+}
 const SLOT_MIN = 1;
 
 const GOALS_PER_SET = {
@@ -175,7 +193,7 @@ function scheduleNextLoad() {
 }
 
 let currentDayType = getTodayDayType();
-let currentSets    = 5;
+let currentSets    = 3;
 let lastData       = null;
 
 // 요일 버튼
@@ -210,7 +228,7 @@ async function loadData() {
     document.getElementById("ts").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
   } catch(e) {
     document.getElementById("content").innerHTML =
-      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small style="color:#666">${e.message}</small><br><br>서버에서 문제를 해결중입니다.</div>`;
+      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small style="color:#666">${e.message}</small><br><br>관리자가 배민 페이지를 열어두면 자동으로 업데이트됩니다.</div>`;
   }
 }
 
@@ -276,46 +294,17 @@ function render(data) {
     const bA = b.status?.includes("운행중") ? 0 : 1;
     return aA - bA;
   });
- const sortedCards = sorted.map(r => {
+  const sortedCards = sorted.map(r => {
     const isActive = r.statusCode==="DELIVERING"||r.status?.includes("운행중");
-    const rRate = calcRejectRate(r);
-    const uid = r.name.replace(/\s/g,'_');
-    return `<div class="rider-card" onclick="togglePeak('${uid}')" style="cursor:pointer;flex-direction:column;align-items:stretch">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <div><div class="rider-name">${r.name}</div>
-        <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
-        <div class="rider-stats">
-          ${sv(r.complete,"stat-complete","완료")}
-          ${sv(r.reject,"stat-reject","거절")}
-          ${sv(r.cancel,"stat-cancel","배차취소")}
-          ${svRate(rRate)}
-        </div>
-      </div>
-      <div id="peak_${uid}" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid #ffffff0d">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center">
-          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
-            <div style="font-size:16px;margin-bottom:4px">🌅</div>
-            <div style="font-size:9px;color:#666;margin-bottom:4px">아침점심</div>
-            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.morningPeak||0}</div>
-          </div>
-          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
-            <div style="font-size:16px;margin-bottom:4px">☀️</div>
-            <div style="font-size:9px;color:#666;margin-bottom:4px">오후논피크</div>
-            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.afternoonOff||0}</div>
-          </div>
-          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
-            <div style="font-size:16px;margin-bottom:4px">🌆</div>
-            <div style="font-size:9px;color:#666;margin-bottom:4px">저녁피크</div>
-            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.eveningPeak||0}</div>
-          </div>
-          <div style="background:#13161f;border-radius:8px;padding:10px 4px">
-            <div style="font-size:16px;margin-bottom:4px">🌙</div>
-            <div style="font-size:9px;color:#666;margin-bottom:4px">심야논피크</div>
-            <div style="font-size:18px;font-weight:900;color:#00c3ff">${r.nightOff||0}</div>
-          </div>
-        </div>
-      </div>
-    </div>`;
+    return `<div class="rider-card">
+      <div><div class="rider-name">${r.name}</div>
+      <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
+      <div class="rider-stats">
+        ${sv(r.complete,"stat-complete","완료")}
+        ${sv(r.reject,"stat-reject","거절")}
+        ${sv(r.cancel,"stat-cancel","배차취소")}
+        ${svRate(calcRejectRate(r))}
+      </div></div>`;
   }).join("");
 
   document.getElementById("content").innerHTML = `
@@ -342,7 +331,16 @@ function render(data) {
         ${peakBar(s.nightOff||0, goals.nightOff)}
       </div>
     </div>
-   
+    <div class="active-banner">
+      <div class="active-main">
+        <div class="active-dot"></div>
+        <div>
+          <div class="active-label">현재 운행중</div>
+          <div class="active-count">${active}<span style="font-size:14px;color:#555;font-weight:400"> / ${totalR}명</span></div>
+        </div>
+      </div>
+      <div class="active-names">${nameTags||'<span style="color:#444;font-size:11px">운행중 없음</span>'}</div>
+    </div>
     <div class="summary-grid">
       <div class="summary-card complete"><div class="card-label">✅ 완료</div><div class="card-value">${s.complete||0}<span class="card-unit">건</span></div></div>
       <div class="summary-card reject"><div class="card-label">❌ 거절</div><div class="card-value">${s.reject||0}<span class="card-unit">건</span></div></div>
@@ -357,39 +355,106 @@ function render(data) {
       <span><span class="legend-dot" style="background:#00e676"></span>완료 ${pct(s.complete)}%</span>
       <span><span class="legend-dot" style="background:#ff5252"></span>거절율 ${rejectPct}%</span>
     </div>
-     <div class="active-banner" onclick="toggleRiderList()" style="cursor:pointer">
-      <div class="active-main">
-        <div class="active-dot"></div>
-        <div>
-          <div class="active-label">현재 운행중</div>
-          <div class="active-count">${active}<span style="font-size:14px;color:#555;font-weight:400"> / ${totalR}명</span></div>
-        </div>
-      </div>
-      <div class="active-names">${nameTags||'<span style="color:#444;font-size:11px">운행중 없음</span>'}</div>
-    </div>
-    
-    <div class="section-title" id="riderSection" style="display:none">라이더별 현황</div>
-    <div class="rider-list" id="riderList" style="display:none">${sortedCards}</div>`;
+    <div class="section-title">라이더별 현황</div>
+    <div class="rider-list">${sortedCards}</div>`;
 }
 
-// 시작
-loadData();
-scheduleNextLoad();
-setInterval(updateNextTime, 30000);
-updateNextTime();
-  function togglePeak(uid) {
-  const el = document.getElementById('peak_' + uid);
-  if (!el) return;
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+// ── 센터 로그인 + 시작 ──
+function initDashboard() {
+  // 1. URL 파라미터 우선
+  const urlCenter = getCenterFromUrl();
+  if (urlCenter && BAEMIN_CENTERS[urlCenter]) {
+    currentCenterId = urlCenter;
+    startDashboard();
+    return;
+  }
+  // 2. 로그인 화면 표시
+  showLoginScreen();
 }
-  function toggleRiderList() {
-  const s = document.getElementById('riderSection');
-  const l = document.getElementById('riderList');
-  if (!s || !l) return;
-  const show = s.style.display === 'none';
-  s.style.display = show ? 'block' : 'none';
-  l.style.display = show ? 'block' : 'none';
+
+function showLoginScreen() {
+  document.getElementById("content").innerHTML = `
+    <div style="max-width:360px;margin:60px auto;padding:0 20px">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-size:40px;margin-bottom:12px">🛵</div>
+        <div style="font-size:18px;font-weight:700">배민 대시보드</div>
+        <div style="font-size:12px;color:#555;margin-top:4px">센터 코드를 입력해주세요</div>
+      </div>
+      <div style="background:#1a1d27;border-radius:16px;padding:24px;border:1px solid #ffffff0d">
+        <input type="password" id="centerCodeInput" placeholder="센터 코드 입력"
+          style="width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;font-family:inherit"
+          onkeydown="if(event.key==='Enter') doLoginDashboard()" />
+        <button onclick="doLoginDashboard()"
+          style="width:100%;background:linear-gradient(135deg,#00c3ff,#0077ff);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:15px;cursor:pointer;font-family:inherit">
+          접속
+        </button>
+        <div id="loginErr" style="color:#ff5252;font-size:12px;text-align:center;margin-top:10px;min-height:18px"></div>
+      </div>
+    </div>`;
+  setTimeout(() => document.getElementById("centerCodeInput")?.focus(), 100);
 }
+
+function doLoginDashboard() {
+  const input = document.getElementById("centerCodeInput")?.value?.trim().toLowerCase().replace(/ /g,"_");
+  if (!input) return;
+  if (BAEMIN_CENTERS[input]) {
+    currentCenterId = input;
+    // URL 업데이트 (북마크 가능하게)
+    history.replaceState(null,"",`?center=${input}`);
+    startDashboard();
+  } else {
+    document.getElementById("loginErr").textContent = "센터 코드가 올바르지 않아요.";
+  }
+}
+
+function startDashboard() {
+  // 헤더에 센터명 + 복사 버튼 표시
+  document.getElementById("centerTitle").textContent =
+    BAEMIN_CENTERS[currentCenterId] || currentCenterId;
+
+  // 복사 버튼 추가
+  const headerRight = document.querySelector(".header-right");
+  if (headerRight && !document.getElementById("copyBtn")) {
+    const copyBtn = document.createElement("button");
+    copyBtn.id = "copyBtn";
+    copyBtn.className = "refresh-btn";
+    copyBtn.textContent = "📋 현황 복사";
+    copyBtn.onclick = copyStatus;
+    headerRight.insertBefore(copyBtn, headerRight.firstChild);
+  }
+
+  loadData();
+  scheduleNextLoad();
+  setInterval(updateNextTime, 30000);
+  updateNextTime();
+}
+
+function copyStatus() {
+  if (!lastData) { alert("데이터가 없어요!"); return; }
+  const s = lastData.summary || {};
+  const goals = getGoals(currentDayType, currentSets);
+  const now = new Date();
+  const hour = now.getHours();
+  let peakLabel = "", peakDone = 0, peakGoal = 0;
+  if (hour >= 6 && hour < 14)       { peakLabel="아침점심"; peakDone=s.morningPeak||0;  peakGoal=goals.morningPeak; }
+  else if (hour >= 14 && hour < 17) { peakLabel="오후논피크"; peakDone=s.afternoonOff||0; peakGoal=goals.afternoonOff; }
+  else if (hour >= 17 && hour < 21) { peakLabel="저녁피크";  peakDone=s.eveningPeak||0;  peakGoal=goals.eveningPeak; }
+  else                               { peakLabel="심야논피크"; peakDone=s.nightOff||0;     peakGoal=goals.nightOff; }
+  const remain = Math.max(0, peakGoal - peakDone);
+  const active = lastData.activeCount ?? 0;
+  const centerName = BAEMIN_CENTERS[currentCenterId] || currentCenterId;
+  const timeStr = now.toLocaleTimeString("ko-KR", {hour:"2-digit",minute:"2-digit"});
+
+  const text = `[${centerName}] ${timeStr} 기준
+완료 ${s.complete||0}건 | ${peakLabel} 목표 ${peakGoal}건 | 접속 ${active}명 | 잔여 ${remain}건`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copyBtn");
+    if (btn) { btn.textContent = "✅ 복사됨!"; setTimeout(() => btn.textContent = "📋 현황 복사", 2000); }
+  });
+}
+
+initDashboard();
 </script>
 </body>
 </html>

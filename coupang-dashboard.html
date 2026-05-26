@@ -99,14 +99,30 @@
 <div class="timestamp" id="ts"></div>
 
 <script>
-const FIREBASE_URL = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com/coupangData.json";
+const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
+const COUPANG_CENTERS = {
+  coconut_bear:  "🥥 코코넛 베어",
+  kiwi_squirrel: "🥝 키위 다람쥐",
+  peach_tiger:   "🍑 피치 타이거",
+};
+
+let currentCenterId = null;
+let lastData = null;
+
+function getCenterFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("center") || null;
+}
 
 async function loadData() {
+  if (!currentCenterId) return;
+  const url = `${FIREBASE_BASE}/coupangData/${currentCenterId}.json`;
   try {
-    const res = await fetch(FIREBASE_URL);
+    const res = await fetch(url);
     if (!res.ok) throw new Error("응답 오류 " + res.status);
     const data = await res.json();
     if (!data) throw new Error("데이터 없음");
+    lastData = data;
     render(data);
     document.getElementById("ts").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
   } catch(e) {
@@ -176,18 +192,7 @@ function render(data) {
     <div class="section-title">⏰ 피크타임별 현황</div>
     <div class="peak-grid">${peakCards||'<div style="color:#555;padding:10px 16px;font-size:12px">피크 데이터 없음</div>'}</div>
 
-<!-- 거절률, 거절수, 오늘배정물량 카드 -->
-      <div class="summary-grid">
-      <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectionRate||0}<span class="card-unit">%</span></div></div>
-      <div class="summary-card cancel"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${Math.round(p.rejectionCount||0)}<span class="card-unit">건</span></div></div>
-      <div class="summary-card assign"><div class="card-label">📦 오늘배정물량</div><div class="card-value" style="color:#00c3ff">${Math.round(p.scheduledCount||0)}<span class="card-unit">건</span></div></div>
-    </div>
-    <div class="sub-info">
-      <span>처리 ${Math.round(p.processingCount||0)}건</span>
-      <span>전체수행률 ${p.overallRate||0}%</span>
-    </div>
-
-    <div class="active-banner" onclick="toggleRiderList()" style="cursor:pointer">
+    <div class="active-banner">
       <div class="active-left">
         <div class="active-dot"></div>
         <div>
@@ -201,19 +206,118 @@ function render(data) {
       </div>
     </div>
 
-    <div class="section-title" id="riderSection" style="display:none">라이더별 현황</div>
-<div class="rider-list" id="riderList" style="display:none">${cards||'<div style="color:#555;padding:10px 16px;font-size:12px">라이더 데이터 없음</div>'}</div>`;
+    <div class="summary-grid">
+      <div class="summary-card reject"><div class="card-label">❌ 거절률</div><div class="card-value" style="color:#ff5252">${p.rejectionRate||0}<span class="card-unit">%</span></div></div>
+      <div class="summary-card cancel"><div class="card-label">🚫 거절수</div><div class="card-value" style="color:#ffd740">${Math.round(p.rejectionCount||0)}<span class="card-unit">건</span></div></div>
+      <div class="summary-card assign"><div class="card-label">📦 오늘배정물량</div><div class="card-value" style="color:#00c3ff">${Math.round(p.scheduledCount||0)}<span class="card-unit">건</span></div></div>
+    </div>
+    <div class="sub-info">
+      <span>처리 ${Math.round(p.processingCount||0)}건</span>
+      <span>전체수행률 ${p.overallRate||0}%</span>
+    </div>
+
+    <div class="section-title">라이더별 현황</div>
+    <div class="rider-list">${cards||'<div style="color:#555;padding:10px 16px;font-size:12px">라이더 데이터 없음</div>'}</div>`;
 }
 
-loadData();
-  function toggleRiderList() {
-  const s = document.getElementById('riderSection');
-  const l = document.getElementById('riderList');
-  if (!s || !l) return;
-  const show = s.style.display === 'none';
-  s.style.display = show ? 'block' : 'none';
-  l.style.display = show ? 'block' : 'none';
+// ── 센터 로그인 + 시작 ──
+function initDashboard() {
+  const urlCenter = getCenterFromUrl();
+  if (urlCenter && COUPANG_CENTERS[urlCenter]) {
+    currentCenterId = urlCenter;
+    startDashboard();
+    return;
+  }
+  showLoginScreen();
 }
+
+function showLoginScreen() {
+  document.getElementById("content").innerHTML = `
+    <div style="max-width:360px;margin:60px auto;padding:0 20px">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-size:40px;margin-bottom:12px">🚀</div>
+        <div style="font-size:18px;font-weight:700">쿠팡이츠 대시보드</div>
+        <div style="font-size:12px;color:#555;margin-top:4px">센터 코드를 입력해주세요</div>
+      </div>
+      <div style="background:#1a1d27;border-radius:16px;padding:24px;border:1px solid #ffffff0d">
+        <input type="password" id="centerCodeInput" placeholder="센터 코드 입력"
+          style="width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;font-family:inherit"
+          onkeydown="if(event.key==='Enter') doLoginDashboard()" />
+        <button onclick="doLoginDashboard()"
+          style="width:100%;background:linear-gradient(135deg,#e74c3c,#c0392b);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:15px;cursor:pointer;font-family:inherit">
+          접속
+        </button>
+        <div id="loginErr" style="color:#ff5252;font-size:12px;text-align:center;margin-top:10px;min-height:18px"></div>
+      </div>
+    </div>`;
+  setTimeout(() => document.getElementById("centerCodeInput")?.focus(), 100);
+}
+
+function doLoginDashboard() {
+  const input = document.getElementById("centerCodeInput")?.value?.trim().toLowerCase().replace(/ /g,"_");
+  if (!input) return;
+  if (COUPANG_CENTERS[input]) {
+    currentCenterId = input;
+    history.replaceState(null,"",`?center=${input}`);
+    startDashboard();
+  } else {
+    document.getElementById("loginErr").textContent = "센터 코드가 올바르지 않아요.";
+  }
+}
+
+function startDashboard() {
+  document.getElementById("centerTitle").textContent =
+    COUPANG_CENTERS[currentCenterId] || currentCenterId;
+
+  // 복사 버튼 추가
+  const headerRight = document.querySelector(".header-right");
+  if (headerRight && !document.getElementById("copyBtn")) {
+    const copyBtn = document.createElement("button");
+    copyBtn.id = "copyBtn";
+    copyBtn.className = "refresh-btn";
+    copyBtn.textContent = "📋 현황 복사";
+    copyBtn.onclick = copyStatus;
+    headerRight.insertBefore(copyBtn, headerRight.firstChild);
+  }
+
+  loadData();
+  setInterval(loadData, 60000);
+}
+
+function copyStatus() {
+  if (!lastData) { alert("데이터가 없어요!"); return; }
+  const p = lastData.peak || {};
+  const peaks = p.peaks || [];
+  const active = lastData.activeCount ?? 0;
+  const centerName = COUPANG_CENTERS[currentCenterId] || currentCenterId;
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString("ko-KR", {hour:"2-digit",minute:"2-digit"});
+
+  // 현재 피크타임 찾기
+  const hour = now.getHours();
+  let curPeak = null;
+  if (hour >= 6  && hour < 11) curPeak = peaks.find(p => p.label.includes("아침") || p.label.includes("점심피크"));
+  else if (hour >= 11 && hour < 14) curPeak = peaks.find(p => p.label.includes("논피크") && p.label.includes("점심"));
+  else if (hour >= 17 && hour < 21) curPeak = peaks.find(p => p.label.includes("저녁피크"));
+  else curPeak = peaks.find(p => p.label.includes("논피크") && p.label.includes("저녁"));
+  if (!curPeak && peaks.length > 0) curPeak = peaks[peaks.length - 1];
+
+  const peakLabel  = curPeak?.label  || "-";
+  const peakGoal   = curPeak?.goalCount || 0;
+  const peakDone   = curPeak?.completedCount || 0;
+  const peakRemain = Math.max(0, peakGoal - peakDone);
+  const complete   = lastData.summary?.complete || 0;
+
+  const text = `[${centerName}] ${timeStr} 기준
+완료 ${complete}건 | ${peakLabel} 목표 ${peakGoal}건 | 접속 ${active}명 | 잔여 ${peakRemain}건`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copyBtn");
+    if (btn) { btn.textContent = "✅ 복사됨!"; setTimeout(() => btn.textContent = "📋 현황 복사", 2000); }
+  });
+}
+
+initDashboard();
 </script>
 </body>
 </html>
