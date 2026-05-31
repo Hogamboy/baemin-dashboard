@@ -416,7 +416,7 @@ async function renderWeeklyRiders() {
       <div class="week-rr-right">
         <div class="week-rr-val" style="color:${rrColor(r.rejectRate)}">${r.rejectRate}%</div>
         <div class="week-rr-label">주간 거절율</div>
-        <div class="week-rr-sub">${r.reject}거절 / ${r.<div class="week-rr-sub">r.reject}건 / }완</div>
+        <div class="week-rr-sub">거절 ${r.reject}건 · 수행 ${r.total}건</div>
       </div>
     </div>`).join("");
 }
