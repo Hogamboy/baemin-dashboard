@@ -457,7 +457,8 @@ function copyStatus() {
   const centerName = (document.title || BAEMIN_CENTERS[currentCenterId] || currentCenterId)
                        .replace(/\s*\(DP\d+\)/i, "");
   const timeStr    = now.toLocaleTimeString("ko-KR", {hour:"2-digit",minute:"2-digit"});
-  const text = `[${centerName}] ${timeStr} 기준\n${peakLabel} 완료 ${peakDone}건 | 목표 ${peakGoal}건 | 잔여 ${remain}건 | 접속 ${active}명`;
+  const pct = peakGoal > 0 ? ((peakDone / peakGoal) * 100).toFixed(0) : 0;
+const text = `${timeStr} ${peakLabel}\n운행중 ${active}명\n진행 : ${peakDone}/${peakGoal} (${pct}%)\n잔여할당 : ${remain}건`;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById("copyBtn");
     if (btn) { btn.textContent="✅ 복사됨!"; setTimeout(()=>btn.textContent="📋 현황 복사",2000); }
