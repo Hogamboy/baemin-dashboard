@@ -7,54 +7,34 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
     *{box-sizing:border-box;margin:0;padding:0}
-
-    /* ── 테마 변수 ── */
     :root {
-      --bg:      #f0fafa;
-      --bg2:     #ffffff;
-      --bg3:     #e8f8f5;
-      --border:  #00c3aa33;
-      --border2: #00c3aa88;
-      --text1:   #0a2a28;
-      --text2:   #5a8a84;
-      --accent:  #00c3aa;
-      --acl:     #00c3aa18;
-      --green:   #00796b;
-      --red:     #d05050;
-      --yellow:  #c09010;
-      --header-border: #00c3aa33;
+      --bg:#f0fafa;--bg2:#ffffff;--bg3:#e8f8f5;
+      --border:#00c3aa33;--border2:#00c3aa88;
+      --text1:#0a2a28;--text2:#5a8a84;
+      --accent:#00c3aa;--acl:#00c3aa18;
+      --green:#00796b;--red:#d05050;--yellow:#c09010;
+      --header-border:#00c3aa33;
     }
     body.dark {
-      --bg:      #0f1117;
-      --bg2:     #1a1d27;
-      --bg3:     #13161f;
-      --border:  #ffffff15;
-      --border2: #00c3ff55;
-      --text1:   #f0f0f0;
-      --text2:   #666;
-      --accent:  #00c3ff;
-      --acl:     #00c3ff18;
-      --green:   #00e676;
-      --red:     #ff5252;
-      --yellow:  #ffd740;
-      --header-border: #00c3ff22;
+      --bg:#0f1117;--bg2:#1a1d27;--bg3:#13161f;
+      --border:#ffffff15;--border2:#00c3ff55;
+      --text1:#f0f0f0;--text2:#666;
+      --accent:#00c3ff;--acl:#00c3ff18;
+      --green:#00e676;--red:#ff5252;--yellow:#ffd740;
+      --header-border:#00c3ff22;
     }
-
     body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;padding-bottom:40px;transition:background 0.4s,color 0.4s}
-
     header{background:var(--bg2);border-bottom:2px solid var(--header-border);padding:14px 20px;position:sticky;top:0;z-index:10;transition:background 0.4s,border-color 0.4s}
     .header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
     .logo{display:flex;align-items:center;gap:10px}
-    .logo-icon{width:34px;height:34px;background:var(--acl);border:1.5px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;transition:all 0.4s}
     .logo-text{font-size:15px;font-weight:700;color:var(--text1);transition:color 0.4s}
-    .center-sub{font-size:10px;color:var(--text2);margin-top:1px;transition:color 0.4s}
+    .center-sub{font-size:10px;color:var(--text2);margin-top:1px}
     .header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
     .next-info{font-size:11px;color:var(--text2);background:var(--bg3);border-radius:6px;padding:5px 10px;white-space:nowrap;transition:all 0.4s}
     .next-info span{color:var(--green);font-weight:700}
     .theme-btn{background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;color:var(--accent);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0}
     .theme-btn:hover{background:var(--acl)}
-
-    .control-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
+    .control-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .copy-btn{background:var(--acl);border:1.5px solid var(--accent);border-radius:7px;color:var(--green);font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:14px 12px;cursor:pointer;font-weight:700;white-space:nowrap;transition:all 0.3s}
     .copy-btn:hover{background:var(--accent);color:#fff}
     .divider{width:1px;height:20px;background:var(--border)}
@@ -66,10 +46,7 @@
     .day-btns{display:flex;gap:5px}
     .day-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;padding:4px 12px;cursor:pointer;transition:all 0.2s}
     .day-btn.active{background:var(--acl);border-color:var(--border2);color:var(--green)}
-
-    /* ── 배너 ── */
-    .active-banner{margin:14px 16px 6px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all 0.3s}
-    .active-banner:hover{border-color:var(--border2)}
+    .active-banner{margin:14px 16px 6px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
     .active-main{display:flex;align-items:center;gap:10px}
     .active-dot{width:9px;height:9px;background:var(--green);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
@@ -77,8 +54,6 @@
     .active-count{font-size:26px;font-weight:900;color:var(--green);line-height:1}
     .active-names{font-size:10px;color:var(--text2);max-width:55%;line-height:1.7;text-align:right}
     .active-name-tag{display:inline-block;background:var(--acl);color:var(--green);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin:1px 2px;font-size:10px}
-
-    /* ── 요약 카드 ── */
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 16px}
     .summary-card{background:var(--bg2);border-radius:12px;padding:14px 10px;text-align:center;border:1.5px solid var(--border);position:relative;overflow:hidden;transition:all 0.4s}
     .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
@@ -91,14 +66,11 @@
     .summary-card.reject .card-value{color:var(--red)}
     .summary-card.cancel .card-value{color:var(--yellow)}
     .card-unit{font-size:12px;font-weight:500}
-
     .bar-wrap{display:flex;gap:4px;padding:2px 16px 8px;height:12px}
     .bar-segment{height:8px;border-radius:4px;min-width:2px}
     .bar-complete{background:var(--green)}.bar-reject{background:var(--red)}.bar-cancel{background:var(--yellow)}
     .bar-legend{display:flex;gap:14px;padding:0 16px 12px;font-size:11px;color:var(--text2)}
     .legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle}
-
-    /* ── 피크 ── */
     .section-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:4px 16px 8px}
     .peak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 14px}
     .peak-card{background:var(--bg3);border-radius:12px;padding:14px 8px 10px;text-align:center;border:1px solid var(--border);position:relative;overflow:hidden;transition:all 0.4s}
@@ -111,14 +83,21 @@
     .peak-bar{height:100%;border-radius:3px;transition:width 0.6s ease}
     .peak-pct{font-size:9px;color:var(--text2);margin-top:4px}
 
-    /* ── 라이더 섹션 (접기/펼치기) ── */
+    /* ── 라이더 섹션 ── */
     .rider-section-header{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 8px;cursor:pointer;user-select:none}
     .rider-section-header:hover .rider-section-title{color:var(--accent)}
     .rider-section-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase;transition:color 0.2s}
+    .rider-section-right{display:flex;align-items:center;gap:10px}
     .rider-toggle-icon{font-size:12px;color:var(--text2);transition:transform 0.3s}
     .rider-toggle-icon.open{transform:rotate(180deg)}
+
+    /* 오늘/주간 탭 */
+    .rider-tab-bar{display:flex;background:var(--bg3);border-radius:8px;padding:3px;gap:3px}
+    .rider-tab-btn{padding:4px 12px;border:none;border-radius:6px;font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.2s}
+    .rider-tab-btn.active{background:var(--bg2);color:var(--accent)}
+
     .rider-list{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0}
-    .rider-list.open{max-height:2000px}
+    .rider-list.open{max-height:3000px}
     .rider-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;transition:all 0.4s}
     .rider-name{font-size:14px;font-weight:700;color:var(--text1);margin-bottom:3px}
     .rider-status{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;display:inline-block}
@@ -130,13 +109,20 @@
     .stat-label{font-size:9px;color:var(--text2);margin-top:2px}
     .stat-complete{color:var(--green)}.stat-reject{color:var(--red)}.stat-cancel{color:var(--yellow)}.stat-zero{color:#555}
 
+    /* 주간 거절율 카드 */
+    .week-rr-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;transition:all 0.4s}
+    .week-rr-name{font-size:14px;font-weight:700;color:var(--text1)}
+    .week-rr-right{text-align:right}
+    .week-rr-val{font-size:22px;font-weight:900;line-height:1}
+    .week-rr-label{font-size:9px;color:var(--text2);margin-top:2px}
+    .week-rr-sub{font-size:10px;color:var(--text2);margin-top:2px}
+    .week-loading{text-align:center;padding:20px;color:var(--text2);font-size:12px}
+
     .timestamp{font-size:11px;color:var(--text2);text-align:center;padding:14px;transition:color 0.4s}
     .loading{text-align:center;padding:60px 20px;color:var(--text2)}
     .spinner{font-size:32px;animation:spin 1.2s linear infinite;display:inline-block;margin-bottom:10px}
     @keyframes spin{to{transform:rotate(360deg)}}
     .error-msg{text-align:center;padding:50px 20px;color:var(--red);font-size:13px;line-height:1.8}
-
-    /* 로그인 화면 */
     .login-box{max-width:360px;margin:60px auto;padding:0 20px}
     .login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text1);font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif;transition:all 0.4s}
     .login-box button{width:100%;background:linear-gradient(135deg,var(--accent),#0099aa);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:15px;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
@@ -157,22 +143,22 @@
     </div>
   </div>
   <div class="control-bar">
-  <button class="copy-btn" id="copyBtn" onclick="copyStatus()">📋 현황 복사</button>
-  <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
-    <div class="sets-wrap">
-      <span class="sets-label">세트수</span>
-      <div class="arr-btn" onclick="changeSets(-1)">▼</div>
-      <input type="number" class="sets-input" id="setsInput" value="5" min="1" max="10" />
-      <div class="arr-btn" onclick="changeSets(1)">▲</div>
-      <span class="sets-label">세트</span>
-    </div>
-    </div>
-    <div class="divider"></div>
-    <div class="day-btns">
-      <button class="day-btn" data-day="weekday">평일</button>
-      <button class="day-btn" data-day="friday">금</button>
-      <button class="day-btn" data-day="saturday">토</button>
-      <button class="day-btn" data-day="sunday">일</button>
+    <button class="copy-btn" id="copyBtn" onclick="copyStatus()">📋 현황 복사</button>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+      <div class="sets-wrap">
+        <span class="sets-label">세트수</span>
+        <div class="arr-btn" onclick="changeSets(-1)">▼</div>
+        <input type="number" class="sets-input" id="setsInput" value="5" min="1" max="10" />
+        <div class="arr-btn" onclick="changeSets(1)">▲</div>
+        <span class="sets-label">세트</span>
+      </div>
+      <div class="divider"></div>
+      <div class="day-btns">
+        <button class="day-btn" data-day="weekday">평일</button>
+        <button class="day-btn" data-day="friday">금</button>
+        <button class="day-btn" data-day="saturday">토</button>
+        <button class="day-btn" data-day="sunday">일</button>
+      </div>
     </div>
   </div>
 </header>
@@ -195,6 +181,8 @@ let currentDayType  = getTodayDayType();
 let currentSets     = 5;
 let lastData        = null;
 let riderListOpen   = false;
+let riderTab        = "today"; // "today" | "weekly"
+let weeklyCache     = null;
 let manualTheme     = null;
 
 // ── 테마 ──
@@ -202,24 +190,20 @@ function applyTheme(dark) {
   document.body.classList.toggle("dark", dark);
   document.getElementById("themeBtn").textContent = dark ? "☀️" : "🌙";
 }
-
 function autoTheme() {
   if (manualTheme !== null) { applyTheme(manualTheme); return; }
   const now  = new Date();
   const mins = now.getHours() * 60 + now.getMinutes();
   applyTheme(mins < 7*60+30 || mins >= 19*60+30);
 }
-
 function toggleTheme() {
-  const isDark = document.body.classList.contains("dark");
-  manualTheme = !isDark;
+  manualTheme = !document.body.classList.contains("dark");
   applyTheme(manualTheme);
 }
-
 autoTheme();
 setInterval(autoTheme, 60000);
 
-// ── Firebase URL ──
+// ── Firebase ──
 function getCenterFromUrl() {
   return new URLSearchParams(window.location.search).get("center") || null;
 }
@@ -250,17 +234,14 @@ const SLOT_MIN = 5;
 function getNextSlot() {
   const now = new Date();
   const ms  = now.getMinutes()*60000 + now.getSeconds()*1000 + now.getMilliseconds();
-  const slotMs = SLOT_MIN * 60000;
-  return new Date(Date.now() + (slotMs - (ms % slotMs)));
+  return new Date(Date.now() + (SLOT_MIN*60000 - (ms % (SLOT_MIN*60000))));
 }
 function updateNextTime() {
-  const next = getNextSlot();
   document.getElementById("nextTime").textContent =
-    next.toLocaleTimeString("ko-KR", { hour:"2-digit", minute:"2-digit" });
+    getNextSlot().toLocaleTimeString("ko-KR", { hour:"2-digit", minute:"2-digit" });
 }
 function scheduleNextLoad() {
-  const msLeft = getNextSlot() - Date.now();
-  setTimeout(() => { loadData(); scheduleNextLoad(); }, msLeft);
+  setTimeout(() => { loadData(); scheduleNextLoad(); }, getNextSlot() - Date.now());
 }
 
 // ── 요일 버튼 ──
@@ -278,34 +259,83 @@ updateDayBtns();
 
 // ── 세트수 ──
 document.getElementById("setsInput").addEventListener("change", e => {
-  currentSets = Math.max(1, parseInt(e.target.value) || 1);
+  currentSets = Math.max(1, parseInt(e.target.value)||1);
   e.target.value = currentSets;
   if (lastData) render(lastData);
 });
 function changeSets(dir) {
-  const input  = document.getElementById("setsInput");
-  const newVal = Math.min(10, Math.max(1, (parseInt(input.value)||1) + dir));
-  input.value  = newVal;
-  currentSets  = newVal;
+  const input = document.getElementById("setsInput");
+  const v = Math.min(10, Math.max(1, (parseInt(input.value)||1) + dir));
+  input.value = v; currentSets = v;
   if (lastData) render(lastData);
 }
 
 // ── 데이터 로드 ──
 async function loadData() {
   if (!currentCenterId) return;
-  const url = getFirebaseUrl();
-  if (!url) return;
   try {
-    const res  = await fetch(url);
+    const res  = await fetch(getFirebaseUrl());
     if (!res.ok) throw new Error("응답 오류 " + res.status);
     const data = await res.json();
     if (!data || !data.riders) throw new Error("데이터 없음");
     lastData = data;
+    weeklyCache = null; // 새 데이터 로드 시 주간 캐시 초기화
     render(data);
     document.getElementById("ts").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
   } catch(e) {
     document.getElementById("content").innerHTML =
-      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small style="color:var(--text2)">${e.message}</small><br><br>관리자가 배민 페이지를 열어두면 자동으로 업데이트됩니다.</div>`;
+      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small>${e.message}</small><br><br>관리자가 배민 페이지를 열어두면 자동으로 업데이트됩니다.</div>`;
+  }
+}
+
+// ── 주간 히스토리 로드 및 거절율 계산 ──
+async function loadWeeklyRR() {
+  if (weeklyCache) return weeklyCache;
+  try {
+    // 최근 7일 날짜 생성
+    const dates = [];
+    for (let i = 1; i <= 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      dates.push(d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"));
+    }
+
+    // 병렬로 가져오기
+    const results = await Promise.all(
+      dates.map(date =>
+        fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${date}.json`)
+          .then(r => r.json())
+          .catch(() => null)
+      )
+    );
+
+    // 기사별 합산
+    const riderTotals = {};
+    results.forEach(dayData => {
+      if (!dayData || !dayData.riders) return;
+      Object.values(dayData.riders).forEach(r => {
+        if (!r.name) return;
+        const key = r.name;
+        if (!riderTotals[key]) riderTotals[key] = { name:r.name, reject:0, cancel:0, total:0 };
+        riderTotals[key].reject += r.reject || 0;
+        riderTotals[key].cancel += r.cancel || 0;
+        riderTotals[key].total  += r.total  || ((r.complete||0)+(r.reject||0)+(r.cancel||0));
+      });
+    });
+
+    // 거절율 계산 후 정렬 (높은 순)
+    weeklyCache = Object.values(riderTotals)
+      .map(r => ({
+        name: r.name,
+        rejectRate: r.total > 0 ? Math.round(((r.reject+r.cancel)/r.total)*1000)/10 : 0,
+        total: r.total,
+        reject: r.reject + r.cancel,
+      }))
+      .sort((a,b) => b.rejectRate - a.rejectRate);
+
+    return weeklyCache;
+  } catch(e) {
+    return [];
   }
 }
 
@@ -316,6 +346,79 @@ function peakBar(val, goal) {
   const color = pct >= 100 ? "var(--green)" : pct >= 70 ? "#f5c842" : "var(--red)";
   return `<div class="peak-bar-wrap"><div class="peak-bar" style="width:${pct.toFixed(0)}%;background:${color}"></div></div>
           <div class="peak-pct">${pct.toFixed(0)}%</div>`;
+}
+
+const rrColor = rate => rate >= 20 ? "var(--red)" : rate >= 10 ? "#f5c842" : "var(--green)";
+
+// ── 탭 전환 ──
+function switchRiderTab(tab) {
+  riderTab = tab;
+  // 탭 버튼 활성화
+  document.querySelectorAll(".rider-tab-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.tab === tab);
+  });
+  // 콘텐츠 전환
+  if (tab === "today") {
+    renderTodayRiders();
+  } else {
+    renderWeeklyRiders();
+  }
+}
+
+function renderTodayRiders() {
+  if (!lastData) return;
+  const calcRR = r => {
+    const t = (r.complete||0)+(r.reject||0)+(r.cancel||0);
+    return t > 0 ? Math.round(((r.reject+r.cancel)/t)*1000)/10 : 0;
+  };
+  const sv = (v,cls,label) =>
+    `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v}</div><div class="stat-label">${label}</div></div>`;
+  const svRate = rate =>
+    `<div class="stat-item"><div class="stat-val" style="color:${rrColor(rate)}">${rate}%</div><div class="stat-label">거절율</div></div>`;
+
+  const sorted = [...lastData.riders].sort((a,b) =>
+    (a.status?.includes("운행중")?0:1) - (b.status?.includes("운행중")?0:1)
+  );
+  const html = sorted.map(r => {
+    const isActive = r.statusCode==="DELIVERING" || r.status?.includes("운행중");
+    const rr = calcRR(r);
+    return `<div class="rider-card">
+      <div>
+        <div class="rider-name">${r.name}</div>
+        <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span>
+      </div>
+      <div class="rider-stats">
+        ${sv(r.complete,"stat-complete","완료")}
+        ${sv(r.reject,"stat-reject","거절")}
+        ${sv(r.cancel,"stat-cancel","배차취소")}
+        ${svRate(rr)}
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("riderList").innerHTML = html;
+}
+
+async function renderWeeklyRiders() {
+  const listEl = document.getElementById("riderList");
+  listEl.innerHTML = '<div class="week-loading">⏳ 주간 데이터 불러오는 중...</div>';
+
+  const data = await loadWeeklyRR();
+
+  if (!data || data.length === 0) {
+    listEl.innerHTML = '<div class="week-loading">📭 주간 데이터가 없어요.</div>';
+    return;
+  }
+
+  listEl.innerHTML = data.map(r => `
+    <div class="week-rr-card">
+      <div class="week-rr-name">${r.name}</div>
+      <div class="week-rr-right">
+        <div class="week-rr-val" style="color:${rrColor(r.rejectRate)}">${r.rejectRate}%</div>
+        <div class="week-rr-label">주간 거절율</div>
+        <div class="week-rr-sub">${r.reject}건 / ${r.total}건</div>
+      </div>
+    </div>`).join("");
 }
 
 // ── 렌더 ──
@@ -335,37 +438,7 @@ function render(data) {
     document.title = data.centerName;
   }
 
-  const calcRR = r => {
-    const t = (r.complete||0)+(r.reject||0)+(r.cancel||0);
-    return t > 0 ? Math.round(((r.reject+r.cancel)/t)*1000)/10 : 0;
-  };
-  const rrColor = rate => rate >= 20 ? "var(--red)" : rate >= 10 ? "#f5c842" : "var(--green)";
-  const sv = (v,cls,label) =>
-    `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v}</div><div class="stat-label">${label}</div></div>`;
-  const svRate = rate =>
-    `<div class="stat-item"><div class="stat-val" style="color:${rrColor(rate)}">${rate}%</div><div class="stat-label">거절율</div></div>`;
-
   const nameTags = activeNames.map(n=>`<span class="active-name-tag">${n}</span>`).join("");
-
-  const sorted = [...data.riders].sort((a,b) => {
-    return (a.status?.includes("운행중")?0:1) - (b.status?.includes("운행중")?0:1);
-  });
-  const riderCards = sorted.map(r => {
-    const isActive = r.statusCode==="DELIVERING" || r.status?.includes("운행중");
-    const rr = calcRR(r);
-    return `<div class="rider-card">
-      <div>
-        <div class="rider-name">${r.name}</div>
-        <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span>
-      </div>
-      <div class="rider-stats">
-        ${sv(r.complete,"stat-complete","완료")}
-        ${sv(r.reject,"stat-reject","거절")}
-        ${sv(r.cancel,"stat-cancel","배차취소")}
-        ${svRate(rr)}
-      </div>
-    </div>`;
-  }).join("");
 
   document.getElementById("content").innerHTML = `
     <div class="section-title">⏰ 시간대별 완료 · ${dayLabel} ${currentSets}세트 기준</div>
@@ -392,7 +465,7 @@ function render(data) {
       </div>
     </div>
 
-    <div class="active-banner" onclick="toggleRiderList()">
+    <div class="active-banner">
       <div class="active-main">
         <div class="active-dot"></div>
         <div>
@@ -420,25 +493,26 @@ function render(data) {
 
     <div class="rider-section-header" onclick="toggleRiderList()">
       <span class="rider-section-title">👥 라이더별 현황 (${totalR}명)</span>
-      <span class="rider-toggle-icon" id="riderToggleIcon">▼</span>
+      <div class="rider-section-right">
+        <div class="rider-tab-bar" onclick="event.stopPropagation()">
+          <button class="rider-tab-btn ${riderTab==='today'?'active':''}" data-tab="today" onclick="switchRiderTab('today')">오늘</button>
+          <button class="rider-tab-btn ${riderTab==='weekly'?'active':''}" data-tab="weekly" onclick="switchRiderTab('weekly')">주간</button>
+        </div>
+        <span class="rider-toggle-icon ${riderListOpen?'open':''}" id="riderToggleIcon">▼</span>
+      </div>
     </div>
-    <div class="rider-list" id="riderList">${riderCards}</div>`;
+    <div class="rider-list ${riderListOpen?'open':''}" id="riderList"></div>`;
 
-  // 기존 펼침 상태 유지
-  if (riderListOpen) {
-    document.getElementById("riderList")?.classList.add("open");
-    document.getElementById("riderToggleIcon")?.classList.add("open");
-  }
+  // 현재 탭에 맞게 렌더
+  if (riderTab === "today") renderTodayRiders();
+  else renderWeeklyRiders();
 }
 
 // ── 라이더 목록 토글 ──
 function toggleRiderList() {
-  const list = document.getElementById("riderList");
-  const icon = document.getElementById("riderToggleIcon");
-  if (!list) return;
   riderListOpen = !riderListOpen;
-  list.classList.toggle("open", riderListOpen);
-  icon?.classList.toggle("open", riderListOpen);
+  document.getElementById("riderList")?.classList.toggle("open", riderListOpen);
+  document.getElementById("riderToggleIcon")?.classList.toggle("open", riderListOpen);
 }
 
 // ── 현황 복사 ──
@@ -453,13 +527,11 @@ function copyStatus() {
   else if (hour>=14 && hour<17) { peakLabel="오후논피크"; peakDone=s.afternoonOff||0; peakGoal=goals.afternoonOff; }
   else if (hour>=17 && hour<21) { peakLabel="저녁피크";  peakDone=s.eveningPeak||0;  peakGoal=goals.eveningPeak; }
   else                           { peakLabel="심야논피크"; peakDone=s.nightOff||0;     peakGoal=goals.nightOff; }
-  const remain     = Math.max(0, peakGoal - peakDone);
-  const active     = lastData.activeCount ?? 0;
-  const centerName = (document.title || BAEMIN_CENTERS[currentCenterId] || currentCenterId)
-                       .replace(/\s*\(DP\d+\)/i, "");
-  const timeStr    = now.toLocaleTimeString("ko-KR", {hour:"2-digit",minute:"2-digit"});
-  const pct = peakGoal > 0 ? ((peakDone / peakGoal) * 100).toFixed(0) : 0;
-const text = `${timeStr} ${peakLabel}\n운행중 ${active}명\n진행 : ${peakDone}/${peakGoal} (${pct}%)\n잔여할당 : ${remain}건`;
+  const remain  = Math.max(0, peakGoal - peakDone);
+  const active  = lastData.activeCount ?? 0;
+  const timeStr = now.toLocaleTimeString("ko-KR", {hour:"2-digit",minute:"2-digit"});
+  const pct     = peakGoal > 0 ? ((peakDone/peakGoal)*100).toFixed(0) : 0;
+  const text    = `${timeStr} ${peakLabel}\n운행중 ${active}명\n진행 : ${peakDone}/${peakGoal} (${pct}%)\n잔여할당 : ${remain}건`;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById("copyBtn");
     if (btn) { btn.textContent="✅ 복사됨!"; setTimeout(()=>btn.textContent="📋 현황 복사",2000); }
