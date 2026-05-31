@@ -157,15 +157,24 @@
     </div>
   </div>
   <div class="control-bar">
-    <div class="flex:1"></div>
-    <button class="copy-btn" id="copyBtn" onclick="copyStatus()">📋 현황 복사</button>
-        <div class="sets-wrap">
+  <button class="copy-btn" id="copyBtn" onclick="copyStatus()">📋 현황 복사</button>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+    <div class="sets-wrap">
       <span class="sets-label">세트수</span>
       <div class="arr-btn" onclick="changeSets(-1)">▼</div>
       <input type="number" class="sets-input" id="setsInput" value="5" min="1" max="10" />
       <div class="arr-btn" onclick="changeSets(1)">▲</div>
       <span class="sets-label">세트</span>
     </div>
+    <div class="divider"></div>
+    <div class="day-btns">
+      <button class="day-btn" data-day="weekday">평일</button>
+      <button class="day-btn" data-day="friday">금</button>
+      <button class="day-btn" data-day="saturday">토</button>
+      <button class="day-btn" data-day="sunday">일</button>
+    </div>
+  </div>
+</div>
     <div class="divider"></div>
     <div class="day-btns">
       <button class="day-btn" data-day="weekday">평일</button>
