@@ -34,9 +34,11 @@
     .next-info span{color:var(--green);font-weight:700}
     .theme-btn{background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;color:var(--accent);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0}
     .theme-btn:hover{background:var(--acl)}
-    .control-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .control-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .copy-btn{background:var(--acl);border:1.5px solid var(--accent);border-radius:7px;color:var(--green);font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:14px 12px;cursor:pointer;font-weight:700;white-space:nowrap;transition:all 0.3s}
     .copy-btn:hover{background:var(--accent);color:#fff}
+    .save-btn{background:var(--bg3);border:1.5px solid var(--border2);border-radius:7px;color:var(--text2);font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:6px 10px;cursor:pointer;font-weight:600;white-space:nowrap;transition:all 0.3s}
+    .save-btn:hover{background:var(--acl);color:var(--green)}
     .divider{width:1px;height:20px;background:var(--border)}
     .sets-wrap{display:flex;align-items:center;gap:5px}
     .sets-label{font-size:11px;color:var(--text2)}
@@ -46,6 +48,7 @@
     .day-btns{display:flex;gap:5px}
     .day-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;padding:4px 12px;cursor:pointer;transition:all 0.2s}
     .day-btn.active{background:var(--acl);border-color:var(--border2);color:var(--green)}
+
     .active-banner{margin:14px 16px 6px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
     .active-main{display:flex;align-items:center;gap:10px}
     .active-dot{width:9px;height:9px;background:var(--green);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
@@ -54,6 +57,7 @@
     .active-count{font-size:26px;font-weight:900;color:var(--green);line-height:1}
     .active-names{font-size:10px;color:var(--text2);max-width:55%;line-height:1.7;text-align:right}
     .active-name-tag{display:inline-block;background:var(--acl);color:var(--green);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin:1px 2px;font-size:10px}
+
     .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 16px}
     .summary-card{background:var(--bg2);border-radius:12px;padding:14px 10px;text-align:center;border:1.5px solid var(--border);position:relative;overflow:hidden;transition:all 0.4s}
     .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
@@ -71,10 +75,21 @@
     .bar-complete{background:var(--green)}.bar-reject{background:var(--red)}.bar-cancel{background:var(--yellow)}
     .bar-legend{display:flex;gap:14px;padding:0 16px 12px;font-size:11px;color:var(--text2)}
     .legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle}
+
     .section-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:4px 16px 8px}
+
+    /* ── 피크 카드 ── */
     .peak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 14px}
-    .peak-card{background:var(--bg3);border-radius:12px;padding:14px 8px 10px;text-align:center;border:1px solid var(--border);position:relative;overflow:hidden;transition:all 0.4s}
-    .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)}
+    .peak-card{background:var(--bg3);border-radius:12px;padding:14px 8px 10px;text-align:center;border:1.5px solid var(--border);position:relative;overflow:hidden;transition:all 0.4s;cursor:default}
+    .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transition:all 0.4s}
+
+    /* 현재 피크 하이라이트 */
+    .peak-card.current-peak{border-color:var(--accent);box-shadow:0 0 0 2px var(--acl),0 4px 16px var(--acl)}
+    .peak-card.current-peak::before{height:3px;background:linear-gradient(90deg,var(--accent),var(--green))}
+    .peak-card.current-peak .peak-active-badge{display:inline-block}
+    .peak-active-badge{display:none;font-size:8px;background:var(--accent);color:#fff;border-radius:4px;padding:1px 5px;font-weight:700;margin-bottom:3px;animation:badgePulse 1.5s ease-in-out infinite}
+    @keyframes badgePulse{0%,100%{opacity:1}50%{opacity:0.6}}
+
     .peak-emoji{font-size:18px;margin-bottom:5px}
     .peak-label{font-size:9px;color:var(--text2);margin-bottom:5px}
     .peak-value{font-size:22px;font-weight:900;color:var(--accent);line-height:1}
@@ -90,15 +105,17 @@
     .rider-section-right{display:flex;align-items:center;gap:10px}
     .rider-toggle-icon{font-size:12px;color:var(--text2);transition:transform 0.3s}
     .rider-toggle-icon.open{transform:rotate(180deg)}
-
-    /* 오늘/주간 탭 */
     .rider-tab-bar{display:flex;background:var(--bg3);border-radius:8px;padding:3px;gap:3px}
     .rider-tab-btn{padding:4px 12px;border:none;border-radius:6px;font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.2s}
     .rider-tab-btn.active{background:var(--bg2);color:var(--accent)}
 
     .rider-list{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0}
     .rider-list.open{max-height:3000px}
-    .rider-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;transition:all 0.4s}
+
+    /* 라이더 카드 + 클릭 아코디언 */
+    .rider-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);transition:all 0.3s;cursor:pointer}
+    .rider-card:hover{border-color:var(--border2)}
+    .rider-card-top{display:flex;align-items:center;justify-content:space-between}
     .rider-name{font-size:14px;font-weight:700;color:var(--text1);margin-bottom:3px}
     .rider-status{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;display:inline-block}
     .status-active{background:var(--acl);color:var(--green);border:1px solid var(--border2)}
@@ -108,6 +125,15 @@
     .stat-val{font-size:17px;font-weight:900;line-height:1}
     .stat-label{font-size:9px;color:var(--text2);margin-top:2px}
     .stat-complete{color:var(--green)}.stat-reject{color:var(--red)}.stat-cancel{color:var(--yellow)}.stat-zero{color:#555}
+
+    /* 라이더 피크 상세 (아코디언) */
+    .rider-peak-detail{overflow:hidden;max-height:0;transition:max-height 0.35s ease,margin-top 0.2s;margin-top:0}
+    .rider-peak-detail.open{max-height:200px;margin-top:12px}
+    .rider-peak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-top:10px;border-top:1px solid var(--border)}
+    .rider-peak-item{text-align:center;background:var(--bg3);border-radius:8px;padding:8px 4px}
+    .rider-peak-emoji{font-size:14px;margin-bottom:3px}
+    .rider-peak-label{font-size:8px;color:var(--text2);margin-bottom:3px}
+    .rider-peak-val{font-size:16px;font-weight:900;color:var(--accent)}
 
     /* 주간 거절율 카드 */
     .week-rr-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;transition:all 0.4s}
@@ -126,9 +152,14 @@
     .login-box{max-width:360px;margin:60px auto;padding:0 20px}
     .login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text1);font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif;transition:all 0.4s}
     .login-box button{width:100%;background:linear-gradient(135deg,var(--accent),#0099aa);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:15px;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+
+    /* 저장 완료 토스트 */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text1);color:var(--bg);font-size:12px;font-weight:600;padding:10px 20px;border-radius:20px;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   </style>
 </head>
 <body>
+<div class="toast" id="toast"></div>
 <header>
   <div class="header-top">
     <div class="logo">
@@ -144,7 +175,7 @@
   </div>
   <div class="control-bar">
     <button class="copy-btn" id="copyBtn" onclick="copyStatus()">📋 현황 복사</button>
-    <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
       <div class="sets-wrap">
         <span class="sets-label">세트수</span>
         <div class="arr-btn" onclick="changeSets(-1)">▼</div>
@@ -159,6 +190,8 @@
         <button class="day-btn" data-day="saturday">토</button>
         <button class="day-btn" data-day="sunday">일</button>
       </div>
+      <div class="divider"></div>
+      <button class="save-btn" onclick="saveSettings()">💾 설정저장</button>
     </div>
   </div>
 </header>
@@ -176,14 +209,44 @@ const BAEMIN_CENTERS = {
   cherry_rabbit: "🍒 체리 래빗",
 };
 
-let currentCenterId = null;
-let currentDayType  = getTodayDayType();
-let currentSets     = 5;
-let lastData        = null;
-let riderListOpen   = false;
-let riderTab        = "today"; // "today" | "weekly"
-let weeklyCache     = null;
-let manualTheme     = null;
+let currentCenterId  = null;
+let currentDayType   = getTodayDayType();
+let currentSets      = 5;
+let lastData         = null;
+let riderListOpen    = false;
+let riderTab         = "today";
+let weeklyCache      = null;
+let manualTheme      = null;
+let openRiderCards   = new Set(); // 펼쳐진 라이더 카드 추적
+const notifiedPeaks  = new Set(); // 알림 보낸 피크 추적
+
+// ── 설정 저장/로드 ──
+function saveSettings() {
+  const settings = {
+    sets:      currentSets,
+    dayType:   currentDayType,
+    centerId:  currentCenterId,
+  };
+  localStorage.setItem("dashSettings", JSON.stringify(settings));
+  showToast("💾 설정이 저장됐어요!");
+}
+
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem("dashSettings") || "{}");
+    if (s.sets)    { currentSets = s.sets; document.getElementById("setsInput").value = s.sets; }
+    if (s.dayType) { currentDayType = s.dayType; }
+    // centerId는 URL 파라미터 우선, 없으면 저장값
+    return s.centerId || null;
+  } catch(e) { return null; }
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
+}
 
 // ── 테마 ──
 function applyTheme(dark) {
@@ -229,6 +292,15 @@ function getGoals(dayType, sets) {
            eveningPeak:base.eveningPeak*sets, nightOff:base.nightOff*sets };
 }
 
+// ── 현재 피크타임 계산 ──
+function getCurrentPeak() {
+  const h = new Date().getHours();
+  if (h >= 6  && h < 14) return "morningPeak";
+  if (h >= 14 && h < 17) return "afternoonOff";
+  if (h >= 17 && h < 21) return "eveningPeak";
+  return "nightOff";
+}
+
 // ── 자동 갱신 ──
 const SLOT_MIN = 5;
 function getNextSlot() {
@@ -243,6 +315,9 @@ function updateNextTime() {
 function scheduleNextLoad() {
   setTimeout(() => { loadData(); scheduleNextLoad(); }, getNextSlot() - Date.now());
 }
+
+// 1분마다 피크 하이라이트 갱신
+setInterval(() => { if (lastData) updatePeakHighlight(); }, 60000);
 
 // ── 요일 버튼 ──
 document.querySelectorAll(".day-btn").forEach(btn => {
@@ -270,6 +345,57 @@ function changeSets(dir) {
   if (lastData) render(lastData);
 }
 
+// ── 브라우저 푸시 알림 ──
+async function requestNotificationPermission() {
+  if (!("Notification" in window)) return;
+  if (Notification.permission === "default") {
+    await Notification.requestPermission();
+  }
+}
+
+function checkPeakNotifications(data) {
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  const s     = data.summary || {};
+  const goals = getGoals(currentDayType, currentSets);
+  const curPeak = getCurrentPeak();
+
+  const peakMap = {
+    morningPeak:  { label:"아침점심피크", val: s.morningPeak  || 0, goal: goals.morningPeak  },
+    afternoonOff: { label:"오후논피크",   val: s.afternoonOff || 0, goal: goals.afternoonOff },
+    eveningPeak:  { label:"저녁피크",     val: s.eveningPeak  || 0, goal: goals.eveningPeak  },
+    nightOff:     { label:"심야논피크",   val: s.nightOff     || 0, goal: goals.nightOff     },
+  };
+
+  // 날짜 바뀌면 알림 초기화
+  const today = new Date().toDateString();
+  const lastDate = localStorage.getItem("notifDate");
+  if (lastDate !== today) {
+    notifiedPeaks.clear();
+    localStorage.setItem("notifDate", today);
+  }
+
+  Object.entries(peakMap).forEach(([key, p]) => {
+    if (p.goal > 0 && p.val >= p.goal && !notifiedPeaks.has(key)) {
+      notifiedPeaks.add(key);
+      new Notification("🎯 목표 달성!", {
+        body: `${p.label} ${p.val}/${p.goal}건 완료!`,
+        icon: "https://hogamboy.github.io/baemin-dashboard/icon.png",
+        tag:  key,
+      });
+    }
+  });
+}
+
+// ── 피크 하이라이트 업데이트 ──
+function updatePeakHighlight() {
+  const curPeak = getCurrentPeak();
+  const peakKeys = ["morningPeak","afternoonOff","eveningPeak","nightOff"];
+  peakKeys.forEach((key, idx) => {
+    const card = document.getElementById(`peak-card-${idx}`);
+    if (card) card.classList.toggle("current-peak", key === curPeak);
+  });
+}
+
 // ── 데이터 로드 ──
 async function loadData() {
   if (!currentCenterId) return;
@@ -279,8 +405,9 @@ async function loadData() {
     const data = await res.json();
     if (!data || !data.riders) throw new Error("데이터 없음");
     lastData = data;
-    weeklyCache = null; // 새 데이터 로드 시 주간 캐시 초기화
+    weeklyCache = null;
     render(data);
+    checkPeakNotifications(data);
     document.getElementById("ts").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
   } catch(e) {
     document.getElementById("content").innerHTML =
@@ -288,42 +415,33 @@ async function loadData() {
   }
 }
 
-// ── 주간 히스토리 로드 및 거절율 계산 ──
+// ── 주간 히스토리 ──
 async function loadWeeklyRR() {
   if (weeklyCache) return weeklyCache;
   try {
-    // 최근 7일 날짜 생성
     const dates = [];
     for (let i = 1; i <= 7; i++) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      dates.push(d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"));
+      dates.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"));
     }
-
-    // 병렬로 가져오기
     const results = await Promise.all(
       dates.map(date =>
         fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${date}.json`)
-          .then(r => r.json())
-          .catch(() => null)
+          .then(r => r.json()).catch(() => null)
       )
     );
-
-    // 기사별 합산
     const riderTotals = {};
     results.forEach(dayData => {
       if (!dayData || !dayData.riders) return;
       Object.values(dayData.riders).forEach(r => {
         if (!r.name) return;
-        const key = r.name;
-        if (!riderTotals[key]) riderTotals[key] = { name:r.name, reject:0, cancel:0, total:0 };
-        riderTotals[key].reject += r.reject || 0;
-        riderTotals[key].cancel += r.cancel || 0;
-        riderTotals[key].total  += r.total  || ((r.complete||0)+(r.reject||0)+(r.cancel||0));
+        if (!riderTotals[r.name]) riderTotals[r.name] = { name:r.name, reject:0, cancel:0, total:0 };
+        riderTotals[r.name].reject += r.reject || 0;
+        riderTotals[r.name].cancel += r.cancel || 0;
+        riderTotals[r.name].total  += r.total  || ((r.complete||0)+(r.reject||0)+(r.cancel||0));
       });
     });
-
-    // 거절율 계산 후 정렬 (높은 순)
     weeklyCache = Object.values(riderTotals)
       .map(r => ({
         name: r.name,
@@ -332,11 +450,8 @@ async function loadWeeklyRR() {
         reject: r.reject + r.cancel,
       }))
       .sort((a,b) => b.rejectRate - a.rejectRate);
-
     return weeklyCache;
-  } catch(e) {
-    return [];
-  }
+  } catch(e) { return []; }
 }
 
 // ── 피크바 ──
@@ -353,16 +468,17 @@ const rrColor = rate => rate >= 20 ? "var(--red)" : rate >= 10 ? "#f5c842" : "va
 // ── 탭 전환 ──
 function switchRiderTab(tab) {
   riderTab = tab;
-  // 탭 버튼 활성화
-  document.querySelectorAll(".rider-tab-btn").forEach(b => {
-    b.classList.toggle("active", b.dataset.tab === tab);
-  });
-  // 콘텐츠 전환
-  if (tab === "today") {
-    renderTodayRiders();
-  } else {
-    renderWeeklyRiders();
-  }
+  document.querySelectorAll(".rider-tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  if (tab === "today") renderTodayRiders();
+  else renderWeeklyRiders();
+}
+
+// ── 라이더 카드 토글 ──
+function toggleRiderCard(name) {
+  if (openRiderCards.has(name)) openRiderCards.delete(name);
+  else openRiderCards.add(name);
+  const detail = document.getElementById(`detail-${name.replace(/\s/g,"_")}`);
+  if (detail) detail.classList.toggle("open", openRiderCards.has(name));
 }
 
 function renderTodayRiders() {
@@ -379,37 +495,45 @@ function renderTodayRiders() {
   const sorted = [...lastData.riders].sort((a,b) =>
     (a.status?.includes("운행중")?0:1) - (b.status?.includes("운행중")?0:1)
   );
-  const html = sorted.map(r => {
+
+  document.getElementById("riderList").innerHTML = sorted.map(r => {
     const isActive = r.statusCode==="DELIVERING" || r.status?.includes("운행중");
-    const rr = calcRR(r);
-    return `<div class="rider-card">
-      <div>
-        <div class="rider-name">${r.name}</div>
-        <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span>
+    const rr  = calcRR(r);
+    const uid = r.name.replace(/\s/g,"_");
+    const isOpen = openRiderCards.has(r.name);
+    return `<div class="rider-card" onclick="toggleRiderCard('${r.name}')">
+      <div class="rider-card-top">
+        <div>
+          <div class="rider-name">${r.name}</div>
+          <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span>
+        </div>
+        <div class="rider-stats">
+          ${sv(r.complete,"stat-complete","완료")}
+          ${sv(r.reject,"stat-reject","거절")}
+          ${sv(r.cancel,"stat-cancel","배차취소")}
+          ${svRate(rr)}
+        </div>
       </div>
-      <div class="rider-stats">
-        ${sv(r.complete,"stat-complete","완료")}
-        ${sv(r.reject,"stat-reject","거절")}
-        ${sv(r.cancel,"stat-cancel","배차취소")}
-        ${svRate(rr)}
+      <div class="rider-peak-detail ${isOpen?"open":""}" id="detail-${uid}">
+        <div class="rider-peak-grid">
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌅</div><div class="rider-peak-label">아침점심</div><div class="rider-peak-val">${r.morningPeak||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">☀️</div><div class="rider-peak-label">오후논피크</div><div class="rider-peak-val">${r.afternoonOff||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌆</div><div class="rider-peak-label">저녁피크</div><div class="rider-peak-val">${r.eveningPeak||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌙</div><div class="rider-peak-label">심야논피크</div><div class="rider-peak-val">${r.nightOff||0}</div></div>
+        </div>
       </div>
     </div>`;
   }).join("");
-
-  document.getElementById("riderList").innerHTML = html;
 }
 
 async function renderWeeklyRiders() {
   const listEl = document.getElementById("riderList");
   listEl.innerHTML = '<div class="week-loading">⏳ 주간 데이터 불러오는 중...</div>';
-
   const data = await loadWeeklyRR();
-
   if (!data || data.length === 0) {
     listEl.innerHTML = '<div class="week-loading">📭 주간 데이터가 없어요.</div>';
     return;
   }
-
   listEl.innerHTML = data.map(r => `
     <div class="week-rr-card">
       <div class="week-rr-name">${r.name}</div>
@@ -425,13 +549,14 @@ async function renderWeeklyRiders() {
 function render(data) {
   const s      = data.summary || {};
   const goals  = getGoals(currentDayType, currentSets);
-  const total  = (s.complete||0) + (s.reject||0) + (s.cancel||0);
+  const total  = (s.complete||0)+(s.reject||0)+(s.cancel||0);
   const pct    = v => total > 0 ? Math.max(1,(v/total)*100).toFixed(1) : 0;
   const rjPct  = total > 0 ? Math.max(1,((s.reject+s.cancel)/total)*100).toFixed(1) : 0;
   const active = data.activeCount ?? data.riders.filter(r=>r.statusCode==="DELIVERING"||r.status?.includes("운행중")).length;
   const totalR = data.totalCount ?? data.riders.length;
   const activeNames = data.riders.filter(r=>r.statusCode==="DELIVERING"||r.status?.includes("운행중")).map(r=>r.name);
   const dayLabel = {weekday:"평일",friday:"금요일",saturday:"토요일",sunday:"일요일"}[currentDayType];
+  const curPeak = getCurrentPeak();
 
   if (data.centerName) {
     document.getElementById("centerTitle").textContent = data.centerName;
@@ -440,30 +565,25 @@ function render(data) {
 
   const nameTags = activeNames.map(n=>`<span class="active-name-tag">${n}</span>`).join("");
 
+  const peakDefs = [
+    { key:"morningPeak",  emoji:"🌅", label:"아침점심피크",  val:s.morningPeak  ||0, goal:goals.morningPeak  },
+    { key:"afternoonOff", emoji:"☀️", label:"오후논피크",    val:s.afternoonOff ||0, goal:goals.afternoonOff },
+    { key:"eveningPeak",  emoji:"🌆", label:"저녁피크",      val:s.eveningPeak  ||0, goal:goals.eveningPeak  },
+    { key:"nightOff",     emoji:"🌙", label:"심야논피크",    val:s.nightOff     ||0, goal:goals.nightOff     },
+  ];
+
+  const peakCards = peakDefs.map((p, idx) => `
+    <div class="peak-card ${p.key===curPeak?"current-peak":""}" id="peak-card-${idx}">
+      <div class="peak-active-badge">진행중</div>
+      <div class="peak-emoji">${p.emoji}</div>
+      <div class="peak-label">${p.label}</div>
+      <div class="peak-value">${p.val}<span class="peak-goal">/ ${p.goal}</span></div>
+      ${peakBar(p.val, p.goal)}
+    </div>`).join("");
+
   document.getElementById("content").innerHTML = `
     <div class="section-title">⏰ 시간대별 완료 · ${dayLabel} ${currentSets}세트 기준</div>
-    <div class="peak-grid">
-      <div class="peak-card">
-        <div class="peak-emoji">🌅</div><div class="peak-label">아침점심피크</div>
-        <div class="peak-value">${s.morningPeak||0}<span class="peak-goal">/ ${goals.morningPeak}</span></div>
-        ${peakBar(s.morningPeak||0, goals.morningPeak)}
-      </div>
-      <div class="peak-card">
-        <div class="peak-emoji">☀️</div><div class="peak-label">오후논피크</div>
-        <div class="peak-value">${s.afternoonOff||0}<span class="peak-goal">/ ${goals.afternoonOff}</span></div>
-        ${peakBar(s.afternoonOff||0, goals.afternoonOff)}
-      </div>
-      <div class="peak-card">
-        <div class="peak-emoji">🌆</div><div class="peak-label">저녁피크</div>
-        <div class="peak-value">${s.eveningPeak||0}<span class="peak-goal">/ ${goals.eveningPeak}</span></div>
-        ${peakBar(s.eveningPeak||0, goals.eveningPeak)}
-      </div>
-      <div class="peak-card">
-        <div class="peak-emoji">🌙</div><div class="peak-label">심야논피크</div>
-        <div class="peak-value">${s.nightOff||0}<span class="peak-goal">/ ${goals.nightOff}</span></div>
-        ${peakBar(s.nightOff||0, goals.nightOff)}
-      </div>
-    </div>
+    <div class="peak-grid">${peakCards}</div>
 
     <div class="active-banner">
       <div class="active-main">
@@ -503,7 +623,6 @@ function render(data) {
     </div>
     <div class="rider-list ${riderListOpen?'open':''}" id="riderList"></div>`;
 
-  // 현재 탭에 맞게 렌더
   if (riderTab === "today") renderTodayRiders();
   else renderWeeklyRiders();
 }
@@ -540,9 +659,15 @@ function copyStatus() {
 
 // ── 센터 로그인 + 시작 ──
 function initDashboard() {
+  const savedSettings = loadSettings();
+  updateDayBtns();
+
   const urlCenter = getCenterFromUrl();
-  if (urlCenter && BAEMIN_CENTERS[urlCenter]) {
-    currentCenterId = urlCenter;
+  const center = urlCenter || savedSettings;
+
+  if (center && BAEMIN_CENTERS[center]) {
+    currentCenterId = center;
+    if (!urlCenter) history.replaceState(null,"",`?center=${center}`);
     startDashboard();
     return;
   }
@@ -581,6 +706,7 @@ function doLoginDashboard() {
 
 function startDashboard() {
   document.getElementById("centerTitle").textContent = BAEMIN_CENTERS[currentCenterId] || currentCenterId;
+  requestNotificationPermission();
   loadData();
   scheduleNextLoad();
   setInterval(updateNextTime, 30000);
