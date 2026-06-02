@@ -23,6 +23,7 @@
       --green:#00e676;--red:#ff5252;--yellow:#ffd740;
       --header-border:#00c3ff22;
     }
+    #mainContent2{background:var(--bg)}
     body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;padding-bottom:40px;transition:background 0.4s,color 0.4s}
     header{background:var(--bg2);border-bottom:2px solid var(--header-border);padding:14px 20px;position:sticky;top:0;z-index:10;transition:background 0.4s,border-color 0.4s}
     .header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
@@ -173,8 +174,8 @@
     .collapsible-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase}
     .collapsible-icon{font-size:12px;color:var(--text2);transition:transform 0.3s}
     .collapsible-icon.open{transform:rotate(180deg)}
-    .collapsible-body{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0}
-    .collapsible-body.open{max-height:3000px}
+    .collapsible-body{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0;background:var(--bg)}
+    .collapsible-body.open{max-height:3000px;background:var(--bg)}
 
     .timestamp{font-size:11px;color:var(--text2);text-align:center;padding:14px}
     .loading{text-align:center;padding:60px 20px;color:var(--text2)}
