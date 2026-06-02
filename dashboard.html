@@ -23,7 +23,6 @@
       --green:#00e676;--red:#ff5252;--yellow:#ffd740;
       --header-border:#00c3ff22;
     }
-    #mainContent2{background:var(--bg)}
     body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;padding-bottom:40px;transition:background 0.4s,color 0.4s}
     header{background:var(--bg2);border-bottom:2px solid var(--header-border);padding:14px 20px;position:sticky;top:0;z-index:10;transition:background 0.4s,border-color 0.4s}
     .header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
@@ -174,8 +173,8 @@
     .collapsible-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase}
     .collapsible-icon{font-size:12px;color:var(--text2);transition:transform 0.3s}
     .collapsible-icon.open{transform:rotate(180deg)}
-    .collapsible-body{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0;background:var(--bg)}
-    .collapsible-body.open{max-height:3000px;background:var(--bg)}
+    .collapsible-body{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0}
+    .collapsible-body.open{max-height:3000px}
 
     .timestamp{font-size:11px;color:var(--text2);text-align:center;padding:14px}
     .loading{text-align:center;padding:60px 20px;color:var(--text2)}
@@ -271,14 +270,16 @@ const MAX_WEEKS      = 3;
 
 // ── 설정 저장/로드 ──
 function saveSettings() {
-  localStorage.setItem("dashSettings", JSON.stringify({
-    sets: currentSets, dayType: currentDayType, centerId: currentCenterId
+  const key = currentCenterId ? `dashSettings_${currentCenterId}` : "dashSettings_default";
+  localStorage.setItem(key, JSON.stringify({
+    sets: currentSets, dayType: currentDayType
   }));
   showToast("💾 설정이 저장됐어요!");
 }
-function loadSettings() {
+function loadSettings(centerId) {
   try {
-    const s = JSON.parse(localStorage.getItem("dashSettings") || "{}");
+    const key = centerId ? `dashSettings_${centerId}` : "dashSettings_default";
+    const s = JSON.parse(localStorage.getItem(key) || "{}");
     if (s.sets)    { currentSets = s.sets; document.getElementById("setsInput").value = s.sets; }
     if (s.dayType) currentDayType = s.dayType;
   } catch(e) {}
@@ -797,14 +798,23 @@ function copyStatus() {
 
 // ── 센터 로그인 + 시작 ──
 function initDashboard() {
-  loadSettings(); updateDayBtns();
   const urlCenter = getCenterFromUrl();
-  if (urlCenter && BAEMIN_CENTERS[urlCenter]) { currentCenterId=urlCenter; startDashboard(); return; }
+  if (urlCenter && BAEMIN_CENTERS[urlCenter]) {
+    currentCenterId = urlCenter;
+    loadSettings(currentCenterId);
+    updateDayBtns();
+    startDashboard();
+    return;
+  }
+  loadSettings(null); updateDayBtns();
   try {
-    const s=JSON.parse(localStorage.getItem("dashSettings")||"{}");
-    if(s.centerId&&BAEMIN_CENTERS[s.centerId]){
-      currentCenterId=s.centerId;
-      history.replaceState(null,"",`?center=${s.centerId}`);
+    // 저장된 센터ID는 별도 키로 관리
+    const savedCenter = localStorage.getItem("lastCenterId");
+    if(savedCenter && BAEMIN_CENTERS[savedCenter]){
+      currentCenterId = savedCenter;
+      history.replaceState(null,"",`?center=${savedCenter}`);
+      loadSettings(currentCenterId);
+      updateDayBtns();
       startDashboard(); return;
     }
   } catch(e) {}
@@ -837,6 +847,8 @@ function doLogin() {
 }
 function startDashboard() {
   document.getElementById("centerTitle").textContent=BAEMIN_CENTERS[currentCenterId]||currentCenterId;
+  // 마지막 센터 저장
+  localStorage.setItem("lastCenterId", currentCenterId);
   requestNotificationPermission();
   loadData();
   scheduleNextLoad();

@@ -199,10 +199,26 @@
 const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
 
 const CENTERS = [
-  { id: "mango_panda",   name: "🥭 망고 팬더",   sets: 5 },
-  { id: "lime_penguin",  name: "🍋 라임 펭귄",   sets: 5 },
-  { id: "cherry_rabbit", name: "🍒 체리 래빗",   sets: 5 },
+  { id: "mango_panda",   name: "🥭 망고 팬더" },
+  { id: "lime_penguin",  name: "🍋 라임 펭귄" },
+  { id: "cherry_rabbit", name: "🍒 체리 래빗" },
 ];
+
+// 센터별 저장된 세트수 불러오기
+function getCenterSets(centerId) {
+  try {
+    const s = JSON.parse(localStorage.getItem(`dashSettings_${centerId}`) || "{}");
+    return s.sets || 5;
+  } catch(e) { return 5; }
+}
+
+// 센터별 저장된 요일 불러오기
+function getCenterDayType(centerId) {
+  try {
+    const s = JSON.parse(localStorage.getItem(`dashSettings_${centerId}`) || "{}");
+    return s.dayType || getDayType();
+  } catch(e) { return getDayType(); }
+}
 
 const GOALS_PER_SET = {
   weekday: { morningPeak:21, afternoonOff:20, eveningPeak:30, nightOff:29 },
@@ -236,8 +252,8 @@ function getDayType() {
   const d = new Date().getDay();
   return d===0?"sunday":d===6?"saturday":d===5?"friday":"weekday";
 }
-function getGoals(sets) {
-  const base = GOALS_PER_SET[getDayType()];
+function getGoals(sets, dayType) {
+  const base = GOALS_PER_SET[dayType || getDayType()];
   return { morningPeak:base.morningPeak*sets, afternoonOff:base.afternoonOff*sets,
            eveningPeak:base.eveningPeak*sets, nightOff:base.nightOff*sets };
 }
@@ -299,6 +315,7 @@ function buildCenterCards() {
         <div>
           <div class="center-name">${c.name}</div>
           <div class="center-real-name" id="realname_${c.id}">-</div>
+          <div style="font-size:9px;color:var(--text2);margin-top:1px" id="sets_${c.id}">세트수 로딩중...</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <div class="center-updated" id="updated_${c.id}">-</div>
@@ -334,6 +351,10 @@ async function loadCenter(center) {
     if (data.centerName) {
       document.getElementById("realname_"+center.id).textContent = data.centerName.replace(/\s*\(DP\d+\)/i,"");
     }
+    const cSets = getCenterSets(center.id);
+    const cDay  = getCenterDayType(center.id);
+    const dayLabels = {weekday:"평일",friday:"금",saturday:"토",sunday:"일"};
+    document.getElementById("sets_"+center.id).textContent = `${dayLabels[cDay]||"평일"} ${cSets}세트`;
     renderCenterBody(center, data);
     return data;
   } catch(e) {
@@ -348,7 +369,9 @@ async function loadCenter(center) {
 // ── 센터 본문 렌더 ──
 function renderCenterBody(center, data) {
   const s      = data.summary || {};
-  const goals  = getGoals(center.sets);
+  const sets    = getCenterSets(center.id);
+  const dayType = getCenterDayType(center.id);
+  const goals   = getGoals(sets, dayType);
   const total  = (s.complete||0)+(s.reject||0)+(s.cancel||0);
   const rjPct  = total>0?(((s.reject+s.cancel)/total)*100).toFixed(1):0;
   const active = data.activeCount ?? data.riders.filter(r=>r.statusCode==="DELIVERING"||r.status?.includes("운행중")).length;
