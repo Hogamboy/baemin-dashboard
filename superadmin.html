@@ -23,46 +23,59 @@
     }
     body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;transition:background 0.4s,color 0.4s}
 
-
-
-    /* 헤더 */
-    header{background:var(--bg2);border-bottom:2px solid var(--border);padding:14px 20px;position:sticky;top:0;z-index:10}
+    header{background:var(--bg2);border-bottom:2px solid var(--border);padding:12px 20px;position:sticky;top:0;z-index:10}
     .hdr-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-    .hdr-left{display:flex;align-items:center;gap:10px}
-    .hdr-title{font-size:16px;font-weight:700;color:var(--text1)}
-    .hdr-sub{font-size:11px;color:var(--text2)}
-    .hdr-right{display:flex;align-items:center;gap:8px}
-    .hdr-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer}
+    .hdr-title{font-size:15px;font-weight:700;color:var(--text1)}
+    .hdr-sub{font-size:10px;color:var(--text2)}
+    .hdr-right{display:flex;align-items:center;gap:6px}
+    .hdr-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer;transition:all 0.2s}
+    .hdr-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .save-all-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s}
+    .save-all-btn:hover{background:var(--acl);border-color:var(--accent)}
     .theme-btn{background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;color:var(--accent);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer}
     .next-info{font-size:11px;color:var(--text2);background:var(--bg3);border-radius:6px;padding:5px 10px;white-space:nowrap}
     .next-info span{color:var(--green);font-weight:700}
 
-    /* 총괄 요약 */
-    .total-bar{display:block;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px}
-    .total-inner{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    /* 총괄 요약 - 폰트 2단계 축소 */
+    .total-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 20px}
+    .total-inner{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
     .total-item{text-align:center}
-    .total-label{font-size:10px;color:var(--text2);margin-bottom:2px}
-    .total-value{font-size:20px;font-weight:900}
+    .total-label{font-size:9px;color:var(--text2);margin-bottom:2px}
+    .total-value{font-size:14px;font-weight:900}
     .tv-green{color:var(--green)}.tv-red{color:var(--red)}.tv-accent{color:var(--accent)}.tv-yellow{color:var(--yellow)}
-    .total-divider{width:1px;height:36px;background:var(--border)}
+    .total-divider{width:1px;height:28px;background:var(--border)}
 
-    /* 그리드 */
-    .dashboard{display:block;padding:16px}
-    .centers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+    .dashboard{padding:14px}
+    .centers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
 
     /* 센터 카드 */
     .center-card{background:var(--bg2);border-radius:16px;border:1.5px solid var(--border);overflow:hidden;transition:all 0.4s}
     .center-card.loading{opacity:0.6}
-    .center-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-    .center-name{font-size:15px;font-weight:700;color:var(--text1)}
-    .center-real-name{font-size:10px;color:var(--text2);margin-top:2px}
+
+    /* 센터 헤더 - 지사명만 크게, 암호명 숨김 */
+    .center-header{padding:12px 14px;border-bottom:1px solid var(--border)}
+    .center-header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+    .center-real-name{font-size:14px;font-weight:700;color:var(--text1)}
+    .center-header-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
     .center-status-dot{width:8px;height:8px;border-radius:50%;background:#444;flex-shrink:0}
     .center-status-dot.live{background:var(--green);box-shadow:0 0 6px var(--green);animation:dotPulse 1.5s infinite}
     @keyframes dotPulse{0%,100%{opacity:1}50%{opacity:0.4}}
     .center-updated{font-size:10px;color:var(--text2)}
 
+    /* 센터별 설정 컨트롤 */
+    .center-ctrl{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .center-sets-wrap{display:flex;align-items:center;gap:4px}
+    .sets-lbl{font-size:10px;color:var(--text2)}
+    .sets-inp{width:32px;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text1);font-size:12px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:3px 4px;text-align:center}
+    .arr-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--accent);font-size:10px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+    .center-day-btns{display:flex;gap:3px}
+    .center-day-btn{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text2);font-size:10px;font-weight:600;font-family:'Noto Sans KR',sans-serif;padding:3px 8px;cursor:pointer;transition:all 0.2s}
+    .center-day-btn.active{background:var(--acl);border-color:var(--border2);color:var(--green)}
+    .center-save-btn{background:var(--acl);border:1px solid var(--accent);border-radius:5px;color:var(--green);font-size:10px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:3px 8px;cursor:pointer;white-space:nowrap;transition:all 0.2s;margin-left:auto}
+    .center-save-btn:hover{background:var(--accent);color:#fff}
+
     /* 센터 요약 */
-    .center-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 14px}
+    .center-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 14px}
     .cs-card{background:var(--bg3);border-radius:10px;padding:10px 8px;text-align:center;position:relative;overflow:hidden}
     .cs-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:10px 10px 0 0}
     .cs-card.c::before{background:var(--green)}
@@ -75,14 +88,12 @@
     .cs-card.a .cs-value{color:var(--accent)}
     .cs-unit{font-size:10px;font-weight:500}
 
-    /* 거절율 바 */
     .rr-bar{padding:0 14px 10px;display:flex;align-items:center;gap:8px}
     .rr-label{font-size:10px;color:var(--text2);white-space:nowrap}
     .rr-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
     .rr-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
     .rr-pct{font-size:11px;font-weight:700;min-width:36px;text-align:right}
 
-    /* 피크 */
     .peak-section{padding:0 14px 10px}
     .peak-label-row{font-size:10px;color:var(--text2);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px}
     .peak-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
@@ -96,7 +107,6 @@
     .peak-mini-bar{height:3px;background:var(--border);border-radius:2px;margin:4px 3px 0;overflow:hidden}
     .peak-mini-fill{height:100%;border-radius:2px}
 
-    /* 운행중 배너 */
     .active-banner{margin:0 14px 10px;background:var(--bg3);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
     .active-left{display:flex;align-items:center;gap:8px}
     .active-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:dotPulse 1.5s infinite}
@@ -112,11 +122,11 @@
     .rtl-icon{font-size:11px;color:var(--text2);transition:transform 0.3s}
     .rtl-icon.open{transform:rotate(180deg)}
     .rider-list-wrap{overflow:hidden;max-height:0;transition:max-height 0.4s ease}
-    .rider-list-wrap.open{max-height:1000px}
-    .rider-table{width:100%;border-collapse:collapse;font-size:11px;margin:0 0 12px}
+    .rider-list-wrap.open{max-height:2000px}
+    .rider-table{width:100%;border-collapse:collapse;font-size:11px;margin:0 0 4px}
     .rider-table thead th{color:var(--text2);font-weight:700;text-align:center;padding:5px 8px;border-bottom:1px solid var(--border);font-size:10px}
     .rider-table thead th:first-child{text-align:left}
-    .rider-table tbody tr{border-bottom:1px solid var(--border)}
+    .rider-table tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s}
     .rider-table tbody tr:hover{background:var(--bg3)}
     .rider-table tbody td{padding:7px 8px;text-align:center;color:var(--text2)}
     .rider-table tbody td:first-child{text-align:left;color:var(--text1);font-weight:500}
@@ -127,10 +137,17 @@
     .num-ca{color:var(--yellow);font-weight:700}
     .num-0{color:#444}
 
-    /* 에러 */
+    /* 라이더 피크 상세 */
+    .rider-peak-row{display:none;background:var(--bg3)}
+    .rider-peak-row.open{display:table-row}
+    .rider-peak-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px 10px}
+    .rpd-item{text-align:center;background:var(--bg2);border-radius:6px;padding:6px 4px}
+    .rpd-emoji{font-size:11px;margin-bottom:2px}
+    .rpd-lbl{font-size:8px;color:var(--text2);margin-bottom:2px}
+    .rpd-val{font-size:14px;font-weight:900;color:var(--accent)}
+
     .center-error{padding:20px;text-align:center;color:var(--red);font-size:12px}
     .center-loading{padding:20px;text-align:center;color:var(--text2);font-size:12px}
-
     .timestamp{font-size:10px;color:var(--text2);text-align:center;padding:12px}
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1.5px solid var(--accent);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;color:var(--text1);z-index:999;transition:transform 0.4s ease;white-space:nowrap}
     .toast.show{transform:translateX(-50%) translateY(0)}
@@ -139,58 +156,37 @@
 <body>
 <div class="toast" id="toast"></div>
 
-
-
-<!-- 헤더 -->
-<header id="mainHeader">
+<header>
   <div class="hdr-inner">
-    <div class="hdr-left">
-      <div>
-        <div class="hdr-title">🏢 총괄 관제 대시보드</div>
-        <div class="hdr-sub">배민커넥트비즈 · 전체 센터</div>
-      </div>
+    <div>
+      <div class="hdr-title">🏢 총괄 관제 대시보드</div>
+      <div class="hdr-sub">배민커넥트비즈 · 전체 센터</div>
     </div>
     <div class="hdr-right">
       <div class="next-info">다음 갱신 <span id="nextTime">--:--</span></div>
       <button class="hdr-btn" id="refreshBtn">🔄 새로고침</button>
+      <div class="save-all-btn" id="saveAllBtn" title="전체 설정 저장">💾</div>
       <div class="theme-btn" id="themeBtn">🌙</div>
-
     </div>
   </div>
 </header>
 
 <!-- 총괄 요약 -->
-<div class="total-bar" id="totalBar">
+<div class="total-bar">
   <div class="total-inner">
-    <div class="total-item">
-      <div class="total-label">전체 완료</div>
-      <div class="total-value tv-green" id="totalComplete">-</div>
-    </div>
+    <div class="total-item"><div class="total-label">전체 완료</div><div class="total-value tv-green" id="totalComplete">-</div></div>
     <div class="total-divider"></div>
-    <div class="total-item">
-      <div class="total-label">전체 거절</div>
-      <div class="total-value tv-red" id="totalReject">-</div>
-    </div>
+    <div class="total-item"><div class="total-label">전체 거절</div><div class="total-value tv-red" id="totalReject">-</div></div>
     <div class="total-divider"></div>
-    <div class="total-item">
-      <div class="total-label">전체 운행중</div>
-      <div class="total-value tv-accent" id="totalActive">-</div>
-    </div>
+    <div class="total-item"><div class="total-label">전체 운행중</div><div class="total-value tv-accent" id="totalActive">-</div></div>
     <div class="total-divider"></div>
-    <div class="total-item">
-      <div class="total-label">평균 거절율</div>
-      <div class="total-value tv-yellow" id="totalRR">-</div>
-    </div>
+    <div class="total-item"><div class="total-label">평균 거절율</div><div class="total-value tv-yellow" id="totalRR">-</div></div>
     <div class="total-divider"></div>
-    <div class="total-item">
-      <div class="total-label">전체 기사</div>
-      <div class="total-value" id="totalRiders">-</div>
-    </div>
+    <div class="total-item"><div class="total-label">전체 기사</div><div class="total-value" id="totalRiders">-</div></div>
   </div>
 </div>
 
-<!-- 대시보드 -->
-<div class="dashboard" id="dashboard">
+<div class="dashboard">
   <div class="centers-grid" id="centersGrid"></div>
   <div class="timestamp" id="ts"></div>
 </div>
@@ -199,26 +195,10 @@
 const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
 
 const CENTERS = [
-  { id: "mango_panda",   name: "🥭 망고 팬더" },
-  { id: "lime_penguin",  name: "🍋 라임 펭귄" },
-  { id: "cherry_rabbit", name: "🍒 체리 래빗" },
+  { id: "mango_panda"   },
+  { id: "lime_penguin"  },
+  { id: "cherry_rabbit" },
 ];
-
-// 센터별 저장된 세트수 불러오기
-function getCenterSets(centerId) {
-  try {
-    const s = JSON.parse(localStorage.getItem(`dashSettings_${centerId}`) || "{}");
-    return s.sets || 5;
-  } catch(e) { return 5; }
-}
-
-// 센터별 저장된 요일 불러오기
-function getCenterDayType(centerId) {
-  try {
-    const s = JSON.parse(localStorage.getItem(`dashSettings_${centerId}`) || "{}");
-    return s.dayType || getDayType();
-  } catch(e) { return getDayType(); }
-}
 
 const GOALS_PER_SET = {
   weekday: { morningPeak:21, afternoonOff:20, eveningPeak:30, nightOff:29 },
@@ -226,9 +206,23 @@ const GOALS_PER_SET = {
   saturday:{ morningPeak:31, afternoonOff:22, eveningPeak:36, nightOff:31 },
   sunday:  { morningPeak:33, afternoonOff:22, eveningPeak:35, nightOff:30 },
 };
+const DAY_LABELS = { weekday:"평일", friday:"금", saturday:"토", sunday:"일" };
 
-let manualTheme = null;
+let manualTheme    = null;
 let openRiderLists = new Set();
+let openRiderRows  = new Set(); // 피크 상세 펼쳐진 라이더
+let centerData     = {}; // 센터별 데이터 캐시
+
+// ── 설정 ──
+function getCenterSettings(centerId) {
+  try {
+    const s = JSON.parse(localStorage.getItem(`dashSettings_${centerId}`) || "{}");
+    return { sets: s.sets || 5, dayType: s.dayType || getDayType() };
+  } catch(e) { return { sets: 5, dayType: getDayType() }; }
+}
+function saveCenterSettings(centerId, sets, dayType) {
+  localStorage.setItem(`dashSettings_${centerId}`, JSON.stringify({ sets, dayType }));
+}
 
 // ── 테마 ──
 function applyTheme(dark) {
@@ -269,7 +263,6 @@ function calcRR(r) {
   const t=(r.complete||0)+(r.reject||0)+(r.cancel||0);
   return t>0?Math.round(((r.reject+r.cancel)/t)*1000)/10:0;
 }
-
 let toastTimer = null;
 function showToast(msg) {
   const el = document.getElementById("toast");
@@ -278,18 +271,6 @@ function showToast(msg) {
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove("show"), 2500);
 }
-
-// ── 대시보드 초기화 ──
-function initDashboard() {
-  buildCenterCards();
-  loadAllCenters();
-  scheduleNextLoad();
-  setInterval(updateNextTime, 30000);
-  updateNextTime();
-}
-
-document.getElementById("refreshBtn").addEventListener("click", loadAllCenters);
-window.addEventListener("load", initDashboard);
 
 // ── 자동 갱신 ──
 const SLOT_MIN = 5;
@@ -306,34 +287,103 @@ function scheduleNextLoad() {
   setTimeout(()=>{ loadAllCenters(); scheduleNextLoad(); }, getNextSlot()-Date.now());
 }
 
+// ── 전체 설정 저장 버튼 ──
+document.getElementById("saveAllBtn").addEventListener("click", () => {
+  CENTERS.forEach(c => {
+    const setsEl = document.getElementById(`si_${c.id}`);
+    const activeDay = document.querySelector(`.cdb[data-center="${c.id}"].active`);
+    if (setsEl && activeDay) {
+      saveCenterSettings(c.id, parseInt(setsEl.value)||5, activeDay.dataset.day);
+    }
+  });
+  showToast("💾 전체 설정 저장 완료!");
+});
+
 // ── 센터 카드 뼈대 생성 ──
 function buildCenterCards() {
   const grid = document.getElementById("centersGrid");
-  grid.innerHTML = CENTERS.map(c => `
+  grid.innerHTML = CENTERS.map(c => {
+    const cfg = getCenterSettings(c.id);
+    return `
     <div class="center-card loading" id="card_${c.id}">
       <div class="center-header">
-        <div>
-          <div class="center-name">${c.name}</div>
-          <div class="center-real-name" id="realname_${c.id}">-</div>
-          <div style="font-size:9px;color:var(--text2);margin-top:1px" id="sets_${c.id}">세트수 로딩중...</div>
+        <div class="center-header-top">
+          <div>
+            <div class="center-real-name" id="realname_${c.id}">로딩 중...</div>
+            <div style="font-size:10px;color:var(--text2);margin-top:2px" id="updated_${c.id}">-</div>
+          </div>
+          <div class="center-header-right">
+            <div class="center-status-dot" id="dot_${c.id}"></div>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="center-updated" id="updated_${c.id}">-</div>
-          <div class="center-status-dot" id="dot_${c.id}"></div>
+        <div class="center-ctrl">
+          <div class="center-sets-wrap">
+            <span class="sets-lbl">세트</span>
+            <div class="arr-btn" data-center="${c.id}" data-dir="-1">▼</div>
+            <input type="number" class="sets-inp" id="si_${c.id}" value="${cfg.sets}" min="1" max="10"/>
+            <div class="arr-btn" data-center="${c.id}" data-dir="1">▲</div>
+          </div>
+          <div class="center-day-btns">
+            ${["weekday","friday","saturday","sunday"].map(d =>
+              `<button class="center-day-btn cdb ${cfg.dayType===d?"active":""}" data-center="${c.id}" data-day="${d}">${DAY_LABELS[d]}</button>`
+            ).join("")}
+          </div>
+          <button class="center-save-btn" data-center="${c.id}">💾 저장</button>
         </div>
       </div>
       <div id="body_${c.id}">
         <div class="center-loading">⏳ 데이터 불러오는 중...</div>
       </div>
-    </div>`).join("");
+    </div>`;
+  }).join("");
+
+  // 세트수 ▼▲ 이벤트
+  document.querySelectorAll(".arr-btn[data-center]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cId  = btn.dataset.center;
+      const dir  = parseInt(btn.dataset.dir);
+      const inp  = document.getElementById(`si_${cId}`);
+      const newV = Math.min(10, Math.max(1, (parseInt(inp.value)||1) + dir));
+      inp.value  = newV;
+      reRenderCenter(cId);
+    });
+  });
+
+  // 요일 버튼 이벤트
+  document.querySelectorAll(".cdb[data-center]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cId = btn.dataset.center;
+      document.querySelectorAll(`.cdb[data-center="${cId}"]`).forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      reRenderCenter(cId);
+    });
+  });
+
+  // 개별 저장 버튼
+  document.querySelectorAll(".center-save-btn[data-center]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const cId     = btn.dataset.center;
+      const setsEl  = document.getElementById(`si_${cId}`);
+      const dayBtn  = document.querySelector(`.cdb[data-center="${cId}"].active`);
+      if (setsEl && dayBtn) {
+        saveCenterSettings(cId, parseInt(setsEl.value)||5, dayBtn.dataset.day);
+        showToast(`💾 저장 완료!`);
+      }
+    });
+  });
+}
+
+// 설정 변경 시 본문만 재렌더
+function reRenderCenter(cId) {
+  const data = centerData[cId];
+  if (data) renderCenterBody({ id: cId }, data);
 }
 
 // ── 전체 센터 로드 ──
 async function loadAllCenters() {
   const results = await Promise.all(CENTERS.map(c => loadCenter(c)));
   updateTotals(results.filter(r => r !== null));
-  document.getElementById("ts").textContent =
-    "마지막 갱신: " + new Date().toLocaleString("ko-KR");
+  document.getElementById("ts").textContent = "마지막 갱신: " + new Date().toLocaleString("ko-KR");
 }
 
 async function loadCenter(center) {
@@ -345,16 +395,18 @@ async function loadCenter(center) {
     const data = await res.json();
     if (!data || !data.riders) throw new Error("데이터 없음");
 
+    centerData[center.id] = data; // 캐시 저장
     card.classList.remove("loading");
     dot.classList.add("live");
-    document.getElementById("updated_"+center.id).textContent = data.scrapedAt?.split(" ").slice(-1)[0] || "-";
+
+    // 지사명만 표시 (DP코드 제거, 암호명 숨김)
     if (data.centerName) {
-      document.getElementById("realname_"+center.id).textContent = data.centerName.replace(/\s*\(DP\d+\)/i,"");
+      document.getElementById("realname_"+center.id).textContent =
+        data.centerName.replace(/\s*\(DP\d+\)/i,"");
     }
-    const cSets = getCenterSets(center.id);
-    const cDay  = getCenterDayType(center.id);
-    const dayLabels = {weekday:"평일",friday:"금",saturday:"토",sunday:"일"};
-    document.getElementById("sets_"+center.id).textContent = `${dayLabels[cDay]||"평일"} ${cSets}세트`;
+    document.getElementById("updated_"+center.id).textContent =
+      "갱신: " + (data.scrapedAt?.split(" ").slice(-1)[0] || "-");
+
     renderCenterBody(center, data);
     return data;
   } catch(e) {
@@ -368,10 +420,13 @@ async function loadCenter(center) {
 
 // ── 센터 본문 렌더 ──
 function renderCenterBody(center, data) {
-  const s      = data.summary || {};
-  const sets    = getCenterSets(center.id);
-  const dayType = getCenterDayType(center.id);
+  const setsEl  = document.getElementById(`si_${center.id}`);
+  const dayBtn  = document.querySelector(`.cdb[data-center="${center.id}"].active`);
+  const sets    = parseInt(setsEl?.value) || getCenterSettings(center.id).sets;
+  const dayType = dayBtn?.dataset.day     || getCenterSettings(center.id).dayType;
   const goals   = getGoals(sets, dayType);
+
+  const s      = data.summary || {};
   const total  = (s.complete||0)+(s.reject||0)+(s.cancel||0);
   const rjPct  = total>0?(((s.reject+s.cancel)/total)*100).toFixed(1):0;
   const active = data.activeCount ?? data.riders.filter(r=>r.statusCode==="DELIVERING"||r.status?.includes("운행중")).length;
@@ -379,7 +434,6 @@ function renderCenterBody(center, data) {
   const activeNames = data.riders.filter(r=>r.statusCode==="DELIVERING"||r.status?.includes("운행중")).map(r=>r.name);
   const curPeak = getCurrentPeak();
 
-  // 피크 카드
   const peaks = [
     {key:"morningPeak", emoji:"🌅", label:"아침점심", val:s.morningPeak||0, goal:goals.morningPeak},
     {key:"afternoonOff",emoji:"☀️", label:"오후논피크",val:s.afternoonOff||0,goal:goals.afternoonOff},
@@ -396,23 +450,35 @@ function renderCenterBody(center, data) {
     </div>`;
   }).join("");
 
-  // 운행중 태그
   const nameTags = activeNames.map(n=>`<span class="active-tag">${n}</span>`).join("");
 
-  // 라이더 테이블
   const sorted = [...data.riders].sort((a,b)=>
     (a.status?.includes("운행중")?0:1)-(b.status?.includes("운행중")?0:1)
   );
+
+  // 라이더 행 + 피크 상세 행
   const rows = sorted.map(r => {
-    const isOn = r.statusCode==="DELIVERING"||r.status?.includes("운행중");
-    const rr = calcRR(r);
-    return `<tr>
+    const isOn  = r.statusCode==="DELIVERING"||r.status?.includes("운행중");
+    const rr    = calcRR(r);
+    const rowId = `${center.id}_${r.name.replace(/\s/g,"_")}`;
+    const isRowOpen = openRiderRows.has(rowId);
+    return `<tr class="rider-row" data-rowid="${rowId}">
       <td>${r.name}</td>
       <td><span class="${isOn?"s-on":"s-off"}">${isOn?"운행중":"대기"}</span></td>
       <td class="${r.complete===0?"num-0":"num-c"}">${r.complete||0}</td>
       <td class="${r.reject===0?"num-0":"num-r"}">${r.reject||0}</td>
       <td class="${r.cancel===0?"num-0":"num-ca"}">${r.cancel||0}</td>
       <td style="color:${rrColor(rr)};font-weight:700">${rr}%</td>
+    </tr>
+    <tr class="rider-peak-row ${isRowOpen?"open":""}" id="pr_${rowId}">
+      <td colspan="6">
+        <div class="rider-peak-detail">
+          <div class="rpd-item"><div class="rpd-emoji">🌅</div><div class="rpd-lbl">아침점심</div><div class="rpd-val">${r.morningPeak||0}</div></div>
+          <div class="rpd-item"><div class="rpd-emoji">☀️</div><div class="rpd-lbl">오후논피크</div><div class="rpd-val">${r.afternoonOff||0}</div></div>
+          <div class="rpd-item"><div class="rpd-emoji">🌆</div><div class="rpd-lbl">저녁피크</div><div class="rpd-val">${r.eveningPeak||0}</div></div>
+          <div class="rpd-item"><div class="rpd-emoji">🌙</div><div class="rpd-lbl">심야논피크</div><div class="rpd-val">${r.nightOff||0}</div></div>
+        </div>
+      </td>
     </tr>`;
   }).join("");
 
@@ -424,18 +490,15 @@ function renderCenterBody(center, data) {
       <div class="cs-card r"><div class="cs-label">❌ 거절</div><div class="cs-value">${s.reject||0}<span class="cs-unit">건</span></div></div>
       <div class="cs-card a"><div class="cs-label">🛵 운행중</div><div class="cs-value">${active}<span class="cs-unit">명</span></div></div>
     </div>
-
     <div class="rr-bar">
       <span class="rr-label">거절율</span>
       <div class="rr-track"><div class="rr-fill" style="width:${Math.min(100,rjPct)}%;background:${rrColor(parseFloat(rjPct))}"></div></div>
       <span class="rr-pct" style="color:${rrColor(parseFloat(rjPct))}">${rjPct}%</span>
     </div>
-
     <div class="peak-section">
-      <div class="peak-label-row">⏰ 피크타임</div>
+      <div class="peak-label-row">⏰ 피크타임 (${DAY_LABELS[dayType]} ${sets}세트)</div>
       <div class="peak-mini-grid">${peaks}</div>
     </div>
-
     <div class="active-banner">
       <div class="active-left">
         <div class="active-dot"></div>
@@ -446,7 +509,6 @@ function renderCenterBody(center, data) {
       </div>
       <div class="active-tags">${nameTags||'<span style="color:var(--text2);font-size:10px">없음</span>'}</div>
     </div>
-
     <div class="rider-toggle-hdr" data-center="${center.id}">
       <span class="rtl">👥 라이더 현황 (${totalR}명)</span>
       <span class="rtl-icon ${isOpen?"open":""}">▼</span>
@@ -458,9 +520,22 @@ function renderCenterBody(center, data) {
       </table>
     </div>`;
 
-  // 라이더 토글 이벤트
+  // 라이더 토글
   document.querySelector(`.rider-toggle-hdr[data-center="${center.id}"]`)
     .addEventListener("click", () => toggleRiderList(center.id));
+
+  // 라이더 행 클릭 → 피크 상세
+  document.querySelectorAll(`#riderWrap_${center.id} .rider-row`).forEach(row => {
+    row.addEventListener("click", () => {
+      const rowId  = row.dataset.rowid;
+      const detRow = document.getElementById("pr_"+rowId);
+      if (!detRow) return;
+      const isRowOpen = openRiderRows.has(rowId);
+      if (isRowOpen) openRiderRows.delete(rowId);
+      else openRiderRows.add(rowId);
+      detRow.classList.toggle("open", !isRowOpen);
+    });
+  });
 }
 
 function toggleRiderList(centerId) {
@@ -474,7 +549,7 @@ function toggleRiderList(centerId) {
   icon?.classList.toggle("open", !isOpen);
 }
 
-// ── 총괄 합계 업데이트 ──
+// ── 총괄 합계 ──
 function updateTotals(dataList) {
   let tComplete=0, tReject=0, tCancel=0, tActive=0, tRiders=0;
   dataList.forEach(data => {
@@ -488,13 +563,22 @@ function updateTotals(dataList) {
   });
   const tTotal = tComplete + tReject;
   const tRR    = tTotal>0?((tReject/tTotal)*100).toFixed(1):0;
-
   document.getElementById("totalComplete").textContent = tComplete+"건";
   document.getElementById("totalReject").textContent   = (tReject-tCancel)+"건";
   document.getElementById("totalActive").textContent   = tActive+"명";
   document.getElementById("totalRR").textContent       = tRR+"%";
   document.getElementById("totalRiders").textContent   = tRiders+"명";
 }
+
+// ── 시작 ──
+document.getElementById("refreshBtn").addEventListener("click", loadAllCenters);
+window.addEventListener("load", () => {
+  buildCenterCards();
+  loadAllCenters();
+  scheduleNextLoad();
+  setInterval(updateNextTime, 30000);
+  updateNextTime();
+});
 </script>
 </body>
 </html>
