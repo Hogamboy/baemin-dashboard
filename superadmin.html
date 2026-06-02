@@ -23,23 +23,10 @@
     }
     body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;transition:background 0.4s,color 0.4s}
 
-    /* 로그인 */
-    .login-wrap{max-width:400px;margin:80px auto;padding:0 20px}
-    .login-logo{text-align:center;margin-bottom:32px}
-    .login-logo .icon{font-size:48px;margin-bottom:12px}
-    .login-logo h1{font-size:22px;font-weight:700;color:var(--text1)}
-    .login-logo p{font-size:12px;color:var(--text2);margin-top:4px}
-    .login-card{background:var(--bg2);border-radius:16px;padding:28px 24px;border:1px solid var(--border)}
-    .input-group{margin-bottom:16px}
-    .input-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500}
-    .input-group input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text1);font-size:16px;font-family:'Noto Sans KR',sans-serif;padding:14px 16px;outline:none}
-    .input-group input:focus{border-color:var(--accent)}
-    .login-btn{width:100%;background:linear-gradient(135deg,var(--accent),#0099aa);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:15px;cursor:pointer;margin-top:8px}
-    .login-btn:disabled{opacity:0.4}
-    .login-error{color:var(--red);font-size:12px;text-align:center;margin-top:12px;min-height:18px}
+
 
     /* 헤더 */
-    header{background:var(--bg2);border-bottom:2px solid var(--border);padding:14px 20px;position:sticky;top:0;z-index:10;display:none}
+    header{background:var(--bg2);border-bottom:2px solid var(--border);padding:14px 20px;position:sticky;top:0;z-index:10}
     .hdr-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
     .hdr-left{display:flex;align-items:center;gap:10px}
     .hdr-title{font-size:16px;font-weight:700;color:var(--text1)}
@@ -51,7 +38,7 @@
     .next-info span{color:var(--green);font-weight:700}
 
     /* 총괄 요약 */
-    .total-bar{display:none;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px}
+    .total-bar{display:block;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px}
     .total-inner{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
     .total-item{text-align:center}
     .total-label{font-size:10px;color:var(--text2);margin-bottom:2px}
@@ -60,7 +47,7 @@
     .total-divider{width:1px;height:36px;background:var(--border)}
 
     /* 그리드 */
-    .dashboard{display:none;padding:16px}
+    .dashboard{display:block;padding:16px}
     .centers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
 
     /* 센터 카드 */
@@ -152,24 +139,7 @@
 <body>
 <div class="toast" id="toast"></div>
 
-<!-- 로그인 -->
-<div id="loginWrap">
-  <div class="login-wrap">
-    <div class="login-logo">
-      <div class="icon">🏢</div>
-      <h1>총괄 관제 대시보드</h1>
-      <p>배민커넥트비즈 · 전체 센터 현황</p>
-    </div>
-    <div class="login-card">
-      <div class="input-group">
-        <label>관리자 비밀번호</label>
-        <input type="password" id="pwInput" placeholder="비밀번호 입력" />
-      </div>
-      <button class="login-btn" id="loginBtn">접속</button>
-      <div class="login-error" id="loginError"></div>
-    </div>
-  </div>
-</div>
+
 
 <!-- 헤더 -->
 <header id="mainHeader">
@@ -184,7 +154,7 @@
       <div class="next-info">다음 갱신 <span id="nextTime">--:--</span></div>
       <button class="hdr-btn" id="refreshBtn">🔄 새로고침</button>
       <div class="theme-btn" id="themeBtn">🌙</div>
-      <button class="hdr-btn" id="logoutBtn">로그아웃</button>
+
     </div>
   </div>
 </header>
@@ -293,51 +263,6 @@ function showToast(msg) {
   toastTimer = setTimeout(() => el.classList.remove("show"), 2500);
 }
 
-// ── 로그인 ──
-document.getElementById("pwInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") doLogin();
-});
-document.getElementById("loginBtn").addEventListener("click", doLogin);
-
-async function doLogin() {
-  const pw    = document.getElementById("pwInput").value.trim();
-  const errEl = document.getElementById("loginError");
-  if (!pw) { errEl.textContent = "비밀번호를 입력해주세요."; return; }
-  errEl.textContent = "";
-  document.getElementById("loginBtn").disabled = true;
-  document.getElementById("loginBtn").textContent = "확인 중...";
-
-  try {
-    const res  = await fetch(`${FIREBASE_BASE}/adminAuth/password.json`);
-    const data = await res.json();
-    if (!data) throw new Error("비밀번호가 설정되지 않았어요. Firebase에 adminAuth/password 를 설정해주세요.");
-    if (data !== pw) {
-      errEl.textContent = "비밀번호가 올바르지 않아요.";
-      return;
-    }
-    // 로그인 성공
-    document.getElementById("loginWrap").style.display = "none";
-    document.getElementById("mainHeader").style.display = "block";
-    document.getElementById("totalBar").style.display = "block";
-    document.getElementById("dashboard").style.display = "block";
-    initDashboard();
-  } catch(e) {
-    errEl.textContent = "오류: " + e.message;
-  } finally {
-    document.getElementById("loginBtn").disabled = false;
-    document.getElementById("loginBtn").textContent = "접속";
-  }
-}
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  document.getElementById("loginWrap").style.display = "block";
-  document.getElementById("mainHeader").style.display = "none";
-  document.getElementById("totalBar").style.display = "none";
-  document.getElementById("dashboard").style.display = "none";
-  document.getElementById("pwInput").value = "";
-  document.getElementById("loginError").textContent = "";
-});
-
 // ── 대시보드 초기화 ──
 function initDashboard() {
   buildCenterCards();
@@ -348,6 +273,7 @@ function initDashboard() {
 }
 
 document.getElementById("refreshBtn").addEventListener("click", loadAllCenters);
+window.addEventListener("load", initDashboard);
 
 // ── 자동 갱신 ──
 const SLOT_MIN = 5;
