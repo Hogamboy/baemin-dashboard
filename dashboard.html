@@ -377,11 +377,15 @@ function checkPeakNotifications(data) {
   Object.entries(peakMap).forEach(([key, p]) => {
     if (p.goal > 0 && p.val >= p.goal && !notifiedPeaks.has(key)) {
       notifiedPeaks.add(key);
-      new Notification("🎯 목표 달성!", {
-        body: `${p.label} ${p.val}/${p.goal}건 완료!`,
-        icon: "https://hogamboy.github.io/baemin-dashboard/icon.png",
-        tag:  key,
-      });
+      try {
+  new Notification(`🎉 ${centerName}`, {
+    body: `${PEAK_LABELS[key]} 목표 달성! (${done}/${goal}건)`,
+    icon: "https://hogamboy.github.io/baemin-dashboard/icon.png",
+    tag: notifKey,
+  });
+} catch(e) {
+  console.log("알림 미지원 환경:", e.message);
+}
     }
   });
 }
