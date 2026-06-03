@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>B+C 통합 대시보드</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root {
+      --bg:#f0fafa;--bg2:#ffffff;--bg3:#e8f8f5;
+      --border:#00c3aa33;--border2:#00c3aa88;
+      --text1:#0a2a28;--text2:#5a8a84;
+      --accent:#00c3aa;--acl:#00c3aa18;
+      --green:#00796b;--red:#d05050;--yellow:#c09010;
+      --header-border:#00c3aa33;
+    }
+    body.dark {
+      --bg:#0f1117;--bg2:#1a1d27;--bg3:#13161f;
+      --border:#ffffff15;--border2:#00c3ff55;
+      --text1:#f0f0f0;--text2:#666;
+      --accent:#00c3ff;--acl:#00c3ff18;
+      --green:#00e676;--red:#ff5252;--yellow:#ffd740;
+      --header-border:#00c3ff22;
+    }
+    body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;padding-bottom:40px;transition:background 0.4s,color 0.4s}
+    header{background:var(--bg2);border-bottom:2px solid var(--header-border);padding:14px 20px;position:sticky;top:0;z-index:10;transition:background 0.4s,border-color 0.4s}
+    .header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
+    .logo-text{font-size:15px;font-weight:700;color:var(--text1)}
+    .center-sub{font-size:10px;color:var(--text2);margin-top:1px}
+    .header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .next-info{font-size:11px;color:var(--text2);background:var(--bg3);border-radius:6px;padding:5px 10px;white-space:nowrap}
+    .next-info span{color:var(--green);font-weight:700}
+    .theme-btn{background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;color:var(--accent);font-size:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0}
+    .control-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .copy-btn{background:var(--acl);border:1.5px solid var(--accent);border-radius:7px;color:var(--green);font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:14px 12px;cursor:pointer;font-weight:700;white-space:nowrap;transition:all 0.3s}
+    .copy-btn:hover{background:var(--accent);color:#fff}
+    .save-btn{background:var(--bg3);border:1.5px solid var(--border2);border-radius:7px;color:var(--text2);font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:6px 10px;cursor:pointer;font-weight:700;white-space:nowrap;transition:all 0.3s}
+    .save-btn:hover{background:var(--acl);color:var(--green);border-color:var(--accent)}
+    .divider{width:1px;height:20px;background:var(--border)}
+    .sets-wrap{display:flex;align-items:center;gap:5px}
+    .sets-label{font-size:11px;color:var(--text2)}
+    .sets-input{width:38px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:6px;color:var(--text1);font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:4px 6px;text-align:center}
+    .arr-btn{background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--accent);font-size:11px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+    .day-btns{display:flex;gap:5px}
+    .day-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;padding:4px 12px;cursor:pointer;transition:all 0.2s}
+    .day-btn.active{background:var(--acl);border-color:var(--border2);color:var(--green)}
+
+    /* 메인 탭 */
+    .main-tab-bar{display:flex;background:var(--bg2);border-bottom:1.5px solid var(--border);position:sticky;top:72px;z-index:9}
+    .main-tab{flex:1;padding:13px;font-size:13px;font-weight:600;color:var(--text2);text-align:center;border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;background:transparent;border-top:none;border-left:none;border-right:none}
+    .main-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--bg)}
+
+    /* 탭 컨텐츠 */
+    .tab-content{display:none}
+    .tab-content.active{display:block}
+
+    /* 오늘 탭 */
+    .active-banner{margin:14px 16px 6px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
+    .active-main{display:flex;align-items:center;gap:10px}
+    .active-dot{width:9px;height:9px;background:var(--green);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+    .active-label{font-size:12px;color:var(--text2)}
+    .active-count{font-size:26px;font-weight:900;color:var(--green);line-height:1}
+    .active-names{font-size:10px;color:var(--text2);max-width:55%;line-height:1.7;text-align:right}
+    .active-name-tag{display:inline-block;background:var(--acl);color:var(--green);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin:1px 2px;font-size:10px}
+    .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 16px}
+    .summary-card{background:var(--bg2);border-radius:12px;padding:14px 10px;text-align:center;border:1.5px solid var(--border);position:relative;overflow:hidden}
+    .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
+    .summary-card.complete::before{background:var(--green)}
+    .summary-card.reject::before{background:var(--red)}
+    .summary-card.cancel::before{background:var(--yellow)}
+    .card-label{font-size:11px;color:var(--text2);margin-bottom:8px}
+    .card-value{font-size:26px;font-weight:900;line-height:1}
+    .summary-card.complete .card-value{color:var(--green)}
+    .summary-card.reject .card-value{color:var(--red)}
+    .summary-card.cancel .card-value{color:var(--yellow)}
+    .card-unit{font-size:12px;font-weight:500}
+    .bar-wrap{display:flex;gap:4px;padding:2px 16px 8px;height:12px}
+    .bar-segment{height:8px;border-radius:4px;min-width:2px}
+    .bar-complete{background:var(--green)}.bar-reject{background:var(--red)}.bar-cancel{background:var(--yellow)}
+    .bar-legend{display:flex;gap:14px;padding:0 16px 12px;font-size:11px;color:var(--text2)}
+    .legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle}
+    .section-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:4px 16px 8px}
+    .peak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 14px}
+    .peak-card{background:var(--bg3);border-radius:12px;padding:14px 8px 10px;text-align:center;border:1.5px solid var(--border);position:relative;overflow:hidden;transition:all 0.4s}
+    .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)}
+    .peak-card.current-peak{border-color:var(--accent);box-shadow:0 0 0 2px var(--acl)}
+    .peak-card.current-peak::before{height:3px}
+    .peak-now-badge{display:none;font-size:8px;font-weight:700;background:var(--accent);color:#fff;border-radius:4px;padding:1px 5px;margin-bottom:3px;animation:badgePulse 1.5s ease-in-out infinite}
+    .peak-card.current-peak .peak-now-badge{display:inline-block}
+    @keyframes badgePulse{0%,100%{opacity:1}50%{opacity:0.5}}
+    .peak-emoji{font-size:18px;margin-bottom:3px}
+    .peak-label{font-size:9px;color:var(--text2);margin-bottom:5px}
+    .peak-value{font-size:22px;font-weight:900;color:var(--accent);line-height:1}
+    .peak-goal{font-size:12px;color:var(--text2);font-weight:400;margin-left:1px}
+    .peak-bar-wrap{height:5px;background:var(--border);border-radius:3px;margin:8px 4px 0;overflow:hidden}
+    .peak-bar{height:100%;border-radius:3px;transition:width 0.6s ease}
+    .peak-pct{font-size:9px;color:var(--text2);margin-top:4px}
+
+    /* 라이더 섹션 */
+    .rider-section-header{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 8px;cursor:pointer;user-select:none}
+    .rider-section-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase;transition:color 0.2s}
+    .rider-section-right{display:flex;align-items:center;gap:10px}
+    .rider-toggle-icon{font-size:12px;color:var(--text2);transition:transform 0.3s}
+    .rider-toggle-icon.open{transform:rotate(180deg)}
+    .rider-tab-bar{display:flex;background:var(--bg3);border-radius:8px;padding:3px;gap:3px}
+    .rider-tab-btn{padding:4px 12px;border:none;border-radius:6px;font-size:11px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.2s}
+    .rider-tab-btn.active{background:var(--bg2);color:var(--accent)}
+    .rider-list{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0}
+    .rider-list.open{max-height:3000px}
+    .rider-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);transition:all 0.3s;cursor:pointer}
+    .rider-card:hover{border-color:var(--border2)}
+    .rider-card-top{display:flex;align-items:center;justify-content:space-between}
+    .rider-name{font-size:14px;font-weight:700;color:var(--text1);margin-bottom:3px}
+    .rider-status{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;display:inline-block}
+    .status-active{background:var(--acl);color:var(--green);border:1px solid var(--border2)}
+    .status-inactive{background:#ff525222;color:var(--red)}
+    .rider-stats{display:flex;gap:14px;text-align:center}
+    .stat-item{min-width:34px}
+    .stat-val{font-size:17px;font-weight:900;line-height:1}
+    .stat-label{font-size:9px;color:var(--text2);margin-top:2px}
+    .stat-complete{color:var(--green)}.stat-reject{color:var(--red)}.stat-cancel{color:var(--yellow)}.stat-zero{color:#555}
+    .rider-peak-detail{overflow:hidden;max-height:0;transition:max-height 0.3s ease}
+    .rider-peak-detail.open{max-height:200px}
+    .rider-peak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-top:12px;margin-top:10px;border-top:1px solid var(--border)}
+    .rider-peak-item{text-align:center;background:var(--bg3);border-radius:8px;padding:8px 4px}
+    .rider-peak-emoji{font-size:14px;margin-bottom:3px}
+    .rider-peak-label{font-size:8px;color:var(--text2);margin-bottom:3px}
+    .rider-peak-val{font-size:16px;font-weight:900;color:var(--accent)}
+    .week-rr-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .week-rr-name{font-size:14px;font-weight:700;color:var(--text1)}
+    .week-rr-right{text-align:right}
+    .week-rr-val{font-size:22px;font-weight:900;line-height:1}
+    .week-rr-label{font-size:9px;color:var(--text2);margin-top:2px}
+    .week-rr-sub{font-size:10px;color:var(--text2);margin-top:2px}
+    .week-loading{text-align:center;padding:20px;color:var(--text2);font-size:12px}
+
+    /* 지난주 탭 */
+    .wk-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
+    .wk-nav-btn{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:18px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s}
+    .wk-nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .wk-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+    .wk-title-txt{font-size:13px;font-weight:700;color:var(--text1);text-align:center}
+    .wk-date{font-size:11px;color:var(--text2);text-align:center;margin-top:2px}
+    .wk-summary-card{background:var(--bg2);border-radius:12px;padding:14px 16px;margin:0 16px 10px;border:1.5px solid var(--border)}
+    .wk-summary-title{font-size:11px;color:var(--text2);font-weight:700;margin-bottom:10px}
+    .wk-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+    .wk-stat{text-align:center}
+    .wk-stat-label{font-size:9px;color:var(--text2);margin-bottom:4px}
+    .wk-stat-value{font-size:18px;font-weight:900}
+    .wsc{color:var(--green)}.wsr{color:var(--red)}.wsca{color:var(--yellow)}.wscr{color:var(--accent)}
+    .wk-peak-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 14px}
+    .wk-peak-card{background:var(--bg3);border-radius:12px;padding:12px 6px 10px;text-align:center;border:1px solid var(--border);position:relative;overflow:hidden}
+    .wk-peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)}
+    .wk-peak-emoji{font-size:16px;margin-bottom:4px}
+    .wk-peak-label{font-size:9px;color:var(--text2);margin-bottom:4px}
+    .wk-peak-val{font-size:18px;font-weight:900;color:var(--accent)}
+    .wk-day-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border)}
+    .wk-day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .wk-day-name{font-size:13px;font-weight:700;color:var(--text1)}
+    .wk-day-rate{font-size:13px;font-weight:900;color:var(--green)}
+    .wk-day-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center}
+    .wk-day-stat-label{font-size:9px;color:var(--text2)}
+    .wk-day-stat-value{font-size:14px;font-weight:700}
+    .wk-rider-rr-card{background:var(--bg2);border-radius:12px;padding:12px 16px;margin-bottom:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .wk-rider-rr-right{text-align:right}
+    .wk-rider-rr-val{font-size:20px;font-weight:900}
+    .wk-rider-rr-sub{font-size:10px;color:var(--text2);margin-top:2px}
+
+    /* 접기/펼치기 공통 */
+    .collapsible-header{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 8px;cursor:pointer;user-select:none}
+    .collapsible-title{font-size:11px;color:var(--text2);font-weight:700;letter-spacing:0.07em;text-transform:uppercase}
+    .collapsible-icon{font-size:12px;color:var(--text2);transition:transform 0.3s}
+    .collapsible-icon.open{transform:rotate(180deg)}
+    .collapsible-body{padding:0 16px;overflow:hidden;transition:max-height 0.4s ease;max-height:0}
+    .collapsible-body.open{max-height:3000px}
+
+    .timestamp{font-size:11px;color:var(--text2);text-align:center;padding:14px}
+    .loading{text-align:center;padding:60px 20px;color:var(--text2)}
+    .spinner{font-size:32px;animation:spin 1.2s linear infinite;display:inline-block;margin-bottom:10px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .error-msg{text-align:center;padding:50px 20px;color:var(--red);font-size:13px;line-height:1.8}
+    .login-box{max-width:360px;margin:60px auto;padding:0 20px}
+    .login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text1);font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif}
+    .login-box button{width:100%;background:linear-gradient(135deg,var(--accent),#0099aa);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:15px;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+
+    /* B+C 통합 탭 */
+    .bc-tab-bar{display:none;background:var(--bg2);border-bottom:1.5px solid var(--border);position:sticky;top:72px;z-index:9}
+    .bc-tab-bar.visible{display:flex}
+    .bc-tab{flex:1;padding:12px;font-size:14px;font-weight:700;color:var(--text2);text-align:center;border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all 0.2s;background:transparent;border-top:none;border-left:none;border-right:none}
+    .bc-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .bc-total-bar{display:none;background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 16px}
+    .bc-total-bar.visible{display:block}
+    .bc-total-inner{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .bc-total-item{text-align:center}
+    .bc-total-label{font-size:9px;color:var(--text2);margin-bottom:2px}
+    .bc-total-value{font-size:13px;font-weight:900}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1.5px solid var(--accent);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;color:var(--text1);z-index:999;transition:transform 0.4s ease;white-space:nowrap}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .no-data{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px}
+  </style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="logo-text" id="centerTitle">배달현황 대시보드</div>
+      <div class="center-sub" id="centerSub">배민커넥트비즈</div>
+    </div>
+    <div class="header-right">
+      <div class="next-info">다음 갱신 <span id="nextTime">--:--</span></div>
+      <button class="refresh-btn" id="bcModeBtn" style="background:var(--acl);border:1.5px solid var(--accent);color:var(--green);font-weight:700">B+C 통합</button>
+      <div class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</div>
+    </div>
+  </div>
+  <div class="control-bar">
+    <button class="copy-btn" id="copyBtn" onclick="copyStatus()">📋 현황 복사</button>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <div class="sets-wrap">
+        <span class="sets-label">세트수</span>
+        <div class="arr-btn" onclick="changeSets(-1)">▼</div>
+        <input type="number" class="sets-input" id="setsInput" value="5" min="1" max="10"/>
+        <div class="arr-btn" onclick="changeSets(1)">▲</div>
+        <span class="sets-label">세트</span>
+      </div>
+      <div class="divider"></div>
+      <div class="day-btns">
+        <button class="day-btn" data-day="weekday">평일</button>
+        <button class="day-btn" data-day="friday">금</button>
+        <button class="day-btn" data-day="saturday">토</button>
+        <button class="day-btn" data-day="sunday">일</button>
+      </div>
+      <div class="divider"></div>
+      <button class="save-btn" onclick="saveSettings()">💾 저장</button>
+    </div>
+  </div>
+</header>
+
+<!-- B+C 탭바 -->
+<div class="bc-tab-bar" id="bcTabBar">
+  <button class="bc-tab active" id="bcTabB" data-center="lime_penguin">📊 B센터</button>
+  <button class="bc-tab" id="bcTabC" data-center="cherry_rabbit">📊 C센터</button>
+</div>
+
+<!-- B+C 합계 바 -->
+<div class="bc-total-bar" id="bcTotalBar">
+  <div class="bc-total-inner">
+    <div class="bc-total-item"><div class="bc-total-label">합계 완료</div><div class="bc-total-value" style="color:var(--green)" id="bcTotalComplete">-</div></div>
+    <div style="width:1px;height:24px;background:var(--border)"></div>
+    <div class="bc-total-item"><div class="bc-total-label">합계 거절</div><div class="bc-total-value" style="color:var(--red)" id="bcTotalReject">-</div></div>
+    <div style="width:1px;height:24px;background:var(--border)"></div>
+    <div class="bc-total-item"><div class="bc-total-label">합계 운행중</div><div class="bc-total-value" style="color:var(--accent)" id="bcTotalActive">-</div></div>
+    <div style="width:1px;height:24px;background:var(--border)"></div>
+    <div class="bc-total-item"><div class="bc-total-label">합계 기사</div><div class="bc-total-value" id="bcTotalRiders">-</div></div>
+  </div>
+</div>
+
+<!-- 메인 탭 -->
+<div class="main-tab-bar">
+  <button class="main-tab active" id="mainTab1" onclick="switchMainTab(1)">📊 오늘 현황</button>
+  <button class="main-tab" id="mainTab2" onclick="switchMainTab(2)">📅 지난주</button>
+</div>
+
+<!-- 오늘 현황 탭 -->
+<div class="tab-content active" id="mainContent1">
+  <div id="todayContent">
+    <div class="loading"><div class="spinner">⏳</div><br>데이터 불러오는 중...</div>
+  </div>
+  <div class="timestamp" id="ts"></div>
+</div>
+
+<!-- 지난주 탭 -->
+<div class="tab-content" id="mainContent2">
+  <div id="weekContent">
+    <div class="loading"><div class="spinner">⏳</div><br>데이터 불러오는 중...</div>
+  </div>
+</div>
+
+<script>
+const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
+const BAEMIN_CENTERS = {
+  mango_panda:   "🥭 망고 팬더",
+  lime_penguin:  "🍋 라임 펭귄",
+  cherry_rabbit: "🍒 체리 래빗",
+};
+
+// B+C 통합 모드
+const BC_CENTERS = {
+  lime_penguin:  "B센터",
+  cherry_rabbit: "C센터",
+};
+let bcMode = false;        // 통합모드 여부
+let bcActiveCenter = "lime_penguin"; // 현재 탭
+let bcDataCache = {};      // 센터별 데이터 캐시
+
+let currentCenterId  = null;
+let currentDayType   = getTodayDayType();
+let currentSets      = 5;
+let lastData         = null;
+let riderListOpen    = false;
+let riderTab         = "today";
+let weeklyRRCache    = null;
+let manualTheme      = null;
+let notifiedPeaks    = new Set();
+let openRiderCards   = new Set();
+let currentWeekOffset = -1; // -1=지난주, -2=2주전...
+const MAX_WEEKS      = 3;
+
+// ── 설정 저장/로드 ──
+function saveSettings() {
+  const key = currentCenterId ? `dashSettings_${currentCenterId}` : "dashSettings_default";
+  localStorage.setItem(key, JSON.stringify({
+    sets: currentSets, dayType: currentDayType
+  }));
+  showToast("💾 설정이 저장됐어요!");
+}
+function loadSettings(centerId) {
+  try {
+    const key = centerId ? `dashSettings_${centerId}` : "dashSettings_default";
+    const s = JSON.parse(localStorage.getItem(key) || "{}");
+    if (s.sets)    { currentSets = s.sets; document.getElementById("setsInput").value = s.sets; }
+    if (s.dayType) currentDayType = s.dayType;
+  } catch(e) {}
+}
+
+// ── 토스트 ──
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2500);
+}
+
+// ── 테마 ──
+function applyTheme(dark) {
+  document.body.classList.toggle("dark", dark);
+  document.getElementById("themeBtn").textContent = dark ? "☀️" : "🌙";
+}
+function autoTheme() {
+  if (manualTheme !== null) { applyTheme(manualTheme); return; }
+  const mins = new Date().getHours()*60 + new Date().getMinutes();
+  applyTheme(mins < 7*60+30 || mins >= 19*60+30);
+}
+function toggleTheme() {
+  manualTheme = !document.body.classList.contains("dark");
+  applyTheme(manualTheme);
+}
+autoTheme();
+setInterval(autoTheme, 60000);
+
+// ── 메인 탭 전환 ──
+function switchMainTab(n) {
+  document.getElementById("mainContent1").classList.toggle("active", n===1);
+  document.getElementById("mainContent2").classList.toggle("active", n===2);
+  document.getElementById("mainTab1").classList.toggle("active", n===1);
+  document.getElementById("mainTab2").classList.toggle("active", n===2);
+  if (n===2) renderWeekTab();
+}
+
+// ── Firebase ──
+function getCenterFromUrl() {
+  return new URLSearchParams(window.location.search).get("center") || null;
+}
+function getFirebaseUrl() {
+  return currentCenterId ? `${FIREBASE_BASE}/baeminData/${currentCenterId}.json` : null;
+}
+
+// ── 목표 ──
+const GOALS_PER_SET = {
+  weekday: { morningPeak:21, afternoonOff:20, eveningPeak:30, nightOff:29 },
+  friday:  { morningPeak:24, afternoonOff:21, eveningPeak:32, nightOff:33 },
+  saturday:{ morningPeak:31, afternoonOff:22, eveningPeak:36, nightOff:31 },
+  sunday:  { morningPeak:33, afternoonOff:22, eveningPeak:35, nightOff:30 },
+};
+function getTodayDayType() {
+  const d = new Date().getDay();
+  return d===0?"sunday":d===6?"saturday":d===5?"friday":"weekday";
+}
+function getGoals(dayType, sets) {
+  const base = GOALS_PER_SET[dayType] || GOALS_PER_SET.weekday;
+  return { morningPeak:base.morningPeak*sets, afternoonOff:base.afternoonOff*sets,
+           eveningPeak:base.eveningPeak*sets, nightOff:base.nightOff*sets };
+}
+
+// ── 자동 갱신 ──
+const SLOT_MIN = 5;
+function getNextSlot() {
+  const now = new Date();
+  const ms  = now.getMinutes()*60000+now.getSeconds()*1000+now.getMilliseconds();
+  return new Date(Date.now()+(SLOT_MIN*60000-(ms%(SLOT_MIN*60000))));
+}
+function updateNextTime() {
+  document.getElementById("nextTime").textContent =
+    getNextSlot().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
+}
+function scheduleNextLoad() {
+  setTimeout(()=>{
+    if (bcMode) {
+      loadBcCenter("lime_penguin");
+      loadBcCenter("cherry_rabbit");
+    } else {
+      loadData();
+    }
+    scheduleNextLoad();
+  }, getNextSlot()-Date.now());
+}
+
+// ── 현재 피크 ──
+function getCurrentPeak() {
+  const h = new Date().getHours();
+  if (h>=6  && h<14) return "morningPeak";
+  if (h>=14 && h<17) return "afternoonOff";
+  if (h>=17 && h<21) return "eveningPeak";
+  return "nightOff";
+}
+const PEAK_LABELS = {morningPeak:"아침점심",afternoonOff:"오후논피크",eveningPeak:"저녁피크",nightOff:"심야논피크"};
+const PEAK_KEYS   = ["morningPeak","afternoonOff","eveningPeak","nightOff"];
+setInterval(()=>{
+  const cur = getCurrentPeak();
+  document.querySelectorAll(".peak-card").forEach(c=>{
+    c.classList.toggle("current-peak", c.dataset.peakKey===cur);
+  });
+}, 60000);
+
+// ── 푸시 알림 ──
+async function requestNotificationPermission() {
+  if ("Notification" in window && Notification.permission==="default")
+    await Notification.requestPermission();
+}
+function checkPeakNotifications(data, goals) {
+  if (!("Notification" in window) || Notification.permission!=="granted") return;
+  const s = data.summary || {};
+  PEAK_KEYS.forEach(key => {
+    const done = s[key]||0, goal = goals[key]||0;
+    const nk = `${key}_${goal}`;
+    if (goal>0 && done>=goal && !notifiedPeaks.has(nk)) {
+      notifiedPeaks.add(nk);
+      try {
+        const cn = (document.title||"").replace(/\s*\(DP\d+\)/i,"") || "대시보드";
+        new Notification(`🎉 ${cn}`, {
+          body:`${PEAK_LABELS[key]} 목표 달성! (${done}/${goal}건)`,
+          tag: nk,
+        });
+      } catch(e) {}
+    }
+  });
+  const today = new Date().toDateString();
+  if (localStorage.getItem("notifDate")!==today) {
+    notifiedPeaks.clear();
+    localStorage.setItem("notifDate", today);
+  }
+}
+
+// ── 요일 버튼 ──
+document.querySelectorAll(".day-btn").forEach(btn => {
+  btn.addEventListener("click", ()=>{
+    currentDayType = btn.dataset.day;
+    updateDayBtns();
+    if (lastData) renderToday(lastData);
+  });
+});
+function updateDayBtns() {
+  document.querySelectorAll(".day-btn").forEach(b=>b.classList.toggle("active",b.dataset.day===currentDayType));
+}
+
+// ── 세트수 ──
+document.getElementById("setsInput").addEventListener("change", e=>{
+  currentSets = Math.max(1,parseInt(e.target.value)||1);
+  e.target.value = currentSets;
+  if (lastData) renderToday(lastData);
+});
+function changeSets(dir) {
+  const input = document.getElementById("setsInput");
+  const v = Math.min(10,Math.max(1,(parseInt(input.value)||1)+dir));
+  input.value = v; currentSets = v;
+  if (lastData) renderToday(lastData);
+}
+
+// ── 데이터 로드 ──
+async function loadData() {
+  if (!currentCenterId) return;
+  try {
+    const res  = await fetch(getFirebaseUrl());
+    if (!res.ok) throw new Error("응답 오류 "+res.status);
+    const data = await res.json();
+    if (!data||!data.riders) throw new Error("데이터 없음");
+    lastData = data;
+    weeklyRRCache = null;
+    renderToday(data);
+    document.getElementById("ts").textContent = "마지막 업데이트: "+(data.scrapedAt||"-");
+    checkPeakNotifications(data, getGoals(currentDayType, currentSets));
+  } catch(e) {
+    document.getElementById("todayContent").innerHTML =
+      `<div class="error-msg">⚠️ 데이터를 불러오지 못했어요.<br><small>${e.message}</small></div>`;
+  }
+}
+
+// ── 피크바 ──
+function peakBar(val, goal) {
+  if (!goal) return "";
+  const pct = Math.min(100,(val/goal)*100);
+  const color = pct>=100?"var(--green)":pct>=70?"#f5c842":"var(--red)";
+  return `<div class="peak-bar-wrap"><div class="peak-bar" style="width:${pct.toFixed(0)}%;background:${color}"></div></div>
+          <div class="peak-pct">${pct.toFixed(0)}%</div>`;
+}
+const rrColor = r => r>=20?"var(--red)":r>=10?"#f5c842":"var(--green)";
+
+// ── 오늘 탭 렌더 ──
+function renderToday(data) {
+  const s      = data.summary||{};
+  const goals  = getGoals(currentDayType,currentSets);
+  const total  = (s.complete||0)+(s.reject||0)+(s.cancel||0);
+  const pct    = v => total>0?Math.max(1,(v/total)*100).toFixed(1):0;
+  const rjPct  = total>0?Math.max(1,((s.reject+s.cancel)/total)*100).toFixed(1):0;
+  const active = data.activeCount??data.riders.filter(r=>r.statusCode==="DELIVERING"||r.status?.includes("운행중")).length;
+  const totalR = data.totalCount??data.riders.length;
+  const activeNames = data.riders.filter(r=>r.statusCode==="DELIVERING"||r.status?.includes("운행중")).map(r=>r.name);
+  const dayLabel = {weekday:"평일",friday:"금요일",saturday:"토요일",sunday:"일요일"}[currentDayType];
+  const curPeak = getCurrentPeak();
+
+  if (data.centerName) {
+    document.getElementById("centerTitle").textContent = data.centerName;
+    document.title = data.centerName;
+  }
+
+  const nameTags = activeNames.map(n=>`<span class="active-name-tag">${n}</span>`).join("");
+  const peakCards = [
+    {key:"morningPeak", emoji:"🌅",label:"아침점심피크", val:s.morningPeak||0, goal:goals.morningPeak},
+    {key:"afternoonOff",emoji:"☀️",label:"오후논피크",   val:s.afternoonOff||0,goal:goals.afternoonOff},
+    {key:"eveningPeak", emoji:"🌆",label:"저녁피크",     val:s.eveningPeak||0, goal:goals.eveningPeak},
+    {key:"nightOff",    emoji:"🌙",label:"심야논피크",   val:s.nightOff||0,    goal:goals.nightOff},
+  ].map(p=>`
+    <div class="peak-card ${p.key===curPeak?"current-peak":""}" data-peak-key="${p.key}">
+      <div class="peak-now-badge">NOW</div>
+      <div class="peak-emoji">${p.emoji}</div>
+      <div class="peak-label">${p.label}</div>
+      <div class="peak-value">${p.val}<span class="peak-goal">/ ${p.goal}</span></div>
+      ${peakBar(p.val,p.goal)}
+    </div>`).join("");
+
+  const sv = (v,cls,label)=>
+    `<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v}</div><div class="stat-label">${label}</div></div>`;
+  const svRate = rate=>
+    `<div class="stat-item"><div class="stat-val" style="color:${rrColor(rate)}">${rate}%</div><div class="stat-label">거절율</div></div>`;
+  const calcRR = r=>{const t=(r.complete||0)+(r.reject||0)+(r.cancel||0);return t>0?Math.round(((r.reject+r.cancel)/t)*1000)/10:0;};
+
+  const sorted = [...data.riders].sort((a,b)=>(a.status?.includes("운행중")?0:1)-(b.status?.includes("운행중")?0:1));
+  const riderCards = sorted.map(r=>{
+    const isActive = r.statusCode==="DELIVERING"||r.status?.includes("운행중");
+    const rr = calcRR(r);
+    const sid = r.name.replace(/\s/g,"_");
+    const isOpen = openRiderCards.has(r.name);
+    return `<div class="rider-card" onclick="toggleRiderCard('${r.name}')">
+      <div class="rider-card-top">
+        <div><div class="rider-name">${r.name}</div>
+        <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
+        <div class="rider-stats">
+          ${sv(r.complete,"stat-complete","완료")}
+          ${sv(r.reject,"stat-reject","거절")}
+          ${sv(r.cancel,"stat-cancel","배차취소")}
+          ${svRate(rr)}
+        </div>
+      </div>
+      <div class="rider-peak-detail ${isOpen?"open":""}" id="detail_${sid}">
+        <div class="rider-peak-grid">
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌅</div><div class="rider-peak-label">아침점심</div><div class="rider-peak-val">${r.morningPeak||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">☀️</div><div class="rider-peak-label">오후논피크</div><div class="rider-peak-val">${r.afternoonOff||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌆</div><div class="rider-peak-label">저녁피크</div><div class="rider-peak-val">${r.eveningPeak||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌙</div><div class="rider-peak-label">심야논피크</div><div class="rider-peak-val">${r.nightOff||0}</div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("todayContent").innerHTML = `
+    <div class="section-title">⏰ 시간대별 완료 · ${dayLabel} ${currentSets}세트 기준</div>
+    <div class="peak-grid">${peakCards}</div>
+    <div class="active-banner">
+      <div class="active-main">
+        <div class="active-dot"></div>
+        <div><div class="active-label">현재 운행중</div>
+        <div class="active-count">${active}<span style="font-size:14px;color:var(--text2);font-weight:400"> / ${totalR}명</span></div></div>
+      </div>
+      <div class="active-names">${nameTags||'<span style="color:var(--text2);font-size:11px">운행중 없음</span>'}</div>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-card complete"><div class="card-label">✅ 완료</div><div class="card-value">${s.complete||0}<span class="card-unit">건</span></div></div>
+      <div class="summary-card reject"><div class="card-label">❌ 거절</div><div class="card-value">${s.reject||0}<span class="card-unit">건</span></div></div>
+      <div class="summary-card cancel"><div class="card-label">⚡ 배차취소</div><div class="card-value">${s.cancel||0}<span class="card-unit">건</span></div></div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-segment bar-complete" style="width:${pct(s.complete)}%"></div>
+      <div class="bar-segment bar-reject"   style="width:${pct(s.reject)}%"></div>
+      <div class="bar-segment bar-cancel"   style="width:${pct(s.cancel)}%"></div>
+    </div>
+    <div class="bar-legend">
+      <span><span class="legend-dot" style="background:var(--green)"></span>완료 ${pct(s.complete)}%</span>
+      <span><span class="legend-dot" style="background:var(--red)"></span>거절율 ${rjPct}%</span>
+    </div>
+    <div class="rider-section-header" onclick="toggleRiderList()">
+      <span class="rider-section-title">👥 라이더별 현황 (${totalR}명)</span>
+      <div class="rider-section-right">
+        <div class="rider-tab-bar" onclick="event.stopPropagation()">
+          <button class="rider-tab-btn ${riderTab==="today"?"active":""}" data-tab="today" onclick="switchRiderTab('today')">오늘</button>
+          <button class="rider-tab-btn ${riderTab==="weekly"?"active":""}" data-tab="weekly" onclick="switchRiderTab('weekly')">주간</button>
+        </div>
+        <span class="rider-toggle-icon ${riderListOpen?"open":""}" id="riderToggleIcon">▼</span>
+      </div>
+    </div>
+    <div class="rider-list ${riderListOpen?"open":""}" id="riderList"></div>`;
+
+  if (riderTab==="today") renderTodayRiders();
+  else renderWeeklyRR();
+}
+
+function toggleRiderList() {
+  riderListOpen = !riderListOpen;
+  document.getElementById("riderList")?.classList.toggle("open",riderListOpen);
+  document.getElementById("riderToggleIcon")?.classList.toggle("open",riderListOpen);
+}
+function toggleRiderCard(name) {
+  if (openRiderCards.has(name)) openRiderCards.delete(name);
+  else openRiderCards.add(name);
+  const el = document.getElementById("detail_"+name.replace(/\s/g,"_"));
+  if (el) el.classList.toggle("open",openRiderCards.has(name));
+}
+function switchRiderTab(tab) {
+  riderTab = tab;
+  document.querySelectorAll(".rider-tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  if (tab==="today") renderTodayRiders();
+  else renderWeeklyRR();
+}
+function renderTodayRiders() {
+  if (!lastData) return;
+  const calcRR = r=>{const t=(r.complete||0)+(r.reject||0)+(r.cancel||0);return t>0?Math.round(((r.reject+r.cancel)/t)*1000)/10:0;};
+  const sv=(v,cls,label)=>`<div class="stat-item"><div class="stat-val ${v===0?"stat-zero":cls}">${v}</div><div class="stat-label">${label}</div></div>`;
+  const svRate=rate=>`<div class="stat-item"><div class="stat-val" style="color:${rrColor(rate)}">${rate}%</div><div class="stat-label">거절율</div></div>`;
+  const sorted = [...lastData.riders].sort((a,b)=>(a.status?.includes("운행중")?0:1)-(b.status?.includes("운행중")?0:1));
+  document.getElementById("riderList").innerHTML = sorted.map(r=>{
+    const isActive=r.statusCode==="DELIVERING"||r.status?.includes("운행중");
+    const rr=calcRR(r); const sid=r.name.replace(/\s/g,"_"); const isOpen=openRiderCards.has(r.name);
+    return `<div class="rider-card" onclick="toggleRiderCard('${r.name}')">
+      <div class="rider-card-top">
+        <div><div class="rider-name">${r.name}</div>
+        <span class="rider-status ${isActive?"status-active":"status-inactive"}">${r.status||"-"}</span></div>
+        <div class="rider-stats">${sv(r.complete,"stat-complete","완료")}${sv(r.reject,"stat-reject","거절")}${sv(r.cancel,"stat-cancel","배차취소")}${svRate(rr)}</div>
+      </div>
+      <div class="rider-peak-detail ${isOpen?"open":""}" id="detail_${sid}">
+        <div class="rider-peak-grid">
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌅</div><div class="rider-peak-label">아침점심</div><div class="rider-peak-val">${r.morningPeak||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">☀️</div><div class="rider-peak-label">오후논피크</div><div class="rider-peak-val">${r.afternoonOff||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌆</div><div class="rider-peak-label">저녁피크</div><div class="rider-peak-val">${r.eveningPeak||0}</div></div>
+          <div class="rider-peak-item"><div class="rider-peak-emoji">🌙</div><div class="rider-peak-label">심야논피크</div><div class="rider-peak-val">${r.nightOff||0}</div></div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+async function renderWeeklyRR() {
+  const listEl = document.getElementById("riderList");
+  if (!listEl) return;
+  listEl.innerHTML='<div class="week-loading">⏳ 주간 데이터 불러오는 중...</div>';
+  if (!weeklyRRCache) {
+    const dates=[];
+    for(let i=1;i<=7;i++){const d=new Date();d.setDate(d.getDate()-i);dates.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"));}
+    const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
+    const rt={};
+    results.forEach(day=>{if(!day||!day.riders)return;Object.values(day.riders).forEach(r=>{if(!r.name)return;if(!rt[r.name])rt[r.name]={name:r.name,reject:0,cancel:0,total:0};rt[r.name].reject+=r.reject||0;rt[r.name].cancel+=r.cancel||0;rt[r.name].total+=r.total||((r.complete||0)+(r.reject||0)+(r.cancel||0));});});
+    weeklyRRCache = Object.values(rt).map(r=>({name:r.name,rejectRate:r.total>0?Math.round(((r.reject+r.cancel)/r.total)*1000)/10:0,total:r.total,reject:r.reject+r.cancel})).sort((a,b)=>b.rejectRate-a.rejectRate);
+  }
+  if (!weeklyRRCache.length){listEl.innerHTML='<div class="week-loading">📭 주간 데이터가 없어요.</div>';return;}
+  listEl.innerHTML=weeklyRRCache.map(r=>`
+    <div class="week-rr-card">
+      <div class="week-rr-name">${r.name}</div>
+      <div class="week-rr-right">
+        <div class="week-rr-val" style="color:${rrColor(r.rejectRate)}">${r.rejectRate}%</div>
+        <div class="week-rr-label">주간 거절율</div>
+        <div class="week-rr-sub">거절 ${r.reject}건 · 수행 ${r.total}건</div>
+      </div>
+    </div>`).join("");
+}
+
+// ── 지난주 탭 ──
+function formatDate(d) {
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function formatDateKo(d) {
+  const days=["일","월","화","수","목","금","토"];
+  return (d.getMonth()+1)+"."+d.getDate()+" ("+days[d.getDay()]+")";
+}
+function getWeekRange(offset) {
+  const today=new Date(); const day=today.getDay();
+  let daysToWed=(day>=3)?day-3:day+4;
+  const wed=new Date(today); wed.setDate(today.getDate()-daysToWed+(offset*7)); wed.setHours(0,0,0,0);
+  const tue=new Date(wed); tue.setDate(wed.getDate()+6);
+  return {start:wed, end:tue};
+}
+
+async function renderWeekTab() {
+  const {start,end} = getWeekRange(currentWeekOffset);
+  const weekNum = Math.abs(currentWeekOffset);
+  const title = weekNum===1?"지난 주":weekNum+"주 전";
+  const dates=[];
+  for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);dates.push(formatDate(d));}
+
+  document.getElementById("weekContent").innerHTML=`
+    <div class="wk-nav">
+      <button class="wk-nav-btn" ${currentWeekOffset<=-MAX_WEEKS?"disabled":""} onclick="changeWeek(-1)">&#8249;</button>
+      <div><div class="wk-title-txt">${title}</div><div class="wk-date">${formatDateKo(start)} ~ ${formatDateKo(end)}</div></div>
+      <button class="wk-nav-btn" ${currentWeekOffset>=-1?"disabled":""} onclick="changeWeek(1)">&#8250;</button>
+    </div>
+    <div id="wkInner"><div class="loading"><div class="spinner">⏳</div></div></div>`;
+
+  // 데이터 로드
+  const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
+
+  // 센터 주간 합계
+  let wComplete=0,wReject=0,wCancel=0;
+  let wMorning=0,wAfternoon=0,wEvening=0,wNight=0;
+  const riderTotals={};
+
+  results.forEach(day=>{
+    if(!day) return;
+    const s=day.summary||{};
+    wComplete+=s.complete||0; wReject+=s.reject||0; wCancel+=s.cancel||0;
+    wMorning+=s.morningPeak||0; wAfternoon+=s.afternoonOff||0;
+    wEvening+=s.eveningPeak||0; wNight+=s.nightOff||0;
+    if(day.riders) Object.values(day.riders).forEach(r=>{
+      if(!r.name) return;
+      if(!riderTotals[r.name]) riderTotals[r.name]={name:r.name,complete:0,reject:0,cancel:0,total:0};
+      riderTotals[r.name].complete+=r.complete||0;
+      riderTotals[r.name].reject+=r.reject||0;
+      riderTotals[r.name].cancel+=r.cancel||0;
+      riderTotals[r.name].total+=r.total||((r.complete||0)+(r.reject||0)+(r.cancel||0));
+    });
+  });
+
+  const wTotal=wComplete+wReject+wCancel;
+  const wCR=wTotal>0?((wComplete/wTotal)*100).toFixed(1):"-";
+
+  // 기사별 주간 거절율
+  const riderRRList=Object.values(riderTotals)
+    .map(r=>({name:r.name,rejectRate:r.total>0?Math.round(((r.reject+r.cancel)/r.total)*1000)/10:0,total:r.total,reject:r.reject+r.cancel,complete:r.complete}))
+    .sort((a,b)=>b.rejectRate-a.rejectRate);
+
+  // 일별 기록
+  const dayCards=dates.map((dateStr,i)=>{
+    const day=results[i]; const dateObj=new Date(start); dateObj.setDate(start.getDate()+i);
+    const lbl=formatDateKo(dateObj);
+    if(!day||!day.summary) return `<div class="wk-day-card"><div class="wk-day-header"><div class="wk-day-name">${lbl}</div><div style="font-size:11px;color:var(--text2)">데이터 없음</div></div></div>`;
+    const s=day.summary; const t=(s.complete||0)+(s.reject||0)+(s.cancel||0);
+    const cr=t>0?((s.complete/t)*100).toFixed(1):"0.0";
+    const rr=t>0?(((s.reject+s.cancel)/t)*100).toFixed(1):"0.0";
+    return `<div class="wk-day-card">
+      <div class="wk-day-header"><div class="wk-day-name">${lbl}</div><div class="wk-day-rate">${cr}%</div></div>
+      <div class="wk-day-stats">
+        <div><div class="wk-day-stat-label">완료</div><div class="wk-day-stat-value wsc">${s.complete||0}</div></div>
+        <div><div class="wk-day-stat-label">거절</div><div class="wk-day-stat-value wsr">${s.reject||0}</div></div>
+        <div><div class="wk-day-stat-label">취소</div><div class="wk-day-stat-value wsca">${s.cancel||0}</div></div>
+        <div><div class="wk-day-stat-label">거절율</div><div class="wk-day-stat-value" style="color:${rrColor(parseFloat(rr))}">${rr}%</div></div>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("wkInner").innerHTML=`
+    <div class="wk-summary-card">
+      <div class="wk-summary-title">📊 주간 센터 합계</div>
+      <div class="wk-summary-grid">
+        <div class="wk-stat"><div class="wk-stat-label">완료</div><div class="wk-stat-value wsc">${wComplete}</div></div>
+        <div class="wk-stat"><div class="wk-stat-label">거절</div><div class="wk-stat-value wsr">${wReject}</div></div>
+        <div class="wk-stat"><div class="wk-stat-label">취소</div><div class="wk-stat-value wsca">${wCancel}</div></div>
+        <div class="wk-stat"><div class="wk-stat-label">완료율</div><div class="wk-stat-value wscr">${wCR}%</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">⏰ 피크별 주간 합계</div>
+    <div class="wk-peak-grid">
+      <div class="wk-peak-card"><div class="wk-peak-emoji">🌅</div><div class="wk-peak-label">아침점심</div><div class="wk-peak-val">${wMorning}</div></div>
+      <div class="wk-peak-card"><div class="wk-peak-emoji">☀️</div><div class="wk-peak-label">오후논피크</div><div class="wk-peak-val">${wAfternoon}</div></div>
+      <div class="wk-peak-card"><div class="wk-peak-emoji">🌆</div><div class="wk-peak-label">저녁피크</div><div class="wk-peak-val">${wEvening}</div></div>
+      <div class="wk-peak-card"><div class="wk-peak-emoji">🌙</div><div class="wk-peak-label">심야논피크</div><div class="wk-peak-val">${wNight}</div></div>
+    </div>
+
+    <div class="collapsible-header" onclick="toggleCollapsible('wkRR')">
+      <span class="collapsible-title">👥 기사별 주간 거절율</span>
+      <span class="collapsible-icon open" id="icon_wkRR">▼</span>
+    </div>
+    <div class="collapsible-body open" id="body_wkRR">
+      ${riderRRList.length?riderRRList.map(r=>`
+        <div class="wk-rider-rr-card">
+          <div class="rider-name">${r.name}</div>
+          <div class="wk-rider-rr-right">
+            <div class="wk-rider-rr-val" style="color:${rrColor(r.rejectRate)}">${r.rejectRate}%</div>
+            <div class="wk-rider-rr-sub">거절 ${r.reject}건 · 수행 ${r.total}건</div>
+          </div>
+        </div>`).join(""):'<div class="no-data">📭 데이터가 없어요.</div>'}
+    </div>
+
+    <div class="collapsible-header" onclick="toggleCollapsible('wkDay')" style="margin-top:6px">
+      <span class="collapsible-title">📅 일별 기록</span>
+      <span class="collapsible-icon open" id="icon_wkDay">▼</span>
+    </div>
+    <div class="collapsible-body open" id="body_wkDay">${dayCards}</div>`;
+}
+
+function changeWeek(dir) {
+  const newOffset = currentWeekOffset + dir;
+  if (newOffset > -1 || newOffset < -MAX_WEEKS) return;
+  currentWeekOffset = newOffset;
+  renderWeekTab();
+}
+
+function toggleCollapsible(id) {
+  const body = document.getElementById("body_"+id);
+  const icon = document.getElementById("icon_"+id);
+  if (!body) return;
+  const isOpen = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  icon?.classList.toggle("open", !isOpen);
+}
+
+// ── 복사 ──
+function copyStatus() {
+  if (!lastData) { alert("데이터가 없어요!"); return; }
+  const s=lastData.summary||{}; const goals=getGoals(currentDayType,currentSets);
+  const now=new Date(); const hour=now.getHours();
+  let peakLabel="",peakDone=0,peakGoal=0;
+  if(hour>=6&&hour<14){peakLabel="아침점심";peakDone=s.morningPeak||0;peakGoal=goals.morningPeak;}
+  else if(hour>=14&&hour<17){peakLabel="오후논피크";peakDone=s.afternoonOff||0;peakGoal=goals.afternoonOff;}
+  else if(hour>=17&&hour<21){peakLabel="저녁피크";peakDone=s.eveningPeak||0;peakGoal=goals.eveningPeak;}
+  else{peakLabel="심야논피크";peakDone=s.nightOff||0;peakGoal=goals.nightOff;}
+  const remain=Math.max(0,peakGoal-peakDone);
+  const active=lastData.activeCount??0;
+  const timeStr=now.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
+  const pct=peakGoal>0?((peakDone/peakGoal)*100).toFixed(0):0;
+  const text=`${timeStr} ${peakLabel}\n운행중 ${active}명\n진행 : ${peakDone}/${peakGoal} (${pct}%)\n잔여할당 : ${remain}건`;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById("copyBtn");
+    if(btn){btn.textContent="✅ 복사됨!";setTimeout(()=>btn.textContent="📋 현황 복사",2000);}
+  });
+}
+
+// ── B+C 통합 모드 ──
+document.getElementById("bcModeBtn").addEventListener("click", () => {
+  bcMode = !bcMode;
+  const btn = document.getElementById("bcModeBtn");
+  const tabBar   = document.getElementById("bcTabBar");
+  const totalBar = document.getElementById("bcTotalBar");
+  const mainTabBar = document.querySelector(".main-tab-bar");
+  const mainContent1 = document.getElementById("mainContent1");
+  const mainContent2 = document.getElementById("mainContent2");
+
+  if (bcMode) {
+    btn.textContent = "✕ 통합 종료";
+    btn.style.background = "var(--red)";
+    btn.style.borderColor = "var(--red)";
+    btn.style.color = "#fff";
+    tabBar.classList.add("visible");
+    totalBar.classList.add("visible");
+    mainTabBar.style.display = "none";
+    mainContent2.style.display = "none";
+    mainContent1.classList.add("active");
+    // B센터 먼저 로드
+    bcActiveCenter = "lime_penguin";
+    updateBcTabs();
+    loadBcCenter("lime_penguin");
+    loadBcCenter("cherry_rabbit"); // 백그라운드 로드
+  } else {
+    btn.textContent = "B+C 통합";
+    btn.style.background = "var(--acl)";
+    btn.style.borderColor = "var(--accent)";
+    btn.style.color = "var(--green)";
+    tabBar.classList.remove("visible");
+    totalBar.classList.remove("visible");
+    mainTabBar.style.display = "";
+    // 원래 센터 데이터 복원
+    if (lastData) renderToday(lastData);
+  }
+});
+
+// BC 탭 클릭
+document.querySelectorAll(".bc-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    if (!bcMode) return;
+    bcActiveCenter = tab.dataset.center;
+    updateBcTabs();
+    const cached = bcDataCache[bcActiveCenter];
+    if (cached) renderToday(cached);
+    else loadBcCenter(bcActiveCenter);
+  });
+});
+
+function updateBcTabs() {
+  document.querySelectorAll(".bc-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.center === bcActiveCenter);
+  });
+}
+
+async function loadBcCenter(centerId) {
+  try {
+    const res  = await fetch(`${FIREBASE_BASE}/baeminData/${centerId}.json`);
+    const data = await res.json();
+    if (!data || !data.riders) return;
+    bcDataCache[centerId] = data;
+    // 현재 활성 탭이면 렌더
+    if (bcMode && bcActiveCenter === centerId) {
+      currentCenterId = centerId;
+      renderToday(data);
+      document.getElementById("ts").textContent = "마지막 업데이트: " + (data.scrapedAt || "-");
+    }
+    // 합계 업데이트
+    updateBcTotals();
+  } catch(e) {}
+}
+
+function updateBcTotals() {
+  let tC=0, tR=0, tA=0, tRiders=0;
+  Object.values(bcDataCache).forEach(data => {
+    if (!data) return;
+    const s = data.summary||{};
+    tC += s.complete||0;
+    tR += (s.reject||0)+(s.cancel||0);
+    tA += data.activeCount??0;
+    tRiders += data.totalCount??data.riders?.length??0;
+  });
+  document.getElementById("bcTotalComplete").textContent = tC+"건";
+  document.getElementById("bcTotalReject").textContent   = tR+"건";
+  document.getElementById("bcTotalActive").textContent   = tA+"명";
+  document.getElementById("bcTotalRiders").textContent   = tRiders+"명";
+}
+
+// BC 모드일 때 5분 자동 갱신도 두 센터 모두 갱신
+const _origSchedule = scheduleNextLoad;
+
+// ── 센터 로그인 + 시작 ──
+function initDashboard() {
+  const urlCenter = getCenterFromUrl();
+  if (urlCenter && BAEMIN_CENTERS[urlCenter]) {
+    currentCenterId = urlCenter;
+    loadSettings(currentCenterId);
+    updateDayBtns();
+    startDashboard();
+    return;
+  }
+  loadSettings(null); updateDayBtns();
+  try {
+    // 저장된 센터ID는 별도 키로 관리
+    const savedCenter = localStorage.getItem("lastCenterId");
+    if(savedCenter && BAEMIN_CENTERS[savedCenter]){
+      currentCenterId = savedCenter;
+      history.replaceState(null,"",`?center=${savedCenter}`);
+      loadSettings(currentCenterId);
+      updateDayBtns();
+      startDashboard(); return;
+    }
+  } catch(e) {}
+  document.getElementById("todayContent").innerHTML=`
+    <div class="login-box">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-size:40px;margin-bottom:12px">🛵</div>
+        <div style="font-size:18px;font-weight:700;color:var(--text1)">배민 대시보드</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">센터 코드를 입력해주세요</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:16px;padding:24px;border:1px solid var(--border)">
+        <input type="password" id="centerCodeInput" placeholder="센터 코드 입력"
+          onkeydown="if(event.key==='Enter') doLogin()" />
+        <button onclick="doLogin()">접속</button>
+        <div id="loginErr" style="color:var(--red);font-size:12px;text-align:center;margin-top:10px;min-height:18px"></div>
+      </div>
+    </div>`;
+  setTimeout(()=>document.getElementById("centerCodeInput")?.focus(),100);
+}
+function doLogin() {
+  const input=document.getElementById("centerCodeInput")?.value?.trim().toLowerCase().replace(/ /g,"_");
+  if(!input) return;
+  if(BAEMIN_CENTERS[input]){
+    currentCenterId=input;
+    history.replaceState(null,"",`?center=${input}`);
+    startDashboard();
+  } else {
+    document.getElementById("loginErr").textContent="센터 코드가 올바르지 않아요.";
+  }
+}
+function startDashboard() {
+  document.getElementById("centerTitle").textContent=BAEMIN_CENTERS[currentCenterId]||currentCenterId;
+  // 마지막 센터 저장
+  localStorage.setItem("lastCenterId", currentCenterId);
+  requestNotificationPermission();
+  loadData();
+  scheduleNextLoad();
+  setInterval(updateNextTime,30000);
+  updateNextTime();
+}
+initDashboard();
+</script>
+</body>
+</html>
