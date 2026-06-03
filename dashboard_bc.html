@@ -237,10 +237,18 @@ const CENTERS = {
 };
 
 const GOALS_PER_SET = {
-  weekday: { morningPeak:21, afternoonOff:20, eveningPeak:30, nightOff:29 },
-  friday:  { morningPeak:24, afternoonOff:21, eveningPeak:32, nightOff:33 },
-  saturday:{ morningPeak:31, afternoonOff:22, eveningPeak:36, nightOff:31 },
-  sunday:  { morningPeak:33, afternoonOff:22, eveningPeak:35, nightOff:30 },
+  lime_penguin: {
+    weekday: { morningPeak:21, afternoonOff:20, eveningPeak:30, nightOff:29 },
+    friday:  { morningPeak:24, afternoonOff:21, eveningPeak:32, nightOff:33 },
+    saturday:{ morningPeak:31, afternoonOff:22, eveningPeak:36, nightOff:31 },
+    sunday:  { morningPeak:33, afternoonOff:22, eveningPeak:35, nightOff:30 },
+  },
+  cherry_rabbit: {
+    weekday: { morningPeak:21, afternoonOff:20, eveningPeak:35, nightOff:24 },
+    friday:  { morningPeak:26, afternoonOff:21, eveningPeak:38, nightOff:25 },
+    saturday:{ morningPeak:32, afternoonOff:22, eveningPeak:40, nightOff:26 },
+    sunday:  { morningPeak:34, afternoonOff:22, eveningPeak:38, nightOff:26 },
+  },
 };
 
 // 센터별 독립 상태
@@ -295,8 +303,9 @@ function getTodayDayType() {
   const d = new Date().getDay();
   return d===0?"sunday":d===6?"saturday":d===5?"friday":"weekday";
 }
-function getGoals(sets, dayType) {
-  const base = GOALS_PER_SET[dayType||getTodayDayType()];
+function getGoals(centerId, sets, dayType) {
+  const centerGoals = GOALS_PER_SET[centerId] || GOALS_PER_SET.lime_penguin;
+  const base = centerGoals[dayType||getTodayDayType()];
   return { morningPeak:base.morningPeak*sets, afternoonOff:base.afternoonOff*sets,
            eveningPeak:base.eveningPeak*sets, nightOff:base.nightOff*sets };
 }
@@ -410,7 +419,7 @@ function renderCenter(centerId, data) {
     ? { sets: parseInt(document.getElementById("setsInput").value)||5,
         dayType: document.querySelector(".day-btn.active")?.dataset.day||getTodayDayType() }
     : getSettings(centerId);
-  const goals   = getGoals(cfg.sets, cfg.dayType);
+  const goals   = getGoals(centerId, cfg.sets, cfg.dayType);
   const s       = data.summary||{};
   const total   = (s.complete||0)+(s.reject||0)+(s.cancel||0);
   const pct     = v => total>0?Math.max(1,(v/total)*100).toFixed(1):0;
@@ -608,7 +617,7 @@ function copyStatus() {
   if (!data) { alert("데이터가 없어요!"); return; }
   const cfg = { sets: parseInt(document.getElementById("setsInput").value)||5,
                 dayType: document.querySelector(".day-btn.active")?.dataset.day||getTodayDayType() };
-  const goals = getGoals(cfg.sets, cfg.dayType);
+  const goals = getGoals(activeCenter, cfg.sets, cfg.dayType);
   const s = data.summary||{};
   const now = new Date(); const hour = now.getHours();
   let peakLabel="",peakDone=0,peakGoal=0;
