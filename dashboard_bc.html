@@ -828,8 +828,9 @@ function toggleCollapsible(id) {
 
 // ── 복사 ──
 function copyStatus() {
-  if (!lastData) { alert("데이터가 없어요!"); return; }
-  const s=lastData.summary||{}; const goals=getGoals(currentDayType,currentSets);
+  const data = (bcMode && bcActiveCenter) ? bcDataCache[bcActiveCenter] : lastData;
+  if (!data) { alert("데이터가 없어요!"); return; }
+  const s = data.summary || {}; const goals=getGoals(currentDayType,currentSets);
   const now=new Date(); const hour=now.getHours();
   let peakLabel="",peakDone=0,peakGoal=0;
   if(hour>=6&&hour<14){peakLabel="아침점심";peakDone=s.morningPeak||0;peakGoal=goals.morningPeak;}
@@ -837,7 +838,7 @@ function copyStatus() {
   else if(hour>=17&&hour<21){peakLabel="저녁피크";peakDone=s.eveningPeak||0;peakGoal=goals.eveningPeak;}
   else{peakLabel="심야논피크";peakDone=s.nightOff||0;peakGoal=goals.nightOff;}
   const remain=Math.max(0,peakGoal-peakDone);
-  const active=lastData.activeCount??0;
+  const active = data.activeCount ?? 0;
   const timeStr=now.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
   const pct=peakGoal>0?((peakDone/peakGoal)*100).toFixed(0):0;
   const text=`${timeStr} ${peakLabel}\n운행중 ${active}명\n진행 : ${peakDone}/${peakGoal} (${pct}%)\n잔여할당 : ${remain}건`;
