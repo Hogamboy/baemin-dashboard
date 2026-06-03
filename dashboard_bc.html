@@ -313,7 +313,7 @@ function getCurrentPeak() {
   const h = new Date().getHours();
   if (h>=6  && h<14) return "morningPeak";
   if (h>=14 && h<17) return "afternoonOff";
-  if (h>=17 && h<21) return "eveningPeak";
+  if (h>=17 && h<20) return "eveningPeak";
   return "nightOff";
 }
 const rrColor = r => r>=20?"var(--red)":r>=10?"#f5c842":"var(--green)";
