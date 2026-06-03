@@ -91,9 +91,9 @@
       <label>센터</label>
       <select id="inputCenter">
         <option value="">-- 센터 선택 --</option>
-        <option value="mango_panda">🥭 망고 팬더</option>
-        <option value="lime_penguin">🍋 라임 펭귄</option>
-        <option value="cherry_rabbit">🍒 체리 래빗</option>
+        <option value="mango_panda">🥭 덕양동부</option>
+        <option value="lime_penguin">🍋 일산서구B</option>
+        <option value="cherry_rabbit">🍒 일산서구A</option>
       </select>
     </div>
     <div class="input-group">
@@ -138,9 +138,9 @@
 <script>
 const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
 const BAEMIN_CENTERS = {
-  mango_panda:   "망고 팬더",
-  lime_penguin:  "라임 펭귄",
-  cherry_rabbit: "체리 래빗",
+  mango_panda:   "덕양동부",
+  lime_penguin:  "일산서구B",
+  cherry_rabbit: "일산서구A",
 };
 
 let currentRider      = null;
