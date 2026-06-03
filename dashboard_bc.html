@@ -212,7 +212,7 @@
     </div>
     <div class="header-right">
       <div class="next-info">다음 갱신 <span id="nextTime">--:--</span></div>
-      <button class="refresh-btn" id="bcModeBtn" style="background:var(--acl);border:1.5px solid var(--accent);color:var(--green);font-weight:700">B+C 통합</button>
+      <button class="refresh-btn" id="bcModeBtn" style="background:var(--acl);border:1.5px solid var(--accent);color:var(--green);font-weight:700">총괄관제</button>
       <div class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</div>
     </div>
   </div>
@@ -241,8 +241,8 @@
 
 <!-- B+C 탭바 -->
 <div class="bc-tab-bar" id="bcTabBar">
-<button class="bc-tab active" id="bcTabB" data-center="lime_penguin">📊 일산서구B</button>
-<button class="bc-tab" id="bcTabC" data-center="cherry_rabbit">📊 일산서구A</button>
+  <button class="bc-tab active" id="bcTabB" data-center="lime_penguin">📊 일산서구B</button>
+  <button class="bc-tab" id="bcTabC" data-center="cherry_rabbit">📊 일산서구A</button>
 </div>
 
 <!-- B+C 합계 바 -->
@@ -311,11 +311,13 @@ const MAX_WEEKS      = 3;
 
 // ── 설정 저장/로드 ──
 function saveSettings() {
-  const key = currentCenterId ? `dashSettings_${currentCenterId}` : "dashSettings_default";
+  // BC 모드일 때 현재 탭 센터에만 저장
+  const saveId = (bcMode && bcActiveCenter) ? bcActiveCenter : currentCenterId;
+  const key = saveId ? `dashSettings_${saveId}` : "dashSettings_default";
   localStorage.setItem(key, JSON.stringify({
     sets: currentSets, dayType: currentDayType
   }));
-  showToast("💾 설정이 저장됐어요!");
+  showToast(`💾 설정 저장 완료!`);
 }
 function loadSettings(centerId) {
   try {
@@ -856,7 +858,7 @@ document.getElementById("bcModeBtn").addEventListener("click", () => {
   const mainContent2 = document.getElementById("mainContent2");
 
   if (bcMode) {
-    btn.textContent = "✕ 통합 종료";
+    btn.textContent = "✕ 총괄관제 종료";
     btn.style.background = "var(--red)";
     btn.style.borderColor = "var(--red)";
     btn.style.color = "#fff";
@@ -867,11 +869,11 @@ document.getElementById("bcModeBtn").addEventListener("click", () => {
     mainContent1.classList.add("active");
     // B센터 먼저 로드
     bcActiveCenter = "lime_penguin";
-    updateBcTabs();
+    updateBcTabs(); // 내부에서 loadCenterSettings 호출
     loadBcCenter("lime_penguin");
     loadBcCenter("cherry_rabbit"); // 백그라운드 로드
   } else {
-    btn.textContent = "B+C 통합";
+    btn.textContent = "총괄관제";
     btn.style.background = "var(--acl)";
     btn.style.borderColor = "var(--accent)";
     btn.style.color = "var(--green)";
@@ -888,7 +890,8 @@ document.querySelectorAll(".bc-tab").forEach(tab => {
   tab.addEventListener("click", () => {
     if (!bcMode) return;
     bcActiveCenter = tab.dataset.center;
-    updateBcTabs();
+    currentCenterId = bcActiveCenter;
+    updateBcTabs(); // 내부에서 설정 로드
     const cached = bcDataCache[bcActiveCenter];
     if (cached) renderToday(cached);
     else loadBcCenter(bcActiveCenter);
@@ -899,6 +902,24 @@ function updateBcTabs() {
   document.querySelectorAll(".bc-tab").forEach(t => {
     t.classList.toggle("active", t.dataset.center === bcActiveCenter);
   });
+  // 탭 전환 시 해당 센터 설정 로드
+  loadCenterSettings(bcActiveCenter);
+}
+
+function loadCenterSettings(centerId) {
+  try {
+    const key = `dashSettings_${centerId}`;
+    const s = JSON.parse(localStorage.getItem(key) || "{}");
+    if (s.sets) {
+      currentSets = s.sets;
+      const inp = document.getElementById("setsInput");
+      if (inp) inp.value = s.sets;
+    }
+    if (s.dayType) {
+      currentDayType = s.dayType;
+      updateDayBtns();
+    }
+  } catch(e) {}
 }
 
 async function loadBcCenter(centerId) {
