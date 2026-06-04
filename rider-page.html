@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>내 배달 현황</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Noto Sans KR',sans-serif;background:#0f1117;color:#f0f0f0;min-height:100vh;padding-bottom:80px}
+    .login-wrap{width:100%;max-width:400px;margin:40px auto;padding:0 16px}
+    .login-logo{text-align:center;margin-bottom:32px}
+    .login-logo .icon{width:60px;height:60px;background:linear-gradient(135deg,#00c3ff,#0077ff);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
+    .login-logo h1{font-size:20px;font-weight:700}
+    .login-logo p{font-size:12px;color:#666;margin-top:4px}
+    .login-card{background:#1a1d27;border-radius:16px;padding:28px 24px;border:1px solid #ffffff0d}
+    .input-group{margin-bottom:16px}
+    .input-group label{display:block;font-size:12px;color:#888;margin-bottom:6px;font-weight:500}
+    .input-group input,.input-group select{width:100%;background:#13161f;border:1px solid #ffffff15;border-radius:10px;color:#f0f0f0;font-size:16px;font-family:'Noto Sans KR',sans-serif;padding:14px 16px;outline:none}
+    .input-group input:focus,.input-group select:focus{border-color:#00c3ff55}
+    .login-btn{width:100%;background:linear-gradient(135deg,#00c3ff,#0077ff);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;padding:15px;cursor:pointer;margin-top:8px}
+    .login-btn:disabled{opacity:0.4}
+    .login-error{color:#ff5252;font-size:12px;text-align:center;margin-top:12px;min-height:18px}
+    .dashboard-wrap{width:100%;max-width:480px;margin:0 auto;display:none;padding:0 16px}
+    .dash-header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px}
+    .dash-header h2{font-size:18px;font-weight:700}
+    .dash-header .sub{font-size:11px;color:#666;margin-top:2px}
+    .logout-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#888;font-size:11px;font-family:'Noto Sans KR',sans-serif;padding:7px 12px;cursor:pointer}
+    .tab-bar{display:flex;background:#13161f;border-radius:12px;padding:4px;margin-bottom:16px;gap:4px}
+    .tab-btn{flex:1;padding:10px;border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;background:transparent;color:#666;transition:all 0.2s}
+    .tab-btn.active{background:#1a1d27;color:#00c3ff}
+
+    /* 오늘 현황 */
+    .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+    .stat-big-card{background:#1a1d27;border-radius:14px;padding:16px;border:1px solid #ffffff0d;text-align:center;position:relative;overflow:hidden}
+    .stat-big-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .sbc-green::before{background:linear-gradient(90deg,#00c3ff,#00e676)}
+    .sbc-red::before{background:#ff5252}
+    .stat-big-label{font-size:11px;color:#888;margin-bottom:6px}
+    .stat-big-value{font-size:42px;font-weight:900;line-height:1}
+    .stat-big-unit{font-size:14px;font-weight:500;margin-left:2px}
+    .stat-big-sub{font-size:11px;color:#555;margin-top:6px}
+    .sbc-green .stat-big-value{color:#00e676}
+    .sbc-red .stat-big-value{color:#ff5252}
+    .stats-row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+    .stat-sm-card{background:#13161f;border-radius:12px;padding:12px 8px;text-align:center;border:1px solid #ffffff08}
+    .stat-sm-label{font-size:10px;color:#666;margin-bottom:4px}
+    .stat-sm-value{font-size:22px;font-weight:900}
+    .ssc-green{color:#00e676}.ssc-red{color:#ff5252}.ssc-yellow{color:#ffd740}
+    .section-title{font-size:11px;color:#555;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
+    .peak-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+    .peak-card{background:#1a1d27;border-radius:12px;padding:16px 10px;text-align:center;border:1px solid #ffffff08;position:relative;overflow:hidden}
+    .peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#00c3ff,#0077ff)}
+    .peak-emoji{font-size:20px;margin-bottom:6px}
+    .peak-label-txt{font-size:10px;color:#666;margin-bottom:4px}
+    .peak-value{font-size:28px;font-weight:900;color:#00c3ff}
+    .peak-unit{font-size:11px;color:#444}
+
+    /* 주간 */
+    .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    .week-nav-btn{background:#1a1d27;border:1px solid #ffffff22;border-radius:8px;color:#aaa;font-size:18px;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Noto Sans KR',sans-serif}
+    .week-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+    .week-title{font-size:13px;font-weight:700;color:#fff;text-align:center}
+    .rank-card{background:linear-gradient(135deg,#1a1d27,#13161f);border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid #00c3ff22;display:flex;align-items:center;gap:16px}
+    .rank-badge{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#00c3ff,#0077ff);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:26px}
+    .rank-label{font-size:11px;color:#888;margin-bottom:4px}
+    .rank-info{font-size:20px;font-weight:900;color:#00c3ff}
+    .week-summary{background:#1a1d27;border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid #ffffff0d}
+    .week-summary-title{font-size:11px;color:#555;font-weight:700;margin-bottom:12px}
+    .week-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+    .week-stat-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .week-stat{background:#13161f;border-radius:10px;padding:10px 8px;text-align:center}
+    .week-stat-label{font-size:9px;color:#666;margin-bottom:4px}
+    .week-stat-value{font-size:18px;font-weight:900}
+    .wsc{color:#00e676}.wsr{color:#ff5252}.wsca{color:#ffd740}.wscr{color:#00c3ff}.wsrr{color:#ff7043}
+    .day-list{display:flex;flex-direction:column;gap:8px}
+    .day-card{background:#1a1d27;border-radius:12px;padding:14px 16px;border:1px solid #ffffff08}
+    .day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .day-name{font-size:13px;font-weight:700;color:#fff}
+    .day-rate{font-size:13px;font-weight:900;color:#00e676}
+    .day-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px}
+    .day-stat{text-align:center}
+    .day-stat-label{font-size:9px;color:#666}
+    .day-stat-value{font-size:15px;font-weight:700}
+    .dsc{color:#00e676}.dsr{color:#ff5252}.dsca{color:#ffd740}.dsrr{color:#ff7043}
+    .rate-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+    .rate-bar-label{font-size:10px;color:#666;width:36px;flex-shrink:0}
+    .rate-bar-track{flex:1;height:6px;background:#13161f;border-radius:3px;overflow:hidden}
+    .rate-bar-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
+    .rate-bar-pct{font-size:10px;font-weight:700;width:36px;text-align:right;flex-shrink:0}
+    .no-data{text-align:center;padding:40px 20px;color:#555;font-size:13px}
+    .loading-msg{color:#555;font-size:13px;text-align:center;margin-top:40px}
+  </style>
+</head>
+<body>
+
+<div class="login-wrap" id="loginWrap">
+  <div class="login-logo">
+    <div class="icon">🛵</div>
+    <h1>내 배달 현황</h1>
+    <p>배민커넥트비즈</p>
+  </div>
+  <div class="login-card">
+    <div class="input-group">
+      <label>센터</label>
+      <select id="inputCenter">
+        <option value="">-- 센터 선택 --</option>
+        <option value="mango_panda">덕양동부</option>
+        <option value="lime_penguin">일산서구B</option>
+        <option value="cherry_rabbit">일산서구A</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>이름</label>
+      <input type="text" id="inputName" placeholder="홍길동" />
+    </div>
+    <div class="input-group">
+      <label>전화번호 (숫자만)</label>
+      <input type="tel" id="inputPhone" placeholder="01012345678" maxlength="11" />
+    </div>
+    <button class="login-btn" id="loginBtn">확인</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<div class="dashboard-wrap" id="dashWrap">
+  <div class="dash-header">
+    <div>
+      <h2 id="riderName">-</h2>
+      <div class="sub" id="lastUpdate">-</div>
+    </div>
+    <button class="logout-btn" id="logoutBtn">로그아웃</button>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab1">📊 실적 현황</button>
+    <button class="tab-btn" id="tab2">📅 주간 기록</button>
+  </div>
+  <div id="tabContent1"><div id="dashContent"></div></div>
+  <div id="tabContent2" style="display:none">
+    <div class="week-nav">
+      <button class="week-nav-btn" id="btnPrevWeek">&#8249;</button>
+      <div style="text-align:center">
+        <div class="week-title" id="weekTitle">-</div>
+        <div style="font-size:11px;color:#666;margin-top:2px" id="weekDateRange">-</div>
+      </div>
+      <button class="week-nav-btn" id="btnNextWeek">&#8250;</button>
+    </div>
+    <div id="weekContent"><div class="loading-msg">데이터 불러오는 중...</div></div>
+  </div>
+</div>
+
+<script>
+const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
+const BAEMIN_CENTERS = {
+  mango_panda:   "덕양동부",
+  lime_penguin:  "일산서구B",
+  cherry_rabbit: "일산서구A",
+};
+
+let currentRider      = null;
+let currentRiderKey   = null;
+let currentCenterId   = null;
+let historyData       = null;
+let currentWeekOffset = -1;
+const MAX_WEEKS       = 3;
+
+document.getElementById("loginBtn").addEventListener("click", doLogin);
+document.getElementById("logoutBtn").addEventListener("click", doLogout);
+document.getElementById("tab1").addEventListener("click", () => switchTab(1));
+document.getElementById("tab2").addEventListener("click", () => switchTab(2));
+document.getElementById("btnPrevWeek").addEventListener("click", () => changeWeek(-1));
+document.getElementById("btnNextWeek").addEventListener("click", () => changeWeek(1));
+document.getElementById("inputPhone").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
+document.getElementById("inputName").addEventListener("keydown",  e => { if(e.key==="Enter") document.getElementById("inputPhone").focus(); });
+
+window.onload = () => {
+  const saved = localStorage.getItem("riderLogin");
+  if (saved) {
+    try {
+      const { name, phone, centerId } = JSON.parse(saved);
+      document.getElementById("inputName").value  = name   || "";
+      document.getElementById("inputPhone").value = phone  || "";
+      if (centerId) document.getElementById("inputCenter").value = centerId;
+      doLogin(true);
+    } catch(e) {}
+  }
+};
+
+async function doLogin(auto = false) {
+  const centerId = document.getElementById("inputCenter").value;
+  const name     = document.getElementById("inputName").value.trim();
+  const phone    = document.getElementById("inputPhone").value.trim().replace(/[-\s]/g,"");
+  const errEl    = document.getElementById("loginError");
+
+  if (!centerId)                  { errEl.textContent="센터를 선택해주세요."; return; }
+  if (!name)                      { errEl.textContent="이름을 입력해주세요."; return; }
+  if (!phone || phone.length < 10){ errEl.textContent="전화번호를 확인해주세요."; return; }
+  errEl.textContent = "";
+  document.getElementById("loginBtn").disabled    = true;
+  document.getElementById("loginBtn").textContent = "조회 중...";
+
+  try {
+    const res  = await fetch(`${FIREBASE_BASE}/baeminData/${centerId}.json`);
+    const data = await res.json();
+    if (!data||!data.riders) throw new Error("데이터 없음");
+
+    const phoneLast4 = phone.slice(-4);
+    const rider = data.riders.find(r => {
+      const rName       = (r.name  || "").trim();
+      const rPhoneLast4 = (r.phone || "").replace(/[-\s]/g,"").slice(-4);
+      return rName === name && rPhoneLast4 === phoneLast4;
+    });
+
+    if (!rider) { errEl.textContent="이름 또는 전화번호가 일치하지 않아요."; return; }
+
+    localStorage.setItem("riderLogin", JSON.stringify({ name, phone, centerId }));
+    currentRider    = rider;
+    currentRiderKey = rider.name.replace(/[.#$\[\]/]/g,"_");
+    currentCenterId = centerId;
+
+    document.getElementById("loginWrap").style.display = "none";
+    document.getElementById("dashWrap").style.display  = "block";
+    document.getElementById("riderName").textContent   = rider.name + " 기사님";
+    document.getElementById("lastUpdate").textContent  = (BAEMIN_CENTERS[centerId]||centerId) + " · " + (data.scrapedAt||"-");
+
+    renderRider(rider);
+    loadHistory();
+  } catch(e) {
+    errEl.textContent = "오류: " + e.message;
+  } finally {
+    document.getElementById("loginBtn").disabled    = false;
+    document.getElementById("loginBtn").textContent = "확인";
+  }
+}
+
+function renderRider(r) {
+  const complete = r.complete||0;
+  const reject   = r.reject  ||0;
+  const cancel   = r.cancel  ||0;
+  const total    = complete + reject + cancel;
+  const cr = total>0?((complete/total)*100).toFixed(1):"0.0";
+  const rr = total>0?(((reject+cancel)/total)*100).toFixed(1):"0.0";
+  const crColor = parseFloat(cr)>=90?"#00e676":parseFloat(cr)>=80?"#ffd740":"#ff5252";
+  const rrColor = parseFloat(rr)>=20?"#ff5252":parseFloat(rr)>=10?"#ffd740":"#00e676";
+
+  document.getElementById("dashContent").innerHTML = `
+    <div class="stats-row">
+      <div class="stat-big-card sbc-green">
+        <div class="stat-big-label">✅ 완료율</div>
+        <div class="stat-big-value" style="color:${crColor}">${cr}<span class="stat-big-unit" style="color:${crColor}">%</span></div>
+        <div class="stat-big-sub">수행 ${total}건 기준</div>
+      </div>
+      <div class="stat-big-card sbc-red">
+        <div class="stat-big-label">❌ 거절율</div>
+        <div class="stat-big-value" style="color:${rrColor}">${rr}<span class="stat-big-unit" style="color:${rrColor}">%</span></div>
+        <div class="stat-big-sub">거절+취소 ${reject+cancel}건</div>
+      </div>
+    </div>
+    <div class="stats-row3">
+      <div class="stat-sm-card">
+        <div class="stat-sm-label">완료</div>
+        <div class="stat-sm-value ssc-green">${complete}<span style="font-size:11px;color:#555">건</span></div>
+      </div>
+      <div class="stat-sm-card">
+        <div class="stat-sm-label">거절</div>
+        <div class="stat-sm-value ssc-red">${reject}<span style="font-size:11px;color:#555">건</span></div>
+      </div>
+      <div class="stat-sm-card">
+        <div class="stat-sm-label">배차취소</div>
+        <div class="stat-sm-value ssc-yellow">${cancel}<span style="font-size:11px;color:#555">건</span></div>
+      </div>
+    </div>
+    <div class="section-title">⏰ 시간대별 완료</div>
+    <div class="peak-grid">
+      <div class="peak-card"><div class="peak-emoji">🌅</div><div class="peak-label-txt">아침점심피크</div><div class="peak-value">${r.morningPeak||0}<span class="peak-unit">건</span></div></div>
+      <div class="peak-card"><div class="peak-emoji">☀️</div><div class="peak-label-txt">오후논피크</div><div class="peak-value">${r.afternoonOff||0}<span class="peak-unit">건</span></div></div>
+      <div class="peak-card"><div class="peak-emoji">🌆</div><div class="peak-label-txt">저녁피크</div><div class="peak-value">${r.eveningPeak||0}<span class="peak-unit">건</span></div></div>
+      <div class="peak-card"><div class="peak-emoji">🌙</div><div class="peak-label-txt">심야논피크</div><div class="peak-value">${r.nightOff||0}<span class="peak-unit">건</span></div></div>
+    </div>`;
+}
+
+function switchTab(n) {
+  document.getElementById("tabContent1").style.display = n===1?"block":"none";
+  document.getElementById("tabContent2").style.display = n===2?"block":"none";
+  document.getElementById("tab1").classList.toggle("active", n===1);
+  document.getElementById("tab2").classList.toggle("active", n===2);
+  if (n===2) {
+    if (historyData) renderWeek();
+    else loadHistory().then(() => renderWeek());
+  }
+}
+
+async function loadHistory() {
+  try {
+    const res  = await fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}.json?shallow=true`);
+    const keys = await res.json();
+    if (!keys) { historyData={}; return; }
+    historyData = {};
+    const dates = Object.keys(keys).sort().slice(-28);
+    await Promise.all(dates.map(async d => {
+      const r = await fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${d}.json`);
+      historyData[d] = await r.json();
+    }));
+  } catch(e) { historyData=null; }
+}
+
+function getWeekRange(offset) {
+  const today = new Date();
+  const day   = today.getDay();
+  let daysToWed = (day >= 3) ? day - 3 : day + 4;
+  const wed = new Date(today);
+  wed.setDate(today.getDate() - daysToWed + (offset * 7));
+  wed.setHours(0,0,0,0);
+  const tue = new Date(wed);
+  tue.setDate(wed.getDate() + 6);
+  return { start: wed, end: tue };
+}
+
+function formatDate(d) {
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function formatDateKo(d) {
+  const days=["일","월","화","수","목","금","토"];
+  return (d.getMonth()+1)+"."+d.getDate()+" ("+days[d.getDay()]+")";
+}
+
+function changeWeek(dir) {
+  const newOff = currentWeekOffset + dir;
+  if (newOff > 0 || newOff < -MAX_WEEKS) return;
+  currentWeekOffset = newOff;
+  renderWeek();
+}
+
+function renderWeek() {
+  const { start, end } = getWeekRange(currentWeekOffset);
+  document.getElementById("btnPrevWeek").disabled = currentWeekOffset <= -MAX_WEEKS;
+  document.getElementById("btnNextWeek").disabled = currentWeekOffset >= 0;
+  const weekNum = Math.abs(currentWeekOffset);
+  document.getElementById("weekTitle").textContent     = currentWeekOffset===0?"이번 주":weekNum+"주 전";
+  document.getElementById("weekDateRange").textContent = formatDateKo(start)+" ~ "+formatDateKo(end);
+
+  if (!historyData) {
+    document.getElementById("weekContent").innerHTML = '<div class="no-data">📭 데이터가 없어요.</div>';
+    return;
+  }
+
+  const dates = [];
+  for (let i=0; i<7; i++) {
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    dates.push(formatDate(d));
+  }
+
+  const dayData = dates.map(ds => {
+    const rec = historyData[ds];
+    if (!rec||!rec.riders) return null;
+    return rec.riders[currentRiderKey] || null;
+  });
+
+  let wComplete=0, wReject=0, wCancel=0, wTotal=0;
+  dayData.forEach(d => {
+    if (!d) return;
+    wComplete += d.complete||0;
+    wReject   += d.reject  ||0;
+    wCancel   += d.cancel  ||0;
+    wTotal    += d.total||((d.complete||0)+(d.reject||0)+(d.cancel||0));
+  });
+  const wCR = wTotal>0?((wComplete/wTotal)*100).toFixed(1):"-";
+  const wRR = wTotal>0?(((wReject+wCancel)/wTotal)*100).toFixed(1):"-";
+  const wCRColor = parseFloat(wCR)>=90?"#00e676":parseFloat(wCR)>=80?"#ffd740":"#ff5252";
+  const wRRColor = parseFloat(wRR)>=20?"#ff7043":parseFloat(wRR)>=10?"#ffd740":"#00e676";
+
+  const rankHtml = getRankHtml(dates);
+
+  const dayCards = dayData.map((d,i) => {
+    const dateObj = new Date(start); dateObj.setDate(start.getDate()+i);
+    const lbl = formatDateKo(dateObj);
+    if (!d) return `<div class="day-card"><div class="day-header"><div class="day-name">${lbl}</div><div style="font-size:11px;color:#444">데이터 없음</div></div></div>`;
+    const complete=d.complete||0, reject=d.reject||0, cancel=d.cancel||0;
+    const total=d.total||(complete+reject+cancel);
+    const cr=total>0?((complete/total)*100).toFixed(1):"0.0";
+    const rr=total>0?(((reject+cancel)/total)*100).toFixed(1):"0.0";
+    const crC=parseFloat(cr)>=90?"#00e676":parseFloat(cr)>=80?"#ffd740":"#ff5252";
+    const rrC=parseFloat(rr)>=20?"#ff7043":parseFloat(rr)>=10?"#ffd740":"#00e676";
+    return `<div class="day-card">
+      <div class="day-header"><div class="day-name">${lbl}</div><div class="day-rate" style="color:${crC}">${cr}%</div></div>
+      <div class="day-stats">
+        <div class="day-stat"><div class="day-stat-label">완료</div><div class="day-stat-value dsc">${complete}</div></div>
+        <div class="day-stat"><div class="day-stat-label">거절</div><div class="day-stat-value dsr">${reject}</div></div>
+        <div class="day-stat"><div class="day-stat-label">취소</div><div class="day-stat-value dsca">${cancel}</div></div>
+        <div class="day-stat"><div class="day-stat-label">거절율</div><div class="day-stat-value" style="color:${rrC}">${rr}%</div></div>
+      </div>
+      <div class="rate-bar-row">
+        <span class="rate-bar-label" style="color:#00e676">완료율</span>
+        <div class="rate-bar-track"><div class="rate-bar-fill" style="width:${Math.min(100,parseFloat(cr))}%;background:${crC}"></div></div>
+        <span class="rate-bar-pct" style="color:${crC}">${cr}%</span>
+      </div>
+      <div class="rate-bar-row">
+        <span class="rate-bar-label" style="color:#ff7043">거절율</span>
+        <div class="rate-bar-track"><div class="rate-bar-fill" style="width:${Math.min(100,parseFloat(rr)*3)}%;background:${rrC}"></div></div>
+        <span class="rate-bar-pct" style="color:${rrC}">${rr}%</span>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("weekContent").innerHTML = `
+    ${rankHtml}
+    <div class="week-summary">
+      <div class="week-summary-title">📊 주간 합계</div>
+      <div class="week-stat-grid">
+        <div class="week-stat"><div class="week-stat-label">완료</div><div class="week-stat-value wsc">${wComplete}<span style="font-size:10px;color:#555">건</span></div></div>
+        <div class="week-stat"><div class="week-stat-label">거절</div><div class="week-stat-value wsr">${wReject}<span style="font-size:10px;color:#555">건</span></div></div>
+        <div class="week-stat"><div class="week-stat-label">배차취소</div><div class="week-stat-value wsca">${wCancel}<span style="font-size:10px;color:#555">건</span></div></div>
+      </div>
+      <div class="week-stat-grid2">
+        <div class="week-stat"><div class="week-stat-label">완료율</div><div class="week-stat-value" style="color:${wCRColor}">${wCR}%</div></div>
+        <div class="week-stat"><div class="week-stat-label">거절율</div><div class="week-stat-value" style="color:${wRRColor}">${wRR}%</div></div>
+      </div>
+    </div>
+    <div class="section-title" style="margin-bottom:8px">📅 일별 기록</div>
+    <div class="day-list">${dayCards}</div>`;
+}
+
+function getRankHtml(dates) {
+  if (!historyData) return "";
+  const riderTotals = {};
+  dates.forEach(ds => {
+    const rec = historyData[ds];
+    if (!rec||!rec.riders) return;
+    Object.keys(rec.riders).forEach(key => {
+      const r = rec.riders[key];
+      if (!riderTotals[key]) riderTotals[key]={name:r.name,complete:0,total:0};
+      riderTotals[key].complete += r.complete||0;
+      riderTotals[key].total   += r.total||((r.complete||0)+(r.reject||0)+(r.cancel||0));
+    });
+  });
+  if (!Object.keys(riderTotals).length) return "";
+  const sorted = Object.entries(riderTotals)
+    .map(([key,v])=>({key,name:v.name,cr:v.total>0?(v.complete/v.total)*100:0}))
+    .sort((a,b)=>b.cr-a.cr);
+  const myIdx = sorted.findIndex(r=>r.key===currentRiderKey);
+  if (myIdx===-1) return "";
+  const rank=myIdx+1, total=sorted.length;
+  const emoji=rank===1?"🥇":rank===2?"🥈":rank===3?"🥉":"🏅";
+  return `<div class="rank-card">
+    <div class="rank-badge">${emoji}</div>
+    <div>
+      <div class="rank-label">완료율 기준 순위</div>
+      <div class="rank-info">${rank}위 <span style="font-size:14px;color:#555">/ ${total}명</span></div>
+      <div style="font-size:11px;color:#666;margin-top:3px">완료율 ${sorted[myIdx].cr.toFixed(1)}%</div>
+    </div>
+  </div>`;
+}
+
+function doLogout() {
+  localStorage.removeItem("riderLogin");
+  document.getElementById("loginWrap").style.display = "block";
+  document.getElementById("dashWrap").style.display  = "none";
+  document.getElementById("inputName").value  = "";
+  document.getElementById("inputPhone").value = "";
+  document.getElementById("inputCenter").value= "";
+  document.getElementById("loginError").textContent = "";
+  currentRider=null; historyData=null; currentWeekOffset=-1; currentCenterId=null;
+  switchTab(1);
+}
+</script>
+</body>
+</html>
