@@ -340,6 +340,11 @@ function authHeaders() {
 function canAccessCenter(centerId) {
   return isAdmin() || allowedCenters.has(centerId);
 }
+async function getAvailableElectronCenters() {
+  const snap = await authDb.ref(`${FIREBASE_SOURCE_PATH}/baeminData`).get();
+  const data = snap.val() || {};
+  return Object.keys(data);
+}
 
 // ── 설정 저장/로드 ──
 function saveSettings() {
@@ -517,7 +522,7 @@ async function loadData() {
   try {
     const snap = await authDb.ref(getDataPath(currentCenterId)).get();
     const data = snap.val();
-    if (!data||!data.riders) throw new Error("데이터 없음");
+    if (!data||!data.riders) throw new Error(`데이터 없음: ${getDataPath(currentCenterId)}`);
     lastData = data;
     weeklyRRCache = null;
     renderToday(data);
@@ -911,6 +916,26 @@ function initDashboard() {
     </div>`;
   setTimeout(()=>document.getElementById("centerCodeInput")?.focus(),100);
 }
+
+async function initDashboardAfterAuth() {
+  loadSettings(); updateDayBtns();
+  const urlCenter = getCenterFromUrl();
+  if (urlCenter && BAEMIN_CENTERS[urlCenter] && canAccessCenter(urlCenter)) {
+    currentCenterId = urlCenter;
+    startDashboard(); return;
+  }
+
+  const availableCenters = await getAvailableElectronCenters().catch(()=>[]);
+  const firstAvailableCenter = availableCenters.find(centerId => canAccessCenter(centerId));
+  if (firstAvailableCenter) {
+    currentCenterId = firstAvailableCenter;
+    history.replaceState(null,"",`?center=${firstAvailableCenter}`);
+    startDashboard(); return;
+  }
+
+  initDashboard();
+}
+
 function doLogin() {
   const input=document.getElementById("centerCodeInput")?.value?.trim().toLowerCase().replace(/ /g,"_");
   if(!input) return;
@@ -978,7 +1003,7 @@ function initAuthDashboard() {
     try {
       authUser = user;
       await loadAuthProfile(user);
-      initDashboard();
+      await initDashboardAfterAuth();
     } catch (error) {
       await auth.signOut();
       renderAuthLogin(error.message || "계정 권한이 없습니다.");
