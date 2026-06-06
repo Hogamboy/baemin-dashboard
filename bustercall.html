@@ -184,6 +184,15 @@
     .login-box{max-width:360px;margin:60px auto;padding:0 20px}
     .login-box input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text1);font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif}
     .login-box button{width:100%;background:linear-gradient(135deg,var(--accent),#0099aa);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:15px;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+    .admin-panel{display:none;padding:14px 16px;background:var(--bg2);border-bottom:1.5px solid var(--border)}
+    .admin-panel.open{display:block}
+    .admin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+    .admin-panel input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text1);font-size:13px;padding:10px;font-family:'Noto Sans KR',sans-serif}
+    .admin-panel button{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--accent);font-size:12px;font-weight:700;padding:10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+    .admin-user-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:8px}
+    .admin-user-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+    .admin-slot-list{display:flex;flex-wrap:wrap;gap:8px}
+    .admin-slot-list label{font-size:12px;color:var(--text2)}
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1.5px solid var(--accent);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;color:var(--text1);z-index:999;transition:transform 0.4s ease;white-space:nowrap}
     .toast.show{transform:translateX(-50%) translateY(0)}
     .no-data{text-align:center;padding:40px 20px;color:var(--text2);font-size:13px}
@@ -233,6 +242,16 @@
   <button class="main-tab" id="mainTab3" onclick="switchMainTab(3)">📅 지난주</button>
 </div>
 
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-grid">
+    <input id="newUserEmail" type="email" placeholder="사용자 이메일">
+    <input id="newUserPassword" type="password" placeholder="초기 비밀번호">
+    <input id="newUserName" type="text" placeholder="표시 이름">
+    <button onclick="createDashboardUser()">사용자 생성</button>
+  </div>
+  <div id="adminUsers"></div>
+</div>
+
 <!-- 오늘 현황 탭 -->
 <div class="tab-content active" id="mainContent1">
   <div id="todayContent">
@@ -251,6 +270,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-functions-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script>
 const FIREBASE_BASE = "https://bustercall-cd141-default-rtdb.asia-southeast1.firebasedatabase.app";
@@ -301,6 +321,7 @@ let authDb            = null;
 firebase.initializeApp(window.BUSTERCALL_FIREBASE_CONFIG);
 const auth = firebase.auth();
 authDb = firebase.database();
+const cloudFunctions = firebase.functions();
 
 function isAdmin() {
   return authProfile && authProfile.role === "admin";
@@ -344,6 +365,87 @@ async function getAvailableElectronCenters() {
   const snap = await authDb.ref(`${FIREBASE_SOURCE_PATH}/baeminData`).get();
   const data = snap.val() || {};
   return Object.keys(data);
+}
+
+async function renderAdminPanel() {
+  const panel = document.getElementById("adminPanel");
+  if (!panel) return;
+  panel.classList.toggle("open", isAdmin());
+  if (!isAdmin()) return;
+
+  const users = await readAuthPath("config/users") || {};
+  const userSlots = await readAuthPath("config/userSlots") || {};
+  const slots = await readAuthPath("config/slots") || {};
+  const slotIds = Object.keys(slots).sort();
+
+  document.getElementById("adminUsers").innerHTML = Object.entries(users).map(([uid, user]) => {
+    if (user.role === "admin") return "";
+    const checkedSlots = userSlots[uid] || {};
+    const checks = slotIds.map(slotId => `
+      <label>
+        <input type="checkbox" data-uid="${uid}" data-slot="${slotId}" ${checkedSlots[slotId] ? "checked" : ""}>
+        ${slots[slotId]?.name || slotId}
+      </label>`).join("");
+
+    return `
+      <div class="admin-user-card" data-user="${uid}">
+        <div class="admin-user-top">
+          <div>
+            <strong>${user.displayName || user.email || uid}</strong>
+            <div style="font-size:11px;color:var(--text2)">${user.email || ""}</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button onclick="saveUserSlots('${uid}')">슬롯 저장</button>
+            <button onclick="deleteDashboardUser('${uid}')">탈퇴</button>
+          </div>
+        </div>
+        <div class="admin-slot-list">${checks}</div>
+      </div>`;
+  }).join("") || '<div class="no-data">사용자가 없습니다.</div>';
+}
+
+function selectedSlotsForUser(uid) {
+  return Array.from(document.querySelectorAll(`[data-uid="${uid}"][data-slot]:checked`))
+    .map(input => input.dataset.slot);
+}
+
+async function createDashboardUser() {
+  const email = document.getElementById("newUserEmail").value.trim();
+  const password = document.getElementById("newUserPassword").value;
+  const displayName = document.getElementById("newUserName").value.trim() || email;
+  if (!email || !password) { showToast("이메일과 비밀번호를 입력하세요."); return; }
+
+  try {
+    await cloudFunctions.httpsCallable("createUser")({ email, password, displayName, slotIds: [] });
+    document.getElementById("newUserEmail").value = "";
+    document.getElementById("newUserPassword").value = "";
+    document.getElementById("newUserName").value = "";
+    showToast("사용자를 생성했습니다.");
+    await renderAdminPanel();
+  } catch (error) {
+    showToast("사용자 생성 실패: " + (error.message || "오류"));
+  }
+}
+
+async function saveUserSlots(uid) {
+  try {
+    await cloudFunctions.httpsCallable("updateUserSlots")({ uid, slotIds: selectedSlotsForUser(uid) });
+    showToast("슬롯 권한을 저장했습니다.");
+    await renderAdminPanel();
+  } catch (error) {
+    showToast("슬롯 저장 실패: " + (error.message || "오류"));
+  }
+}
+
+async function deleteDashboardUser(uid) {
+  if (!confirm("이 사용자를 탈퇴 처리할까요?")) return;
+  try {
+    await cloudFunctions.httpsCallable("deleteUser")({ uid });
+    showToast("사용자를 삭제했습니다.");
+    await renderAdminPanel();
+  } catch (error) {
+    showToast("사용자 삭제 실패: " + (error.message || "오류"));
+  }
 }
 
 // ── 설정 저장/로드 ──
@@ -1003,6 +1105,7 @@ function initAuthDashboard() {
     try {
       authUser = user;
       await loadAuthProfile(user);
+      await renderAdminPanel();
       await initDashboardAfterAuth();
     } catch (error) {
       await auth.signOut();
