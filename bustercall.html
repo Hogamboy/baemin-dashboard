@@ -248,6 +248,10 @@
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script>
 const FIREBASE_BASE = "https://bustercall-cd141-default-rtdb.asia-southeast1.firebasedatabase.app";
 const FIREBASE_SOURCE_PATH = "sources/electron";
@@ -289,6 +293,53 @@ let notifiedPeaks    = new Set();
 let openRiderCards   = new Set();
 let currentWeekOffset = 0; // 0=이번주, -1=지난주, -2=2주전...
 const MAX_WEEKS      = 3;
+let authUser          = null;
+let authProfile       = null;
+let allowedCenters    = new Set();
+let authDb            = null;
+
+firebase.initializeApp(window.BUSTERCALL_FIREBASE_CONFIG);
+const auth = firebase.auth();
+authDb = firebase.database();
+
+function isAdmin() {
+  return authProfile && authProfile.role === "admin";
+}
+
+function readAuthPath(path) {
+  return authDb.ref(path).get().then(snap => snap.val());
+}
+
+async function loadAuthProfile(user) {
+  const profile = await readAuthPath(`config/users/${user.uid}`);
+  if (!profile || profile.active === false) throw new Error("계정 권한이 없습니다.");
+
+  const slots = await readAuthPath(`config/userSlots/${user.uid}`) || {};
+  const allSlots = await readAuthPath("config/slots") || {};
+  const centers = new Set();
+
+  if (profile.role === "admin") {
+    Object.values(allSlots).forEach(slot => {
+      if (slot && slot.centerId) centers.add(slot.centerId);
+    });
+    Object.keys(BAEMIN_CENTERS).forEach(centerId => centers.add(centerId));
+  } else {
+    Object.keys(slots).forEach(slotId => {
+      const slot = allSlots[slotId];
+      if (slot && slot.centerId) centers.add(slot.centerId);
+    });
+  }
+
+  authProfile = profile;
+  allowedCenters = centers;
+}
+
+function authHeaders() {
+  return auth.currentUser.getIdToken().then(token => ({ Authorization: `Bearer ${token}` }));
+}
+function canAccessCenter(centerId) {
+  return isAdmin() || allowedCenters.has(centerId);
+}
 
 // ── 설정 저장/로드 ──
 function saveSettings() {
@@ -349,6 +400,12 @@ function getCenterFromUrl() {
 }
 function getFirebaseUrl() {
   return currentCenterId ? `${FIREBASE_BASE}/${FIREBASE_SOURCE_PATH}/baeminData/${currentCenterId}.json` : null;
+}
+function getDataPath(centerId) {
+  return `${FIREBASE_SOURCE_PATH}/baeminData/${centerId}`;
+}
+function getHistoryPath(centerId, date) {
+  return `${FIREBASE_SOURCE_PATH}/riderHistory/${centerId}/${date}`;
 }
 
 // ── 목표 ──
@@ -458,9 +515,8 @@ function changeSets(dir) {
 async function loadData() {
   if (!currentCenterId) return;
   try {
-    const res  = await fetch(getFirebaseUrl());
-    if (!res.ok) throw new Error("응답 오류 "+res.status);
-    const data = await res.json();
+    const snap = await authDb.ref(getDataPath(currentCenterId)).get();
+    const data = snap.val();
     if (!data||!data.riders) throw new Error("데이터 없음");
     lastData = data;
     weeklyRRCache = null;
@@ -641,7 +697,7 @@ async function renderWeeklyRR() {
     const dates=[];
     const {start}=getWeekRange(0);
     for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);dates.push(formatDate(d));}
-    const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/${FIREBASE_SOURCE_PATH}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
+    const results=await Promise.all(dates.map(date=>authDb.ref(getHistoryPath(currentCenterId,date)).get().then(snap=>snap.val()).catch(()=>null)));
     const rt={};
     results.forEach(day=>{if(!day||!day.riders)return;Object.values(day.riders).forEach(r=>{if(!r.name)return;if(!rt[r.name])rt[r.name]={name:r.name,reject:0,cancel:0,total:0};rt[r.name].reject+=r.reject||0;rt[r.name].cancel+=r.cancel||0;rt[r.name].total+=r.total||((r.complete||0)+(r.reject||0)+(r.cancel||0));});});
     weeklyRRCache = Object.values(rt).map(r=>({name:r.name,rejectRate:r.total>0?Math.round(((r.reject+r.cancel)/r.total)*1000)/10:0,total:r.total,reject:r.reject+r.cancel})).sort((a,b)=>b.rejectRate-a.rejectRate);
@@ -690,7 +746,7 @@ async function renderWeekTab() {
     <div id="wkInner"><div class="loading"><div class="spinner">⏳</div></div></div>`;
 
   // 데이터 로드
-  const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/${FIREBASE_SOURCE_PATH}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
+  const results=await Promise.all(dates.map(date=>authDb.ref(getHistoryPath(currentCenterId,date)).get().then(snap=>snap.val()).catch(()=>null)));
 
   // 센터 주간 합계
   let wComplete=0,wReject=0,wCancel=0;
@@ -824,15 +880,21 @@ function copyStatus() {
 function initDashboard() {
   loadSettings(); updateDayBtns();
   const urlCenter = getCenterFromUrl();
-  if (urlCenter && BAEMIN_CENTERS[urlCenter]) { currentCenterId=urlCenter; startDashboard(); return; }
+  if (urlCenter && BAEMIN_CENTERS[urlCenter] && canAccessCenter(urlCenter)) { currentCenterId=urlCenter; startDashboard(); return; }
   try {
     const s=JSON.parse(localStorage.getItem("dashSettings")||"{}");
-    if(s.centerId&&BAEMIN_CENTERS[s.centerId]){
+    if(s.centerId&&BAEMIN_CENTERS[s.centerId]&&canAccessCenter(s.centerId)){
       currentCenterId=s.centerId;
       history.replaceState(null,"",`?center=${s.centerId}`);
       startDashboard(); return;
     }
   } catch(e) {}
+  const firstAllowedCenter = Object.keys(BAEMIN_CENTERS).find(centerId => canAccessCenter(centerId));
+  if (firstAllowedCenter) {
+    currentCenterId = firstAllowedCenter;
+    history.replaceState(null,"",`?center=${firstAllowedCenter}`);
+    startDashboard(); return;
+  }
   document.getElementById("todayContent").innerHTML=`
     <div class="login-box">
       <div style="text-align:center;margin-bottom:28px">
@@ -852,7 +914,7 @@ function initDashboard() {
 function doLogin() {
   const input=document.getElementById("centerCodeInput")?.value?.trim().toLowerCase().replace(/ /g,"_");
   if(!input) return;
-  if(BAEMIN_CENTERS[input]){
+  if(BAEMIN_CENTERS[input]&&canAccessCenter(input)){
     currentCenterId=input;
     history.replaceState(null,"",`?center=${input}`);
     startDashboard();
@@ -869,7 +931,62 @@ function startDashboard() {
   setInterval(updateNextTime,30000);
   updateNextTime();
 }
-initDashboard();
+
+function renderAuthLogin(message="") {
+  document.getElementById("todayContent").innerHTML=`
+    <div class="login-box">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="font-size:40px;margin-bottom:12px">🔐</div>
+        <div style="font-size:18px;font-weight:700;color:var(--text1)">BusterCall 로그인</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">관리자가 발급한 계정으로 접속하세요.</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:16px;padding:24px;border:1px solid var(--border)">
+        <input type="email" id="authEmailInput" placeholder="이메일" autocomplete="username" />
+        <input type="password" id="authPasswordInput" placeholder="비밀번호" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doAuthLogin()" />
+        <button onclick="doAuthLogin()">로그인</button>
+        <div id="authErr" style="color:var(--red);font-size:12px;text-align:center;margin-top:10px;min-height:18px">${message}</div>
+      </div>
+    </div>`;
+  document.getElementById("mainContent2").classList.remove("active");
+  document.getElementById("mainTab1").classList.add("active");
+  document.getElementById("mainTab2").classList.remove("active");
+  document.getElementById("mainTab3").classList.remove("active");
+  setTimeout(()=>document.getElementById("authEmailInput")?.focus(),100);
+}
+
+async function doAuthLogin() {
+  const email = document.getElementById("authEmailInput")?.value?.trim();
+  const password = document.getElementById("authPasswordInput")?.value || "";
+  const err = document.getElementById("authErr");
+  if (err) err.textContent = "";
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    if (err) err.textContent = "로그인에 실패했습니다.";
+  }
+}
+
+function initAuthDashboard() {
+  renderAuthLogin();
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      authUser = null; authProfile = null; allowedCenters = new Set();
+      renderAuthLogin(); return;
+    }
+
+    try {
+      authUser = user;
+      await loadAuthProfile(user);
+      initDashboard();
+    } catch (error) {
+      await auth.signOut();
+      renderAuthLogin(error.message || "계정 권한이 없습니다.");
+    }
+  });
+}
+
+initAuthDashboard();
 </script>
 </body>
 </html>
