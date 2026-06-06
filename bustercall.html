@@ -256,6 +256,19 @@ const BAEMIN_CENTERS = {
   cherry_rabbit: "🍒 체리 래빗",
 };
 
+function hideDpCode(text) {
+  return String(text || "")
+    .replace(/\s*\(?DP\d+\)?/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function getSafeCenterName(data) {
+  const scrapedName = hideDpCode(data && data.centerName);
+  if (scrapedName) return scrapedName;
+  return BAEMIN_CENTERS[currentCenterId] || "배달현황 대시보드";
+}
+
 let currentCenterId  = null;
 let currentDayType   = getTodayDayType();
 let currentSets      = 5;
@@ -475,10 +488,9 @@ function renderToday(data) {
   const dayLabel = {weekday:"평일",friday:"금요일",saturday:"토요일",sunday:"일요일"}[currentDayType];
   const curPeak = getCurrentPeak();
 
-  if (data.centerName) {
-    document.getElementById("centerTitle").textContent = data.centerName;
-    document.title = data.centerName;
-  }
+  const safeCenterName = getSafeCenterName(data);
+  document.getElementById("centerTitle").textContent = safeCenterName;
+  document.title = safeCenterName;
 
   const nameTags = activeNames.map(n=>`<span class="active-name-tag">${n}</span>`).join("");
   const peakCards = [
@@ -841,7 +853,7 @@ function doLogin() {
   }
 }
 function startDashboard() {
-  document.getElementById("centerTitle").textContent=BAEMIN_CENTERS[currentCenterId]||currentCenterId;
+  document.getElementById("centerTitle").textContent=BAEMIN_CENTERS[currentCenterId]||"배달현황 대시보드";
   requestNotificationPermission();
   loadData();
   scheduleNextLoad();
