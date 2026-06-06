@@ -250,6 +250,7 @@
 
 <script>
 const FIREBASE_BASE = "https://baemin-dashboard-b289e-default-rtdb.firebaseio.com";
+const FIREBASE_SOURCE_PATH = "sources/electron";
 const BAEMIN_CENTERS = {
   mango_panda:   "🥭 망고 팬더",
   lime_penguin:  "🍋 라임 펭귄",
@@ -347,7 +348,7 @@ function getCenterFromUrl() {
   return new URLSearchParams(window.location.search).get("center") || null;
 }
 function getFirebaseUrl() {
-  return currentCenterId ? `${FIREBASE_BASE}/baeminData/${currentCenterId}.json` : null;
+  return currentCenterId ? `${FIREBASE_BASE}/${FIREBASE_SOURCE_PATH}/baeminData/${currentCenterId}.json` : null;
 }
 
 // ── 목표 ──
@@ -640,7 +641,7 @@ async function renderWeeklyRR() {
     const dates=[];
     const {start}=getWeekRange(0);
     for(let i=0;i<7;i++){const d=new Date(start);d.setDate(start.getDate()+i);dates.push(formatDate(d));}
-    const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
+    const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/${FIREBASE_SOURCE_PATH}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
     const rt={};
     results.forEach(day=>{if(!day||!day.riders)return;Object.values(day.riders).forEach(r=>{if(!r.name)return;if(!rt[r.name])rt[r.name]={name:r.name,reject:0,cancel:0,total:0};rt[r.name].reject+=r.reject||0;rt[r.name].cancel+=r.cancel||0;rt[r.name].total+=r.total||((r.complete||0)+(r.reject||0)+(r.cancel||0));});});
     weeklyRRCache = Object.values(rt).map(r=>({name:r.name,rejectRate:r.total>0?Math.round(((r.reject+r.cancel)/r.total)*1000)/10:0,total:r.total,reject:r.reject+r.cancel})).sort((a,b)=>b.rejectRate-a.rejectRate);
@@ -689,7 +690,7 @@ async function renderWeekTab() {
     <div id="wkInner"><div class="loading"><div class="spinner">⏳</div></div></div>`;
 
   // 데이터 로드
-  const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
+  const results=await Promise.all(dates.map(date=>fetch(`${FIREBASE_BASE}/${FIREBASE_SOURCE_PATH}/riderHistory/${currentCenterId}/${date}.json`).then(r=>r.json()).catch(()=>null)));
 
   // 센터 주간 합계
   let wComplete=0,wReject=0,wCancel=0;
