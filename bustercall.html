@@ -263,10 +263,15 @@ function hideDpCode(text) {
     .trim();
 }
 
+function isInternalCenterAlias(text) {
+  const normalized = hideDpCode(text);
+  return Object.values(BAEMIN_CENTERS).some(alias => hideDpCode(alias) === normalized);
+}
+
 function getSafeCenterName(data) {
   const scrapedName = hideDpCode(data && data.centerName);
-  if (scrapedName) return scrapedName;
-  return BAEMIN_CENTERS[currentCenterId] || "배달현황 대시보드";
+  if (scrapedName && !isInternalCenterAlias(scrapedName)) return scrapedName;
+  return "센터명 확인 중";
 }
 
 let currentCenterId  = null;
@@ -853,7 +858,8 @@ function doLogin() {
   }
 }
 function startDashboard() {
-  document.getElementById("centerTitle").textContent=BAEMIN_CENTERS[currentCenterId]||"배달현황 대시보드";
+  document.getElementById("centerTitle").textContent="센터명 확인 중";
+  document.title = "BusterCall";
   requestNotificationPermission();
   loadData();
   scheduleNextLoad();
